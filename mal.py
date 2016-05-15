@@ -99,12 +99,13 @@ def increment(regex, inc):
     entry = {'episode': episode}
 
     template = {
-        'title': colorize(item['title'], 'cyan', 'underline'),
+        'title': colorize(item['title'], 'yellow', 'bold'),
         'episode': colorize(str(episode), 'red' if inc < 1 else 'green'),
-        'total_episodes': colorize(item['total_episodes'], 'yellow')
+        'total_episodes': colorize(item['total_episodes'], 'cyan'),
+        'procedure': colorize('Incrementing', 'green') if inc >= 1 else colorize('Decrementing', 'red')
     }
 
-    print(('Incrementing progress for '
+    print(('{procedure} progress for '
            '{title} to {episode}/{total_episodes}'.format_map(template)))  # noqa
 
     if item['total_episodes'] == episode:
@@ -168,6 +169,9 @@ if __name__ == '__main__':
 
     args = sys.argv[1:]
 
+    subcommand_splitted = ' '.join(map(str.lower, args))
+    if subcommand_splitted in mal.status_names.values():
+        args = [subcommand_splitted]
     if len(args) > 1:
         if 'inc' in args:
             increment(args[args.index('inc') - len(args[1:])], 1)
