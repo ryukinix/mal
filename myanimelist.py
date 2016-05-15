@@ -16,7 +16,8 @@ class MyAnimeList:
         2: 'completed',
         3: 'on hold',
         4: 'dropped',
-        6: 'plan to watch'  # not a typo
+        6: 'plan to watch',  # not a typo
+        7: 'rewatching' # we have rewatching here too, label for completed
     }
 
     status_codes = {v: k for k, v in status_names.items()}
@@ -45,7 +46,7 @@ class MyAnimeList:
         return [dict((attr.tag, attr.text) for attr in el) for el in elements]
 
     def list(self, status='all', username=None):
-        if username == None:
+        if username is None:
             username = self.username
 
         payload = {'u': username, 'status': status, 'type': 'anime'}
@@ -64,15 +65,19 @@ class MyAnimeList:
 
             if 'series_animedb_id' in entry:
                 entry_id = int(entry['series_animedb_id'])
-
                 result[entry_id] = {
                     'id': entry_id,
                     'title': entry['series_title'],
                     'episode': int(entry['my_watched_episodes']),
                     'status': int(entry['my_status']),
                     'score': int(entry['my_score']),
-                    'total_episodes': int(entry['series_episodes'])
+                    'total_episodes': int(entry['series_episodes']),
+                    'rewatching': int(entry['my_rewatching']) if entry['my_rewatching'] else 0,
+                    'status_name': self.get_status_name(int(entry['my_status'])),
                 }
+                # if was rewatching, so the status_name is rewatching
+                if result[entry_id]['rewatching']:
+                    result[entry_id]['status_name'] = 'rewatching'
 
         return result
 
