@@ -1,4 +1,11 @@
 #!/usr/bin/env python
+# coding=utf-8
+#
+#   Python Script
+#
+#   Copyleft © Manoel Vilela
+#
+#
 
 import sys
 import os
@@ -6,28 +13,31 @@ import signal
 import datetime
 import math
 from configparser import ConfigParser
-from myanimelist import MyAnimeList
 from operator import itemgetter
+from mal.api import MyAnimeList
 
 
 def usage():
-    print(("Usage: mal [inc | dec] anime-by-regex\n"
-           "       mal [watching | plan to watch | on hold | completed]\n"
-           "       mal [list | all]\n"
-           "       mal anime-by-regex\n"))
-    print("Hacked by Manoel Vilela\n\n")
-    print(("Ex. for increment +1:\n\n\t"
-           "$ mal inc 'samurai champloo'\n"))
-    print(("Ex. for decrement -1:\n\n\t"
-           "$ mal dec 'samurai champloo'\n"))
-    print(("Ex. filtering:\n\n\t"
-           "$ mal watching\n"))
-    print(("Ex. search return all anime whose start with s: \n\n\t"
-           "$ mal ^s\n"))
-    print(("Ex. fetch all list: \n\n\t"
-           "$ mal list\n\t"
-           "$ mal all\n\t"
-           "$ mal .+\n"))
+    usage_info = [
+        (("Usage: mal [inc | dec] anime-by-regex\n"
+          "       mal [watching | plan to watch | on hold | completed | rewatching]\n"
+          "       mal [list | all]\n"
+          "       mal anime-by-regex\n")),
+        "Hacked by Manoel Vilela\n\n",
+        (("Ex. for increment +1:\n\n\t"
+          "$ mal inc 'samurai champloo'\n")),
+        (("Ex. for decrement -1:\n\n\t"
+          "$ mal dec 'samurai champloo'\n")),
+        (("Ex. filtering:\n\n\t"
+          "$ mal watching\n")),
+        (("Ex. search return all anime whose start with s: \n\n\t"
+          "$ mal ^s\n")),
+        (("Ex. fetch all list: \n\n\t"
+          "$ mal list\n\t"
+          "$ mal all\n\t"
+          "$ mal .+\n")),
+    ]
+    print('\n'.join(usage_info))
     sys.exit(0)
 
 
@@ -83,15 +93,15 @@ def increment(regex, inc):
 
     if len(items) > 1:
         print('Multiple results:')
-        for index, item in enumerate(items):
-            print(str(index) + ': ' + item['title'])
+        for index, title in enumerate(map(itemgetter('title'), items)):
+            print('{index}: {title}'.format_map(locals()))
         index = int(input('Which one? '))
         item = items[index]
 
     elif len(items) == 1:
         item = items[0]
 
-    if item is None:
+    if not item:
         print("No matches in list.")
         return
 
@@ -162,7 +172,9 @@ def find(regex, filtering='all'):
               "with score {score} {rewatching}".format_map(template))
         print()
 
-if __name__ == '__main__':
+
+def main():
+    global mal
     config = ConfigParser()
     config.read(os.path.expanduser('~/.myanimelist.ini'))
     mal = MyAnimeList(config['mal'])
@@ -172,7 +184,7 @@ if __name__ == '__main__':
     subcommand_splitted = ' '.join(map(str.lower, args))
     if subcommand_splitted in mal.status_names.values():
         args = [subcommand_splitted]
-    if len(args) > 1:
+    if 3 > len(args) > 1:
         if 'inc' in args:
             increment(args[args.index('inc') - len(args[1:])], 1)
         elif 'dec' in args:
@@ -189,3 +201,7 @@ if __name__ == '__main__':
 
     else:
         usage()
+
+
+if __name__ == '__main__':
+    main()
