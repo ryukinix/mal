@@ -7,36 +7,70 @@ import datetime
 import math
 from configparser import ConfigParser
 from myanimelist import MyAnimeList
+from operator import itemgetter
 
 
-signal.signal(signal.SIGINT, lambda x, y: sys.exit(0))
+def usage():
+    print(("Usage: mal [inc | dec] anime-by-regex\n"
+           "       mal [watching | plan to watch | on hold | completed]\n"
+           "       mal [list | all]\n"
+           "       mal anime-by-regex\n"))
+    print("Hacked by Manoel Vilela\n\n")
+    print(("Ex. for increment +1:\n\n\t"
+           "$ mal inc 'samurai champloo'\n"))
+    print(("Ex. for decrement -1:\n\n\t"
+           "$ mal dec 'samurai champloo'\n"))
+    print(("Ex. filtering:\n\n\t"
+           "$ mal watching\n"))
+    print(("Ex. search return all anime whose start with s: \n\n\t"
+           "$ mal ^s\n"))
+    print(("Ex. fetch all list: \n\n\t"
+           "$ mal list\n\t"
+           "$ mal all\n\t"
+           "$ mal .+\n"))
+    sys.exit(0)
+
+
+signal.signal(signal.SIGINT, lambda x, y: usage())
 today = datetime.date.today().strftime('%m%d%Y')
 
-
 color_map = {
-    'brown'  : '\033[{style};30m',
-    'red'    : '\033[{style};31m',
-    'green'  : '\033[{style};32m',
-    'yellow' : '\033[{style};33m',
-    'blue'   : '\033[{style};34m',
-    'pink'   : '\033[{style};35m',
-    'cyan'   : '\033[{style};36m',
-    'gray'   : '\033[{style};37m',
-    'reset'  : '\033[00;00m'
+    'brown': '\033[{style};30m',
+    'red': '\033[{style};31m',
+    'green': '\033[{style};32m',
+    'yellow': '\033[{style};33m',
+    'blue': '\033[{style};34m',
+    'pink': '\033[{style};35m',
+    'cyan': '\033[{style};36m',
+    'gray': '\033[{style};37m',
+    'reset': '\033[00;00m'
 }
 
 style_map = {
-    'normal'    : '00',
-    'bold'      : '01',
-    'underline' : '04',
+    'normal': '00',
+    'bold': '01',
+    'underline': '04',
 }
 
 
-def colorize(string, color_selected, style_selected='normal'):
+def colorize(printable, color_selected, style_selected='normal'):
     style = style_map[style_selected]
     color = color_map[color_selected].format(style=style)
     reset = color_map['reset']
-    return '{color}{string}{reset}'.format_map(locals())
+    return '{color}{printable}{reset}'.format_map(locals())
+
+
+def score_color(score):
+    if score == 10:
+        return colorize(score, 'green', 'bold')
+    if score >= 9:
+        return colorize(score, 'cyan', 'bold')
+    elif score >= 7:
+        return colorize(score, 'blue', 'bold')
+    elif score >= 5:
+        return colorize(score, 'yellow', 'bold')
+    else:
+        return colorize(score, 'red', 'bold')
 
 
 def increment(regex, inc):
@@ -92,27 +126,39 @@ def increment(regex, inc):
 def find(regex, filtering='all'):
     items = mal.find(regex)
     if len(items) == 0:
-        print("No matches in list.")
+        print(colorize("No matches in list.", 'red', 'bold'))
         return
+
     if filtering != 'all':
-        items = list(filter(lambda x: mal.get_status_name(x['status']) == filtering, items))
+        items = [x for x in items if x['status_name'] == filtering]
 
-    print("Matched " + colorize(str(len(items)), 'cyan', 'underline') + " items:")
+    n_items = colorize(str(len(items)), 'cyan', 'underline')
+    print("Matched {} items:".format(n_items))
 
-    sorted_items = sorted(items, key=lambda x: mal.get_status_name(x['status']))
+    sorted_items = sorted(items, key=itemgetter('status'), reverse=True)
     for index, item in enumerate(sorted_items):
         if index == 0:
             padding = 3
         else:
             padding = int(math.log10(index)) + 3
+        template = {
+            'index': index + 1,
+            'title': colorize(item['title'], 'red', 'bold'),
+            'padding': ' ' * padding,
+            'status': mal.status_names[item['status']].capitalize(),
+            'remaining': colorize(
+                '{episode}/{total_episodes}'.format_map(item),
+                'blue' if item['episode'] < item['total_episodes']
+                       else 'green',
+                'bold'),
+            'score': score_color(item['score']),
+            'rewatching': (colorize('#in-rewatching-{}'.format(item['rewatching']), 'yellow', 'bold')
+                           if item['rewatching'] else '')
+        }
 
-        status = mal.status_names[item['status']].capitalize()
-        title = colorize(item['title'], 'red', 'bold')
-        remaining = colorize('{episode}/{total_episodes}'.format_map(item), 
-                    'blue' if item['episode'] < item['total_episodes'] else 'green', 'bold') 
-        print(str(index + 1) + ': ' + '{}'.format(title))  # noqa
-        print(' ' * padding + status + ' at ' + 
-              remaining + ' episodes')
+        print("{index}: {title}".format_map(template))
+        print("{padding}{status} at {remaining} episodes "
+              "with score {score} {rewatching}".format_map(template))
         print()
 
 if __name__ == '__main__':
@@ -132,13 +178,10 @@ if __name__ == '__main__':
     elif len(args) == 1:
         if args[0].lower() in mal.status_names.values():
             find('.+', args[0].lower())
+        elif args[0] in ('all', 'list'):
+            find('.+')
         else:
             find(args[0])
 
     else:
-        print("Usage: mal [inc | dec | filtering] anime-by-regex")
-        print("Hacked by Manoel Vilela\n\n")
-        print("Ex. for increment +1:\n\n\t $ mal inc 'samurai champloo'\n")
-        print("Ex. for decrement -1:\n\n\t $ mal dec 'samurai champloo'\n")
-        print("Ex. filtering:\n\n\t $ mal watching\n")
-        print("Ex. search return all anime whose start with s:\n\n\t $ mal ^s\n")
+        usage()
