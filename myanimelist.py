@@ -25,6 +25,9 @@ class MyAnimeList:
         self.username = config['username']
         self.password = config['password']
 
+    def get_status_name(self, status_code):
+        return self.status_names[status_code]
+
     def search(self, query):
         payload = {'q': query}
 
