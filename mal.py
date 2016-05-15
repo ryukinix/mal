@@ -13,7 +13,22 @@ signal.signal(signal.SIGINT, lambda x, y: sys.exit(0))
 today = datetime.date.today().strftime('%m%d%Y')
 
 
-def increment(regex):
+color_map = {
+    'red': '\033[01;31m',
+    'cyan': '\033[01;36m',
+    'blue': '\033[01;34m',
+    'green': '\033[01;32m',
+    'reset': '\033[00m'
+}
+
+
+def colorize(string, color):
+    color_selected = color_map[color]
+    reset = color_map['reset']
+    return '{color_selected}{string}{reset}'.format_map(locals())
+
+
+def increment(regex, inc):
     items = mal.find(regex)
     item = None
 
@@ -31,14 +46,21 @@ def increment(regex):
     elif len(items) == 1:
         item = items[0]
 
-    if item == None:
+    if item is None:
         print("No matches in list.")
         return
 
-    episode = item['episode'] + 1
+    episode = item['episode'] + inc
     entry = {'episode': episode}
 
-    print('Incrementing progress for ' + item['title'] + ' to ' + str(episode))
+    template = {
+        'title': colorize(item['title'], 'cyan'),
+        'episode': colorize(str(episode), 'red' if inc < 1 else 'green'),
+        'total_episodes': colorize(item['total_episodes'], 'blue')
+    }
+
+    print(('Incrementing progress for '
+           '{title} to {episode}/{total_episodes}'.format_map(template)))  # noqa
 
     if item['total_episodes'] == episode:
         entry['status'] = MyAnimeList.status_codes['completed']
@@ -53,7 +75,7 @@ def increment(regex):
 
     response = mal.update(item['id'], entry)
     if response != 200:
-        print ("Failed with HTTP " + str(response))
+        print("Failed with HTTP " + str(response))
 
 
 def find(regex):
@@ -62,7 +84,7 @@ def find(regex):
         print("No matches in list.")
         return
 
-    print("Matched " + str(len(items)) + " items:")
+    print("Matched " + colorize(str(len(items)), 'cyan') + " items:")
 
     for index, item in enumerate(items):
         if index == 0:
@@ -71,27 +93,29 @@ def find(regex):
             padding = int(math.log10(index)) + 3
 
         status = MyAnimeList.status_names[item['status']].capitalize()
-
-        print(str(index) + ': ' + item['title'])
+        title = colorize(item['title'], 'red')
+        print(str(index + 1) + ': ' + '{}'.format(title))  # noqa
         print(' ' * padding + status + ' at ' + str(item['episode']) +
               '/' + str(item['total_episodes']) + ' episodes')
         print()
 
+if __name__ == '__main__':
+    config = ConfigParser()
+    config.read(os.path.expanduser('~/.myanimelist.ini'))
+    mal = MyAnimeList(config['mal'])
 
-config = ConfigParser()
-config.read(os.path.expanduser('~/.myanimelist.ini'))
+    args = sys.argv[1:]
 
-mal = MyAnimeList(config['mal'])
+    if len(args) > 1:
+        if 'inc' in args:
+            increment(args[args.index('inc') - len(args[1:])], 1)
+        elif 'dec' in args:
+            increment(args[args.index('dec') - len(args[1:])], -1)
 
-args = sys.argv[1:]
+    elif len(args) == 1:
+        find(args[0])
 
-if len(args) > 1:
-    if args[0] == 'inc':
-        increment(args[1])
-
-elif len(args) == 1:
-    find(args[0])
-
-else:
-    print("Usage: mal [command] regex")
-    print("Real help coming eventually.")
+    else:
+        print("Usage: mal [inc | dec] anime-by-regex")
+        print("Hacked by Manoel Vilela")
+        print("Ex.: mal inc 'samurai champloo'")
