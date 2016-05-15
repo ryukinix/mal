@@ -7,80 +7,25 @@
 #
 #
 
+# stdlib
 import sys
-import os
 import signal
 import datetime
 import math
-from configparser import ConfigParser
 from operator import itemgetter
+
+# self-package
 from mal.api import MyAnimeList
+from mal.utils import colorize, score_color, usage, killed
+from mal import login
 
-
-def usage():
-    usage_info = [
-        (("Usage: mal [inc | dec] anime-by-regex\n"
-          "       mal [watching | plan to watch | on hold | completed | rewatching]\n"
-          "       mal [list | all]\n"
-          "       mal anime-by-regex\n")),
-        "Hacked by Manoel Vilela\n\n",
-        (("Ex. for increment +1:\n\n\t"
-          "$ mal inc 'samurai champloo'\n")),
-        (("Ex. for decrement -1:\n\n\t"
-          "$ mal dec 'samurai champloo'\n")),
-        (("Ex. filtering:\n\n\t"
-          "$ mal watching\n")),
-        (("Ex. search return all anime whose start with s: \n\n\t"
-          "$ mal ^s\n")),
-        (("Ex. fetch all list: \n\n\t"
-          "$ mal list\n\t"
-          "$ mal all\n\t"
-          "$ mal .+\n")),
-    ]
-    print('\n'.join(usage_info))
-    sys.exit(0)
-
-
-signal.signal(signal.SIGINT, lambda x, y: usage())
+signal.signal(signal.SIGINT, lambda x, y: killed())
 today = datetime.date.today().strftime('%m%d%Y')
 
-color_map = {
-    'brown': '\033[{style};30m',
-    'red': '\033[{style};31m',
-    'green': '\033[{style};32m',
-    'yellow': '\033[{style};33m',
-    'blue': '\033[{style};34m',
-    'pink': '\033[{style};35m',
-    'cyan': '\033[{style};36m',
-    'gray': '\033[{style};37m',
-    'reset': '\033[00;00m'
-}
 
-style_map = {
-    'normal': '00',
-    'bold': '01',
-    'underline': '04',
-}
-
-
-def colorize(printable, color_selected, style_selected='normal'):
-    style = style_map[style_selected]
-    color = color_map[color_selected].format(style=style)
-    reset = color_map['reset']
-    return '{color}{printable}{reset}'.format_map(locals())
-
-
-def score_color(score):
-    if score == 10:
-        return colorize(score, 'green', 'bold')
-    if score >= 9:
-        return colorize(score, 'cyan', 'bold')
-    elif score >= 7:
-        return colorize(score, 'blue', 'bold')
-    elif score >= 5:
-        return colorize(score, 'yellow', 'bold')
-    else:
-        return colorize(score, 'red', 'bold')
+def isomorphic_increment(aliases, arguments):
+    command = (aliases & set(arguments)).pop()
+    return arguments[arguments.index(command) - len(arguments[1:])]
 
 
 def increment(regex, inc):
@@ -102,7 +47,7 @@ def increment(regex, inc):
         item = items[0]
 
     if not item:
-        print("No matches in list.")
+        print("No matches in list 😢")
         return
 
     episode = item['episode'] + inc
@@ -175,9 +120,8 @@ def find(regex, filtering='all'):
 
 def main():
     global mal
-    config = ConfigParser()
-    config.read(os.path.expanduser('~/.myanimelist.ini'))
-    mal = MyAnimeList(config['mal'])
+    config = login.get_credentials()
+    mal = MyAnimeList(config)
 
     args = sys.argv[1:]
 
@@ -185,17 +129,21 @@ def main():
     if subcommand_splitted in mal.status_names.values():
         args = [subcommand_splitted]
     if 3 > len(args) > 1:
-        if 'inc' in args:
-            increment(args[args.index('inc') - len(args[1:])], 1)
-        elif 'dec' in args:
-            increment(args[args.index('dec') - len(args[1:])], -1)
+        if any(x in args for x in ('inc', '+1')):
+            query = isomorphic_increment({'inc', '+1'}, args)
+            increment(query, 1)
+        elif any(x in args for x in ('dec', '-1')):
+            query = isomorphic_increment({'dec, -1'}, args)
+            increment(query, -1)
         else:
-            print('subcommand not supported.')
+            print('subcommand not supported. 😢')
     elif len(args) == 1:
         if args[0].lower() in mal.status_names.values():
             find('.+', args[0].lower())
         elif args[0] in ('all', 'list'):
             find('.+')
+        elif args[0] == 'login':
+            login.create_credentials()
         else:
             find(args[0])
 
