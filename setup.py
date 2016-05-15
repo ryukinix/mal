@@ -7,12 +7,11 @@
 #
 
 from setuptools import setup, find_packages
-
-version = '0.1'
+import mal
 
 setup(
     name='mal',
-    version=version,
+    version=mal.__version__,
     description="A command line interface to your MyAnimeList profile",
     long_description=(
         "Personal use for managing watching animes using MyAnimeList."
@@ -26,10 +25,10 @@ setup(
     ],
     # Get strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
     keywords='mal myanimelist cli personal',
-    author='Manoel Vilela',
+    author=mal.__author__,
+    author_email=mal.__email__,
+    url=mal.__url__,
     zip_safe=False,
-    author_email='manoel_vilela@engineer.com',
-    url='https://github.com/ryukinix/mal',
     license='GPL',
     packages=find_packages(exclude=['ez_setup', 'examples', 'tests', 'docs']),
     package_dir={'build': 'mal'},
