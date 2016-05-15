@@ -133,7 +133,7 @@ def main():
             query = isomorphic_increment({'inc', '+1'}, args)
             increment(query, 1)
         elif any(x in args for x in ('dec', '-1')):
-            query = isomorphic_increment({'dec, -1'}, args)
+            query = isomorphic_increment({'dec', '-1'}, args)
             increment(query, -1)
         else:
             print('subcommand not supported. 😢')
