@@ -14,18 +14,29 @@ today = datetime.date.today().strftime('%m%d%Y')
 
 
 color_map = {
-    'red': '\033[01;31m',
-    'cyan': '\033[01;36m',
-    'blue': '\033[01;34m',
-    'green': '\033[01;32m',
-    'reset': '\033[00m'
+    'brown'  : '\033[{style};30m',
+    'red'    : '\033[{style};31m',
+    'green'  : '\033[{style};32m',
+    'yellow' : '\033[{style};33m',
+    'blue'   : '\033[{style};34m',
+    'pink'   : '\033[{style};35m',
+    'cyan'   : '\033[{style};36m',
+    'gray'   : '\033[{style};37m',
+    'reset'  : '\033[00;00m'
+}
+
+style_map = {
+    'normal'    : '00',
+    'bold'      : '01',
+    'underline' : '04',
 }
 
 
-def colorize(string, color):
-    color_selected = color_map[color]
+def colorize(string, color_selected, style_selected='normal'):
+    style = style_map[style_selected]
+    color = color_map[color_selected].format(style=style)
     reset = color_map['reset']
-    return '{color_selected}{string}{reset}'.format_map(locals())
+    return '{color}{string}{reset}'.format_map(locals())
 
 
 def increment(regex, inc):
@@ -54,9 +65,9 @@ def increment(regex, inc):
     entry = {'episode': episode}
 
     template = {
-        'title': colorize(item['title'], 'cyan'),
+        'title': colorize(item['title'], 'cyan', 'underline'),
         'episode': colorize(str(episode), 'red' if inc < 1 else 'green'),
-        'total_episodes': colorize(item['total_episodes'], 'blue')
+        'total_episodes': colorize(item['total_episodes'], 'yellow')
     }
 
     print(('Incrementing progress for '
@@ -78,25 +89,30 @@ def increment(regex, inc):
         print("Failed with HTTP " + str(response))
 
 
-def find(regex):
+def find(regex, filtering='all'):
     items = mal.find(regex)
     if len(items) == 0:
         print("No matches in list.")
         return
+    if filtering != 'all':
+        items = list(filter(lambda x: mal.get_status_name(x['status']) == filtering, items))
 
-    print("Matched " + colorize(str(len(items)), 'cyan') + " items:")
+    print("Matched " + colorize(str(len(items)), 'cyan', 'underline') + " items:")
 
-    for index, item in enumerate(items):
+    sorted_items = sorted(items, key=lambda x: mal.get_status_name(x['status']))
+    for index, item in enumerate(sorted_items):
         if index == 0:
             padding = 3
         else:
             padding = int(math.log10(index)) + 3
 
-        status = MyAnimeList.status_names[item['status']].capitalize()
-        title = colorize(item['title'], 'red')
+        status = mal.status_names[item['status']].capitalize()
+        title = colorize(item['title'], 'red', 'bold')
+        remaining = colorize('{episode}/{total_episodes}'.format_map(item), 
+                    'blue' if item['episode'] < item['total_episodes'] else 'green', 'bold') 
         print(str(index + 1) + ': ' + '{}'.format(title))  # noqa
-        print(' ' * padding + status + ' at ' + str(item['episode']) +
-              '/' + str(item['total_episodes']) + ' episodes')
+        print(' ' * padding + status + ' at ' + 
+              remaining + ' episodes')
         print()
 
 if __name__ == '__main__':
@@ -111,11 +127,18 @@ if __name__ == '__main__':
             increment(args[args.index('inc') - len(args[1:])], 1)
         elif 'dec' in args:
             increment(args[args.index('dec') - len(args[1:])], -1)
-
+        else:
+            print('subcommand not supported.')
     elif len(args) == 1:
-        find(args[0])
+        if args[0].lower() in mal.status_names.values():
+            find('.+', args[0].lower())
+        else:
+            find(args[0])
 
     else:
-        print("Usage: mal [inc | dec] anime-by-regex")
-        print("Hacked by Manoel Vilela")
-        print("Ex.: mal inc 'samurai champloo'")
+        print("Usage: mal [inc | dec | filtering] anime-by-regex")
+        print("Hacked by Manoel Vilela\n\n")
+        print("Ex. for increment +1:\n\n\t $ mal inc 'samurai champloo'\n")
+        print("Ex. for decrement -1:\n\n\t $ mal dec 'samurai champloo'\n")
+        print("Ex. filtering:\n\n\t $ mal watching\n")
+        print("Ex. search return all anime whose start with s:\n\n\t $ mal ^s\n")
