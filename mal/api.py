@@ -1,13 +1,18 @@
 #!/usr/bin/env python
+# coding=utf-8
+#
+#   Python Script
+#
+#   Copyleft © Manoel Vilela
+#
+#
 
 import re
 import requests
 from xml.etree import cElementTree as ET
 
 
-class MyAnimeList:
-    username = ''
-    password = ''
+class MyAnimeList(object):
     base_url = 'http://myanimelist.net/api'
     user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/34.0.1847.116 Safari/537.36'
 
