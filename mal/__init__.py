@@ -6,7 +6,7 @@
 #
 #
 
-__version__ = '0.1.1'
+__version__ = '0.1.2'
 __author__ = 'Manoel Vilela'
 __email__ = 'manoel_vilela@engineer.com'
 __url__ = 'https://github.com/ryukinix/mal'

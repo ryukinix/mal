@@ -14,15 +14,26 @@ mal -- MyAnimeList Command Line Interface
 ## Requirements
 
 - Python 3.0+
+- [pypandoc](https://pypi.python.org/pypi/pypandoc/) (only for developing & PyPI submission)
 - [requests](http://docs.python-requests.org/en/latest/index.html)
-- pypandoc (only for developing & PyPI submission)
 
 ## Installation
+
+* `pip install mal --user` or `sudo pip install mal`
+
+
+### Manual Installation
 
 Download the package using `git clone git@github.com:ryukinix/mal.git` or as `zip` file, so then: 
 
 - `sudo python setup.py install`
 - `sudo make install` (alternative)
+
+For develop you can try:
+- `sudo python setup.py develop`
+- `sudo make develop` (alternative)
+
+In develop mode an EGG file is linked with the actual source, that way you can try modifications and get instant feedbacks & at execution
 
 
 ## Usage
