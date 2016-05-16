@@ -1,6 +1,12 @@
 mal -- MyAnimeList Command Line Interface
 =============
 
+[![PyPi version](https://img.shields.io/pypi/v/mal.svg)](https://pypi.python.org/pypi/mal/)
+![PyPi downloads](https://img.shields.io/pypi/dm/mal.svg)
+![PyPi License](https://img.shields.io/pypi/l/mal.svg)
+![PyPI pyversions](https://img.shields.io/pypi/pyversions/mal.svg)
+![PyPI status](https://img.shields.io/pypi/status/mal.svg)
+
 ## Description
 
 `mal` is a command-line client for [MyAnimeList.net](http://myanimelist.net/). It uses their official [API](http://myanimelist.net/modules.php?go=api), so it should remain functional indefinitely (unlike screen-scraping alternatives). But is in alpha development yet, so new ideas is welcome! This version is a inspired tool from the slow-maintained [mal](https://github.com/pushrax/mal).
