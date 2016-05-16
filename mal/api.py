@@ -10,6 +10,7 @@
 import re
 import requests
 from xml.etree import cElementTree as ET
+from mal.utils import checked_connection
 
 
 class MyAnimeList(object):
@@ -33,8 +34,28 @@ class MyAnimeList(object):
         self.username = config['username']
         self.password = config['password']
 
+    @checked_connection
+    def validate_login(self):
+        r = requests.get(
+            self.base_url + '/account/verify_credentials.xml',
+            auth=(self.username, self.password),
+            headers={'User-Agent': self.user_agent}
+        )
+
+        return r.status_code
+
+    @classmethod
+    def login(cls, config):
+        mal = cls(config)
+
+        if mal.validate_login() == 401:
+            return None
+
+        return mal
+
+    @checked_connection
     def search(self, query):
-        payload = {'q': query}
+        payload = dict(q=query)
 
         r = requests.get(
             self.base_url + '/anime/search.xml',
@@ -49,17 +70,16 @@ class MyAnimeList(object):
         elements = ET.fromstring(r.text)
         return [dict((attr.tag, attr.text) for attr in el) for el in elements]
 
-    def list(self, status='all', username=None):
-        if username is None:
-            username = self.username
+    @checked_connection
+    def list(self, status='all', type='anime'):
+        username = self.username
 
-        payload = {'u': username, 'status': status, 'type': 'anime'}
+        payload = dict(u=username, status=status, type=type)
         r = requests.get(
             'http://myanimelist.net/malappinfo.php',
             params=payload,
             headers={'User-Agent': self.user_agent}
         )
-
         if "_Incapsula_Resource" in r.text:
             raise RuntimeError("Request blocked by Incapsula protection")
 
@@ -85,13 +105,14 @@ class MyAnimeList(object):
 
         return result
 
-    def find(self, regex, status='all', username=None):
+    def find(self, regex, status='all'):
         result = []
-        for key, val in self.list(status, username).items():
+        for key, val in self.list(status).items():
             if re.search(regex, val['title'], re.I):
                 result.append(val)
         return result
 
+    @checked_connection
     def update(self, item_id, entry):
         tree = ET.Element('entry')
         for key, val in entry.items():

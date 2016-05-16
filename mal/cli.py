@@ -130,10 +130,18 @@ def main():
     global mal
     if not sys.stdout.isatty():
         color.COLORED = False
-    config = login.get_credentials()
-    mal = MyAnimeList(config)
-
     args = sys.argv[1:]
+
+    if 'login' in args:
+        login.create_credentials()
+        sys.exit(0)
+    
+    config = login.get_credentials()
+    mal = MyAnimeList.login(config)
+    if not mal:
+        print(color.colorize('Invalid credentials! :(', 'red', 'bold'))
+        print(color.colorize('Tip: Try "mal login" again :D', 'white', 'bold'))
+        sys.exit(1)
 
     subcommand_splitted = ' '.join(map(str.lower, args))
     if subcommand_splitted in mal.status_names.values():
@@ -152,8 +160,6 @@ def main():
             find('.+', args[0].lower())
         elif args[0] in ('all', 'list'):
             find('.+')
-        elif args[0] == 'login':
-            login.create_credentials()
         else:
             find(args[0])
 

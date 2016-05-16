@@ -21,11 +21,11 @@
      ✔ allow pre-check on makefile on deploy operations (deploy & register) @done (16-05-16 01:49)
      ✔ add badges for readme.md about the repository status (license, version, pypi downloads...) @done (16-05-16 01:50)
      ✔ remove docs/ folder and use direct links with imgur at README.md @done (16-05-16 01:50)
- 
    ☐ v0.1.3
      ✔ Disable colors when sys.stdout.istty() is False @done (16-05-16 03:13)
-     ☐ Exception Handling
-     ☐ Validate login
+     ✔ Exception Handling about connections @done (16-05-16 17:45)
+     ✔ Validate login in two steps: create_credentials and MyAnimeList.login instance @done (16-05-16 17:45)
+     ✔ added checked_connection decorator for handling the exceptions (into utils.py) @done (16-05-16 17:47)
 
 
 # Features requests:
@@ -33,10 +33,10 @@
  ✔ Search by Regex @done (16-05-16 01:41)
  ✔ Filtering by Sublist (e.g.: watching) @done (16-05-16 01:41)
  ✔ Disable colors when sys.stdout.istty() is False @done (16-05-16 03:13)
- ☐ Validate login in instance of MyAnimeList
- ☐ Validate login before saving in create_credentials!
+ ✔ Validate login in instance of MyAnimeList @done (16-05-16 17:45)
+ ✔ Validate login before saving in create_credentials! @done (16-05-16 17:45)
+ ✔ Exception Handling (connection & communication) @done (16-05-16 17:45)
  ☐ Review implementation of isomorphic increment/decrement (very creep implementation)
- ☐ Exception Handling (connection & communication)
  ☐ Score any anime of the list
  ☐ Add anime to watching list by global search
  ☐ Local & Global filter by genre and rank
