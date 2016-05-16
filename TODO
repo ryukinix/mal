@@ -23,6 +23,7 @@
      ✔ remove docs/ folder and use direct links with imgur at README.md @done (16-05-16 01:50)
  
    ☐ v0.1.3
+     ✔ Disable colors when sys.stdout.istty() is False @done (16-05-16 03:13)
      ☐ Exception Handling
 
 
@@ -30,10 +31,10 @@
  ✔ Inc/Dec anime @done (16-05-16 01:41)
  ✔ Search by Regex @done (16-05-16 01:41)
  ✔ Filtering by Sublist (e.g.: watching) @done (16-05-16 01:41)
+ ✔ Disable colors when sys.stdout.istty() is False @done (16-05-16 03:13)
  ☐ Exception Handling (connection & communication)
  ☐ Score any anime of the list
  ☐ Add anime to watching list by global search
  ☐ Add animes
  ☐ Local & Global filter by genre and rank
- ☐ Disable colors when sys.stdout.istty() is False
  ☐ Options (on commandline or configfile) to disable colors
