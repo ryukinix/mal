@@ -132,10 +132,13 @@ def main():
         color.COLORED = False
     args = sys.argv[1:]
 
+    if not any(args):
+        usage()
+
     if 'login' in args:
         login.create_credentials()
         sys.exit(0)
-    
+
     config = login.get_credentials()
     mal = MyAnimeList.login(config)
     if not mal:
@@ -162,9 +165,6 @@ def main():
             find('.+')
         else:
             find(args[0])
-
-    else:
-        usage()
 
 
 if __name__ == '__main__':
