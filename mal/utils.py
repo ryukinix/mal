@@ -9,6 +9,9 @@
 
 import sys
 import mal
+from requests.exceptions import ConnectionError
+from functools import wraps
+from mal import color
 
 
 def usage():
@@ -37,5 +40,26 @@ def usage():
 
 
 def killed():
-    print("D: somebody killed me")
+    print("\nD: somebody killed me...")
     sys.exit(1)
+
+
+def checked_connection(func):
+
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        try:
+            result = func(*args, **kwargs)
+        except ConnectionError as e:
+            err = e.args[0].args
+            status, reason = err[0], err[1].args[1]
+            error_name = e.__class__.__name__
+            padding = (len(error_name) + 2) * ' '
+            error = color.colorize(error_name, 'red', 'bold')
+            status = color.colorize(status, 'cyan')
+            print('{error}: {status}\n{padding}{reason}'.format_map(locals()))
+            sys.exit(1)
+
+        return result
+
+    return wrapper
