@@ -1,0 +1,4 @@
+include LICENSE
+include requirements.txt
+include README.md
+exclude MANIFEST.in
