@@ -16,8 +16,9 @@ from operator import itemgetter
 
 # self-package
 from mal.api import MyAnimeList
-from mal.utils import colorize, score_color, usage, killed
+from mal.utils import usage, killed
 from mal import login
+from mal import color
 
 signal.signal(signal.SIGINT, lambda x, y: killed())
 today = datetime.date.today().strftime('%m%d%Y')
@@ -52,12 +53,18 @@ def increment(regex, inc):
 
     episode = item['episode'] + inc
     entry = {'episode': episode}
+    if inc >= 1:
+        procedure = 'Incrementing'
+        procedure_color = 'green'
+    else:
+        procedure = 'Decrementing'
+        procedure_color = 'red'
 
     template = {
-        'title': colorize(item['title'], 'yellow', 'bold'),
-        'episode': colorize(str(episode), 'red' if inc < 1 else 'green'),
-        'total_episodes': colorize(item['total_episodes'], 'cyan'),
-        'procedure': colorize('Incrementing', 'green') if inc >= 1 else colorize('Decrementing', 'red')
+        'title': color.colorize(item['title'], 'yellow', 'bold'),
+        'episode': color.colorize(episode, 'red' if inc < 1 else 'green'),
+        'total_episodes': color.colorize(item['total_episodes'], 'cyan'),
+        'procedure': color.colorize(procedure, procedure_color)
     }
 
     print(('{procedure} progress for '
@@ -82,44 +89,51 @@ def increment(regex, inc):
 def find(regex, filtering='all'):
     items = mal.find(regex)
     if len(items) == 0:
-        print(colorize("No matches in list.", 'red', 'bold'))
+        print(color.colorize("No matches in list 😢", 'red', 'bold'))
         return
 
     if filtering != 'all':
         items = [x for x in items if x['status_name'] == filtering]
 
-    n_items = colorize(str(len(items)), 'cyan', 'underline')
+    n_items = color.colorize(str(len(items)), 'cyan', 'underline')
     print("Matched {} items:".format(n_items))
 
     sorted_items = sorted(items, key=itemgetter('status'), reverse=True)
     for index, item in enumerate(sorted_items):
-        if index == 0:
-            padding = 3
-        else:
-            padding = int(math.log10(index)) + 3
-        template = {
-            'index': index + 1,
-            'title': colorize(item['title'], 'red', 'bold'),
-            'padding': ' ' * padding,
-            'status': mal.status_names[item['status']].capitalize(),
-            'remaining': colorize(
-                '{episode}/{total_episodes}'.format_map(item),
-                'blue' if item['episode'] < item['total_episodes']
-                       else 'green',
-                'bold'),
-            'score': score_color(item['score']),
-            'rewatching': (colorize('#in-rewatching-{}'.format(item['rewatching']), 'yellow', 'bold')
-                           if item['rewatching'] else '')
-        }
+        anime_pretty_print(index, item)
 
-        print("{index}: {title}".format_map(template))
-        print("{padding}{status} at {remaining} episodes "
-              "with score {score} {rewatching}".format_map(template))
-        print()
+
+def anime_pretty_print(index, item):
+    if index == 0:
+        padding = 3
+    else:
+        padding = int(math.log10(index)) + 3
+
+    remaining_color = ('blue' if item['episode'] < item['total_episodes']
+                       else 'green')
+    remaining = '{episode}/{total_episodes}'.format_map(item)
+    in_rewatching = ('#in-rewatching-{}'.format(item['rewatching'])
+                     if item['rewatching'] else '')
+    template = {
+        'index': index + 1,
+        'title': color.colorize(item['title'], 'red', 'bold'),
+        'padding': ' ' * padding,
+        'status': mal.status_names[item['status']].capitalize(),
+        'remaining': color.colorize(remaining, remaining_color, 'bold'),
+        'score': color.score_color(item['score']),
+        'rewatching': (color.colorize(in_rewatching, 'yellow', 'bold'))
+    }
+
+    print("{index}: {title}".format_map(template))
+    print("{padding}{status} at {remaining} episodes "
+          "with score {score} {rewatching}".format_map(template))
+    print()
 
 
 def main():
     global mal
+    if not sys.stdout.isatty():
+        color.COLORED = False
     config = login.get_credentials()
     mal = MyAnimeList(config)
 
