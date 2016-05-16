@@ -11,10 +11,15 @@ import os
 from configparser import ConfigParser
 from getpass import getpass
 from mal.api import MyAnimeList
+from mal import color
 
 DEFAULT_FILE = '~/.myanimelist.init'
 DEFAULT_SECTION = 'mal'
 DEFAULT_PATH = os.path.expanduser(DEFAULT_FILE)
+
+LOGIN_HEADER = color.colorize("-- MAL login", 'cyan')
+SUCCESSFUL = color.colorize(':: valid credentials!', 'green')
+INVALID = color.colorize(':: invalid credentials! try again', 'red')
 
 
 def get_credentials():
@@ -27,7 +32,7 @@ def get_credentials():
 
 
 def create_credentials():
-    print("-- MAL login")
+    print(LOGIN_HEADER)
     config = ConfigParser()
     with open(DEFAULT_PATH, 'w') as cfg:
         config.add_section(DEFAULT_SECTION)
@@ -35,8 +40,8 @@ def create_credentials():
         config.set(DEFAULT_SECTION, 'password',  getpass())
         if MyAnimeList.login(config['mal']):
             config.write(cfg)
-            print('-- valid credentials! saved in {}'.format(DEFAULT_PATH))
+            print(SUCCESSFUL, 'saved in {}'.format(DEFAULT_PATH))
         else:
-            print(':: invalid credentials! try again')
+            print(INVALID)
             config = create_credentials()
     return config
