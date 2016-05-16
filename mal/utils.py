@@ -13,14 +13,14 @@ import mal
 
 def usage():
     usage_info = [
-        (("Usage: mal [inc | dec] anime-by-regex\n"
-          "       mal [watching | plan to watch | on hold | completed | rewatching]\n"
+        (("Usage: mal [inc/+1 | dec/-1] anime-by-regex\n"
+          "       mal [watching | plan to watch | ... | rewatching]\n"
           "       mal [list | all]\n"
           "       mal anime-by-regex\n")),
         (("Ex. for increment +1:\n\n\t"
-          "$ mal inc 'samurai champloo'\n")),
+          "$ mal +1 'samurai champloo'\n")),
         (("Ex. for decrement -1:\n\n\t"
-          "$ mal dec 'samurai champloo'\n")),
+          "$ mal -1 'samurai champloo'\n")),
         (("Ex. filtering for section:\n\n\t"
           "$ mal watching\n")),
         (("Ex. search return all anime whose start with s: \n\n\t"
