@@ -9,6 +9,7 @@ mal -- MyAnimeList Command Line Interface
 
 - Python 3.0+
 - [requests](http://docs.python-requests.org/en/latest/index.html)
+- pypandoc (only for developing & PyPI submission)
 
 ## Installation
 
@@ -36,7 +37,7 @@ Why save in plain text? Because the bad design of MAL API, maybe we can change t
 
 * `mal login`
 
-![login](docs/login.png)
+![login]( https://i.imgur.com/2boHCTq.png)
 
 ## Functionalities:
 
@@ -49,7 +50,7 @@ Why save in plain text? Because the bad design of MAL API, maybe we can change t
 ## Search in your anime list 
 * `mal anime-by-regex`
 
-![search](docs/search.png)
+![search]( https://i.imgur.com/B8QNHzB.png)
 
 ## Search current anime in the sublists:
 
@@ -59,7 +60,7 @@ Why save in plain text? Because the bad design of MAL API, maybe we can change t
 * `mal on hold`
 * `mal dropped`
 
-![filtering](docs/filter.png)
+![filtering](https://i.imgur.com/CP2NUF9.png)
 
 ## Increment/Decrement
 - Increment/Decrement the number of episodes watched with `mal [inc | dec] [regex]` (you can swap the order too!). If there are multiple matches, it prompts you to select which one. If incrementing from `0`, it sets the anime status to "watching" and sets the start date to today. If incrementing to the total episode count, it sets the anime status to "completed" and sets the end date to today.
@@ -75,7 +76,7 @@ Why save in plain text? Because the bad design of MAL API, maybe we can change t
   `mal -1 anime-regex dec`
 
 
-![inc-dec](docs/inc-dec.png)
+![inc-dec](https://i.imgur.com/9ZF17Lh.png)
 
 
 # List all animes:
