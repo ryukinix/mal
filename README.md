@@ -91,8 +91,8 @@ Why save in plain text? Because the bad design of MAL API, maybe we can change t
 * Decrement:
     - `mal dec anime-regex`
     - `mal anime-regex dec`
-    - `mal -1 anime-regex dec`
-    - `mal -1 anime-regex dec`
+    - `mal -1 anime-regex`
+    - `mal -1 anime-regex`
 
 
 ![inc-dec](https://i.imgur.com/9ZF17Lh.png)
