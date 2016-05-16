@@ -25,7 +25,7 @@ Download the package using `git clone git@github.com:ryukinix/mal.git` or as `zi
 The program need your credentials to access your list. In the first call, the program will ask your `username/password` and SAVE IN PLAIN TEXT on the default_path (generally `~/.myanimelist.ini`):
 
 
-```init
+```ini
 [mal]
 username = your_username
 password = your_password
