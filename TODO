@@ -25,6 +25,7 @@
    ☐ v0.1.3
      ✔ Disable colors when sys.stdout.istty() is False @done (16-05-16 03:13)
      ☐ Exception Handling
+     ☐ Validate login
 
 
 # Features requests:
@@ -32,6 +33,8 @@
  ✔ Search by Regex @done (16-05-16 01:41)
  ✔ Filtering by Sublist (e.g.: watching) @done (16-05-16 01:41)
  ✔ Disable colors when sys.stdout.istty() is False @done (16-05-16 03:13)
+ ☐ Validate login in instance of MyAnimeList
+ ☐ Validate login before saving in create_credentials!
  ☐ Review implementation of isomorphic increment/decrement (very creep implementation)
  ☐ Exception Handling (connection & communication)
  ☐ Score any anime of the list
@@ -40,4 +43,5 @@
  ☐ Options (on commandline or configfile) to disable colors
  ☐ Create a set of tests, covering the common usage 
  ☐ Integrate with TravisCI or other service of continuous integration (e.g.: shippable)
- ☐ Allow in some way a service of coverage
+ ☐ Allow in some way a service of coverage (need tests done)
+ ☐ Use properly a command line lib, like `argparse`
