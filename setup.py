@@ -41,7 +41,11 @@ setup(
         "Topic :: Games/Entertainment",
         "Topic :: Utilities",
         "Operating System :: Unix",
-        "Programming Language :: Python :: 3 :: Only",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.2",
+        "Programming Language :: Python :: 3.3",
+        "Programming Language :: Python :: 3.4",
+        "Programming Language :: Python :: 3.5",
         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
     ],
     # Get strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
@@ -53,9 +57,8 @@ setup(
                                                   v=mal.__version__),
     zip_safe=False,
     license='GPL',
-    packages=find_packages(exclude=['ez_setup', 'examples', 
+    packages=find_packages(exclude=['ez_setup', 'examples',
                                     'tests', 'docs', '__pycache__']),
-    include_package_data=True,
     platforms='unix',
     install_requires=[
         x.strip() for x in open('requirements.txt').readlines()
