@@ -19,7 +19,7 @@ mal -- MyAnimeList Command Line Interface
 
 ## Installation
 
-* `pip install mal --user` or `sudo pip install mal`
+* `sudo pip install mal`
 
 
 ### Manual Installation
@@ -82,15 +82,17 @@ Why save in plain text? Because the bad design of MAL API, maybe we can change t
 ## Increment/Decrement
 - Increment/Decrement the number of episodes watched with `mal [inc | dec] [regex]` (you can swap the order too!). If there are multiple matches, it prompts you to select which one. If incrementing from `0`, it sets the anime status to "watching" and sets the start date to today. If incrementing to the total episode count, it sets the anime status to "completed" and sets the end date to today.
 
-* `mal inc anime-regex` 
-  `mal anime-regex inc`
-  `mal +1 anime-regex`
-  `mal anime-regex +1`
+* Increment:
+    - `mal inc anime-regex` 
+    - `mal anime-regex inc`
+    - `mal +1 anime-regex`
+    - `mal anime-regex +1`
 
-* `mal dec anime-regex`
-  `mal anime-regex dec`
-  `mal -1 anime-regex dec`
-  `mal -1 anime-regex dec`
+* Decrement:
+    - `mal dec anime-regex`
+    - `mal anime-regex dec`
+    - `mal -1 anime-regex dec`
+    - `mal -1 anime-regex dec`
 
 
 ![inc-dec](https://i.imgur.com/9ZF17Lh.png)
