@@ -8,6 +8,8 @@ DEPLOY = sdist upload --repository pypi
 REGISTER = register --repository pypi
 TRASH = build/ dist/ *.egg-info
 CHECK = check --metadata --restructuredtext --strict
+CLEAN = clean
+UNINSTALL = --uninstall
 
 all: install
 	 clean
@@ -64,4 +66,7 @@ clean:
 	@echo "+===============+"
 	@echo "|  CLEAN BUILD  |"
 	@echo "+===============+"
+	$(PYTHON) $(TARGET) $(CLEAN)
+	$(PYTHON) $(TARGET) $(DEVELOP) $(UNINSTALL)
+	find . -name __pycache__ | xargs rm -rfv;
 	rm -rf -v $(TRASH)
