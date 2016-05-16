@@ -21,7 +21,6 @@ from mal import login
 from mal import color
 
 signal.signal(signal.SIGINT, lambda x, y: killed())
-today = datetime.date.today().strftime('%m%d%Y')
 
 
 def isomorphic_increment(aliases, arguments):
@@ -43,11 +42,9 @@ def increment(regex, inc):
             print('{index}: {title}'.format_map(locals()))
         index = int(input('Which one? '))
         item = items[index]
-
     elif len(items) == 1:
         item = items[0]
-
-    if not item:
+    else:
         print("No matches in list 😢")
         return
 
@@ -79,7 +76,7 @@ def increment(regex, inc):
             entry['score'] = score
     elif episode == 1:
         entry['status'] = MyAnimeList.status_codes['watching']
-        entry['date_start'] = today
+        entry['date_start'] = datetime.date.today().strftime('%m%d%Y')
 
     response = mal.update(item['id'], entry)
     if response != 200:
