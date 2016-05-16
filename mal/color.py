@@ -30,11 +30,11 @@ style_map = {
 
 
 def colorize(printable, color_selected, style_selected='normal'):
+    if not COLORED:  # disable color
+        return printable
     style = style_map[style_selected]
     color = color_map[color_selected].format(style=style)
     reset = color_map['reset']
-    if not COLORED: # disable color
-        color = color_map['reset']
     return '{color}{printable}{reset}'.format_map(locals())
 
 
