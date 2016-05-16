@@ -3,7 +3,7 @@ INSTALL = install
 DEVELOP = develop
 TARGET = setup.py
 TEST_DEPLOY = sdist upload --repository pypitest
-REGISTER = register --repository pypitest
+TEST_REGISTER = register --repository pypitest
 DEPLOY = sdist upload --repository pypi
 REGISTER = register --repository pypi
 TRASH = build/ dist/ *.egg-info
@@ -36,7 +36,7 @@ test-register:
 	@echo "+===============+"
 	@echo "| TEST-REGISTER |"
 	@echo "+===============+"
-	$(PYTHON) $(TARGET) $(REGISTER) 
+	$(PYTHON) $(TARGET) $(TEST_REGISTER) 
 
 test-deploy:
 	@make check
