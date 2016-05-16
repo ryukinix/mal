@@ -12,6 +12,13 @@ CHECK = check --metadata --restructuredtext --strict
 all: install
 	 clean
 
+check:
+	@echo "+===============+"
+	@echo "|     CHECK     |"
+	@echo "+===============+"
+	$(PYTHON) $(TARGET) $(CHECK)
+	@echo "ok!"
+
 install:
 	@echo "+===============+"
 	@echo "|    INSTALL    |"
@@ -25,31 +32,29 @@ develop:
 	$(PYTHON) $(TARGET) $(DEVELOP)
 
 test-register:
+	@make check
 	@echo "+===============+"
 	@echo "| TEST-REGISTER |"
 	@echo "+===============+"
 	$(PYTHON) $(TARGET) $(REGISTER) 
 
 test-deploy:
+	@make check
 	@echo "+===============+"
 	@echo "| TEST-DEPLOY   |"
 	@echo "+===============+"
 	$(PYTHON) $(TARGET) $(TEST_DEPLOY) 
 
 deploy:
+	@make check
 	@echo "+===============+"
 	@echo "|   DEPLOY      |"
 	@echo "+===============+"
 	$(PYTHON) $(TARGET) $(DEPLOY)
 
-check:
-	@echo "+===============+"
-	@echo "|     CHECK     |"
-	@echo "+===============+"
-	$(PYTHON) $(TARGET) $(CHECK)
-	@echo "ok!"
 
 register:
+	@make check
 	@echo "+===============+"
 	@echo "|   REGISTER    |"
 	@echo "+===============+"
