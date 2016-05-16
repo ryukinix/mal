@@ -64,8 +64,8 @@ def increment(regex, inc):
         'procedure': color.colorize(procedure, procedure_color)
     }
 
-    print(('{procedure} progress for '
-           '{title} to {episode}/{total_episodes}'.format_map(template)))  # noqa
+    print(('{procedure} progress for {title} to '
+           '{episode}/{total_episodes}'.format_map(template)))
 
     if item['total_episodes'] == episode:
         entry['status'] = MyAnimeList.status_codes['completed']
@@ -97,34 +97,33 @@ def find(regex, filtering='all'):
 
     sorted_items = sorted(items, key=itemgetter('status'), reverse=True)
     for index, item in enumerate(sorted_items):
-        anime_pretty_print(index, item)
+        anime_pretty_print(index + 1, item)
 
 
 def anime_pretty_print(index, item):
-    if index == 0:
-        padding = 3
-    else:
-        padding = int(math.log10(index)) + 3
-
+    padding = int(math.log10(index)) + 3
     remaining_color = ('blue' if item['episode'] < item['total_episodes']
                        else 'green')
     remaining = '{episode}/{total_episodes}'.format_map(item)
-    in_rewatching = ('#in-rewatching-{}'.format(item['rewatching'])
+    in_rewatching = ('#in-rewatching-{rewatching}'.format_map(item)
                      if item['rewatching'] else '')
     template = {
-        'index': index + 1,
-        'title': color.colorize(item['title'], 'red', 'bold'),
+        'index': index,
         'padding': ' ' * padding,
         'status': mal.status_names[item['status']].capitalize(),
+        'title': color.colorize(item['title'], 'red', 'bold'),
         'remaining': color.colorize(remaining, remaining_color, 'bold'),
         'score': color.score_color(item['score']),
         'rewatching': (color.colorize(in_rewatching, 'yellow', 'bold'))
     }
 
-    print("{index}: {title}".format_map(template))
-    print("{padding}{status} at {remaining} episodes "
-          "with score {score} {rewatching}".format_map(template))
-    print()
+    message_lines = [
+        "{index}: {title}".format_map(template),
+        ("{padding}{status} at {remaining} episodes "
+         "with score {score} {rewatching}\n".format_map(template)),
+    ]
+
+    print('\n'.join(message_lines))
 
 
 def main():
