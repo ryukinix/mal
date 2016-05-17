@@ -36,13 +36,18 @@ For develop you can try:
 - `sudo python setup.py develop`
 - `sudo make develop` (alternative)
 
-In develop mode an EGG file is linked with the actual source, that way you can try modifications and get instant feedbacks & at execution
+In develop mode an EGG file is linked with the actual source, that way you can try modifications and get instant feedbacks in each execution
 
 
 ## Usage
 
 ## First Steps
 
+## Login
+
+* `mal login`
+
+![login](https://i.imgur.com/5PpIB8K.gif)
 The program need your credentials to access your list. In the first call, the program will ask your `username/password` and SAVE IN PLAIN TEXT on the default_path (generally `~/.myanimelist.ini`):
 
 
@@ -53,16 +58,15 @@ password = your_password
 
 ```
 
-Why save in plain text? Because the bad design of MAL API, maybe we can change this in future, but for now you can blame her. You also can call directly this function:
+Why save in plain text? Because the bad design of MAL API, maybe we can change this in future, but for now you can blame her.
 
-* `mal login`
+Now you can try any of the functionalties provide in the sequence above.
 
-![login]( https://i.imgur.com/2boHCTq.png)
 
 ## Functionalities:
 
 * Search in your anime list
-* Search current anime in the sublist (e.g: watching)
+* List anime in the sublist (e.g: watching)
 * Increment/Decrement anime watching
 * Score in final watching
 * Fetch all anime list
@@ -80,7 +84,7 @@ Why save in plain text? Because the bad design of MAL API, maybe we can change t
 * `mal on hold`
 * `mal dropped`
 
-![filtering](https://i.imgur.com/CP2NUF9.png)
+![filtering](https://i.imgur.com/X1K9EyV.gif)
 
 ## Increment/Decrement
 - Increment/Decrement the number of episodes watched with `mal [inc | dec] [regex]` (you can swap the order too!). If there are multiple matches, it prompts you to select which one. If incrementing from `0`, it sets the anime status to "watching" and sets the start date to today. If incrementing to the total episode count, it sets the anime status to "completed" and sets the end date to today.
@@ -98,14 +102,16 @@ Why save in plain text? Because the bad design of MAL API, maybe we can change t
     - `mal -1 anime-regex`
 
 
-![inc-dec](https://i.imgur.com/9ZF17Lh.png)
+![inc-dec](https://i.imgur.com/5b1RCX6.gif)
 
 
-# List all animes:
+# List all animes or any by regex
 
 * `mal all`
 * `mal list`
 * `mal .+` (is regex right? :D)
+
+![all-regex](https://i.imgur.com/KofvxNY.gif)
 
 # License
 
