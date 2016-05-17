@@ -40,7 +40,7 @@ def usage():
 
 
 def killed():
-    print("\nD: somebody killed me...")
+    print(color.colorize("\nD: somebody killed me...", 'red'))
     sys.exit(1)
 
 
