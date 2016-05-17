@@ -18,7 +18,7 @@ mal -- MyAnimeList Command Line Interface
 
 ## Requirements
 
-- Python 3.0+
+- Python 3.2+
 - [pypandoc](https://pypi.python.org/pypi/pypandoc/) (only for developing & PyPI submission)
 - [requests](http://docs.python-requests.org/en/latest/index.html)
 
