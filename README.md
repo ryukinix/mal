@@ -6,6 +6,7 @@ mal -- MyAnimeList Command Line Interface
 [![PyPi License](https://img.shields.io/pypi/l/mal.svg)](https://pypi.python.org/pypi/mal/)
 [![PyPI pyversions](https://img.shields.io/pypi/pyversions/mal.svg)](https://pypi.python.org/pypi/mal/)
 [![PyPI status](https://img.shields.io/pypi/status/mal.svg)](https://pypi.python.org/pypi/mal/)
+[![HitCount](https://hitt.herokuapp.com/ryukinix/mal.svg)](https://github.com/ryukinix/mal)
 
 ## Description
 
