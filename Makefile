@@ -26,7 +26,7 @@ clean:
 	@echo "|  CLEAN BUILD  |"
 	@echo "+===============+"
 	$(PYTHON) $(TARGET) $(CLEAN)
-	find . -name __pycache__ | xargs rm -rfv;
+	find . -name __pycache__ -or -name *.pyc| xargs rm -rfv;
 	rm -rfv $(BUILD)
 
 install:
