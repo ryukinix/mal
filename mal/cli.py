@@ -10,9 +10,9 @@
 # stdlib
 import sys
 import signal
-import datetime
 import math
 from operator import itemgetter
+from datetime import date
 
 # self-package
 from mal.api import MyAnimeList
@@ -51,14 +51,14 @@ def select_item(items):
 def start_end(entry, episode, total_episodes):
     if total_episodes == episode:
         entry['status'] = MyAnimeList.status_codes['completed']
-        entry['date_finish'] = today
+        entry['date_finish'] = date.today().strftime('%m%d%Y')
         print(color.colorize('Series completed!', 'green'))
         score = int(input('Enter a score (or 0 for no score): '))
         if score != 0:
             entry['score'] = score
     elif episode == 1:
         entry['status'] = MyAnimeList.status_codes['watching']
-        entry['date_start'] = datetime.date.today().strftime('%m%d%Y')
+        entry['date_start'] = date.today().strftime('%m%d%Y')
 
     return entry
 
