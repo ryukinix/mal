@@ -23,21 +23,18 @@ from mal import color
 signal.signal(signal.SIGINT, lambda x, y: killed())
 
 
+# creep mode activated
+# '$ mal +1 anime' <-> '$ mal anime +1'
+# where +1 is a alias inside of set aliases.
 def isomorphic_increment(aliases, arguments):
     command = (aliases & set(arguments)).pop()
     return arguments[arguments.index(command) - len(arguments[1:])]
 
 
-def increment(regex, inc):
-    items = mal.find(regex)
+def select_item(items):
     item = None
-
-    for index, i in reversed(list(enumerate(items))):
-        if i['status'] == MyAnimeList.status_codes['completed']:
-            del items[index]
-
     if len(items) > 1:
-        print('Multiple results:')
+        print(color.colorize('Multiple results:', 'cyan'))
         for index, title in enumerate(map(itemgetter('title'), items)):
             print('{index}: {title}'.format_map(locals()))
         index = int(input('Which one? '))
@@ -45,32 +42,17 @@ def increment(regex, inc):
     elif len(items) == 1:
         item = items[0]
     else:
-        print("No matches in list 😢")
-        return
+        print(color.colorize("No matches in list 😢", 'red'))
+        sys.exit(1)
 
-    episode = item['episode'] + inc
-    entry = {'episode': episode}
-    if inc >= 1:
-        procedure = 'Incrementing'
-        procedure_color = 'green'
-    else:
-        procedure = 'Decrementing'
-        procedure_color = 'red'
+    return item
 
-    template = {
-        'title': color.colorize(item['title'], 'yellow', 'bold'),
-        'episode': color.colorize(episode, 'red' if inc < 1 else 'green'),
-        'total_episodes': color.colorize(item['total_episodes'], 'cyan'),
-        'procedure': color.colorize(procedure, procedure_color)
-    }
 
-    print(('{procedure} progress for {title} to '
-           '{episode}/{total_episodes}'.format_map(template)))
-
-    if item['total_episodes'] == episode:
+def start_end(entry, episode, total_episodes):
+    if total_episodes == episode:
         entry['status'] = MyAnimeList.status_codes['completed']
         entry['date_finish'] = today
-        print('Series completed!')
+        print(color.colorize('Series completed!', 'green'))
         score = int(input('Enter a score (or 0 for no score): '))
         if score != 0:
             entry['score'] = score
@@ -78,15 +60,44 @@ def increment(regex, inc):
         entry['status'] = MyAnimeList.status_codes['watching']
         entry['date_start'] = datetime.date.today().strftime('%m%d%Y')
 
+    return entry
+
+
+def remove_completed(items):
+    # remove animes whose is already completed
+    # preserves (rewatching)
+    for index, status in enumerate(map(itemgetter('status_name'), items)):
+        if status == 'completed':
+            del items[index]
+
+    return items
+
+
+def progress_update(mal, regex, inc):
+    items = remove_completed(mal.find(regex))
+    item = select_item(items)
+    episode = item['episode'] + inc
+    entry = dict(episode=episode)
+    template = {
+        'title': color.colorize(item['title'], 'yellow', 'bold'),
+        'episode': color.colorize(episode, 'red' if inc < 1 else 'green'),
+        'total_episodes': color.colorize(item['total_episodes'], 'cyan'),
+        'procedure': color.procedure_color(inc)
+    }
+
+    print(('{procedure} progress for {title} to '
+           '{episode}/{total_episodes}'.format_map(template)))
+
+    entry = start_end(entry, episode, item['total_episodes'])
     response = mal.update(item['id'], entry)
     if response != 200:
-        print("Failed with HTTP " + str(response))
+        print(color.colorize("Failed with HTTP: {}".format(response), 'red'))
 
 
-def find(regex, filtering='all'):
+def find(mal, regex, filtering='all'):
     items = mal.find(regex)
     if len(items) == 0:
-        print(color.colorize("No matches in list 😢", 'red', 'bold'))
+        print(color.colorize("No matches in list 😢", 'red'))
         return
 
     if filtering != 'all':
@@ -97,10 +108,10 @@ def find(regex, filtering='all'):
 
     sorted_items = sorted(items, key=itemgetter('status'), reverse=True)
     for index, item in enumerate(sorted_items):
-        anime_pretty_print(index + 1, item)
+        anime_pprint(index + 1, item)
 
 
-def anime_pretty_print(index, item):
+def anime_pprint(index, item):
     padding = int(math.log10(index)) + 3
     remaining_color = ('blue' if item['episode'] < item['total_episodes']
                        else 'green')
@@ -110,7 +121,7 @@ def anime_pretty_print(index, item):
     template = {
         'index': index,
         'padding': ' ' * padding,
-        'status': mal.status_names[item['status']].capitalize(),
+        'status': MyAnimeList.status_names[item['status']].capitalize(),
         'title': color.colorize(item['title'], 'red', 'bold'),
         'remaining': color.colorize(remaining, remaining_color, 'bold'),
         'score': color.score_color(item['score']),
@@ -126,13 +137,40 @@ def anime_pretty_print(index, item):
     print('\n'.join(message_lines))
 
 
+# parsing -> '$ mal on hold' -> '# mal "on hold"''
+def filtering_splitted(args):
+    subcommand_splitted = ' '.join(map(str.lower, args))
+    if subcommand_splitted in MyAnimeList.status_names.values():
+        args = [subcommand_splitted]
+
+    return args
+
+
+def commands(mal, args):
+    if 3 > len(args) > 1:
+        if any(x in args for x in ('inc', '+1')):
+            query = isomorphic_increment({'inc', '+1'}, args)
+            progress_update(mal, query, 1)
+        elif any(x in args for x in ('dec', '-1')):
+            query = isomorphic_increment({'dec', '-1'}, args)
+            progress_update(mal, query, -1)
+        else:
+            print('subcommand not supported. 😢')
+    elif len(args) == 1:
+        if args[0].lower() in mal.status_names.values():
+            find(mal, '.+', args[0].lower())
+        elif args[0] in ('all', 'list'):
+            find(mal, '.+')
+        else:
+            find(mal, args[0])
+
+
 def main():
-    global mal
     if not sys.stdout.isatty():
         color.COLORED = False
     args = sys.argv[1:]
 
-    if not any(args):
+    if not any(args) or any(x in args for x in ('-h', '--help', 'help')):
         usage()
 
     if 'login' in args:
@@ -146,25 +184,8 @@ def main():
         print(color.colorize('Tip: Try "mal login" again :D', 'white', 'bold'))
         sys.exit(1)
 
-    subcommand_splitted = ' '.join(map(str.lower, args))
-    if subcommand_splitted in mal.status_names.values():
-        args = [subcommand_splitted]
-    if 3 > len(args) > 1:
-        if any(x in args for x in ('inc', '+1')):
-            query = isomorphic_increment({'inc', '+1'}, args)
-            increment(query, 1)
-        elif any(x in args for x in ('dec', '-1')):
-            query = isomorphic_increment({'dec', '-1'}, args)
-            increment(query, -1)
-        else:
-            print('subcommand not supported. 😢')
-    elif len(args) == 1:
-        if args[0].lower() in mal.status_names.values():
-            find('.+', args[0].lower())
-        elif args[0] in ('all', 'list'):
-            find('.+')
-        else:
-            find(args[0])
+    args = filtering_splitted(args)
+    commands(mal, args)
 
 
 if __name__ == '__main__':

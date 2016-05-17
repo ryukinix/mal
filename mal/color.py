@@ -51,3 +51,13 @@ def score_color(score):
         return colorize(score, 'red', 'bold')
     else:
         return colorize('undefined', 'pink', 'bold')
+
+
+def procedure_color(increment):
+    if increment >= 1:
+        procedure = 'Incrementing'
+        procedure_color = 'green'
+    else:
+        procedure = 'Decrementing'
+        procedure_color = 'red'
+    return colorize(procedure, procedure_color)
