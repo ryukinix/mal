@@ -37,7 +37,7 @@ def create_credentials():
     config.add_section(DEFAULT_SECTION)
     config.set(DEFAULT_SECTION, 'username', input('Username: '))
     config.set(DEFAULT_SECTION, 'password',  getpass())
-    if MyAnimeList.login(config['mal']): 
+    if MyAnimeList.login(config['mal']):
         with open(DEFAULT_PATH, 'w') as cfg:
             config.write(cfg)
             print(SUCCESSFUL, 'saved in {}'.format(DEFAULT_PATH))

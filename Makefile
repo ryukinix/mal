@@ -79,32 +79,34 @@ register:
 	$(PYTHON) $(TARGET) $(REGISTER)
 
 help:
-	@echo "Makefile util for build MAL"
-	@echo
+	@echo "+=============================================+"
+	@echo "|                H  E  L  P                   |"
+	@echo "+=============================================+"
 	@echo "----------------------------------------------"
 	@echo "make check:"
 	@echo "	 check the build pass on PyPI"
+	@echo 
 	@echo "make clean:"
 	@echo "	 clean the build (build/ __pyache__, sdist/)"
-	@echo ""
+	@echo 
 	@echo "make install:"
 	@echo "	 install the package in your system"
-	@echo ""
+	@echo 
 	@echo "make develop:"
 	@echo "	 install in develop mode (symlink)"
-	@echo ""
+	@echo 
 	@echo "make develop-uninstall:"
 	@echo "	 uninstall develop files and clean build"
-	@echo ""
+	@echo 
 	@echo "make test-register:"
 	@echo "	 test register using the testPyPI server "
-	@echo ""
+	@echo 
 	@echo "test-deploy:"
 	@echo "	 test deploy using the testPyPI server"
-	@echo ""
+	@echo 
 	@echo "deploy:"
 	@echo "	 deploy to PyPY"
-	@echo ""
+	@echo 
 	@echo "register:"
 	@echo "	 register to PyPI"
 
