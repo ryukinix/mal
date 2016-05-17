@@ -18,3 +18,4 @@
  ☐ Allow in some way a service of coverage (need tests done)
  ☐ Use properly a command line lib, like `argparse`
  ☐ Put properly docstrings in all functions
+ ☐ Write a spinner animation in the terminal when something is fetched
