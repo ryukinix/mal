@@ -9,8 +9,9 @@
 
 import re
 import requests
+
 from xml.etree import cElementTree as ET
-from mal.utils import checked_connection, spinnered
+from mal.utils import checked_connection, checked_regex, animated
 
 
 class MyAnimeList(object):
@@ -34,7 +35,7 @@ class MyAnimeList(object):
         self.username = config['username']
         self.password = config['password']
 
-    @spinnered
+    @animated
     @checked_connection
     def validate_login(self):
         r = requests.get(
@@ -54,7 +55,7 @@ class MyAnimeList(object):
 
         return mal
 
-    @spinnered
+    @animated
     @checked_connection
     def search(self, query):
         payload = dict(q=query)
@@ -72,7 +73,7 @@ class MyAnimeList(object):
         elements = ET.fromstring(r.text)
         return [dict((attr.tag, attr.text) for attr in el) for el in elements]
 
-    @spinnered
+    @animated
     @checked_connection
     def list(self, status='all', type='anime'):
         username = self.username
@@ -108,15 +109,15 @@ class MyAnimeList(object):
 
         return result
 
-    @spinnered
+    @checked_regex
     def find(self, regex, status='all'):
         result = []
-        for key, val in self.list(status).items():
-            if re.search(regex, val['title'], re.I):
-                result.append(val)
+        for value in self.list(status).values():
+            if re.search(regex, value['title'], re.I):
+                result.append(value)
         return result
 
-    @spinnered
+    @animated
     @checked_connection
     def update(self, item_id, entry):
         tree = ET.Element('entry')

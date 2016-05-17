@@ -15,9 +15,34 @@ import threading
 from math import sin
 from itertools import cycle
 from functools import wraps
+from sre_constants import error as BadRegexError
 
 from requests.exceptions import ConnectionError
 from mal import color
+
+
+class Unbuffered(object):
+
+    def __init__(self, stream):
+        self.stream = stream
+
+    def write(self, data):
+        self.stream.write(data)
+        self.stream.flush()
+
+    def __getattr__(self, attr):
+        return getattr(self.stream, attr)
+
+
+class StopSpinner(object):
+    done = False
+    position = 0
+    message = 'loading'
+
+
+# global variables from hell
+sys.stdout = Unbuffered(sys.stdout)
+sig = StopSpinner()
 
 
 def usage():
@@ -45,8 +70,23 @@ def usage():
     sys.exit(1)
 
 
-animation_diagram = "⣾⣽⣻⢿⡿⣟⣯"
-animation_spinner = '▁▂▃▄▅▆▇▆▅▄▃▁'
+def killed():
+    message = ("\n ┑(￣Д ￣)┍ somebody seems killed me..."
+               "\nw a s  Y O U ?! ︵ヽ(`Д´)ﾉ︵﻿ ")
+    print(color.colorize(message, 'red'), file=sys.stderr)
+    os._exit(1)
+
+
+def print_error(error_name, status, reason):
+    padding = (len(error_name) + 2) * ' '
+    error = color.colorize(error_name, 'red', 'bold')
+    status = color.colorize(status, 'cyan')
+    print(('{error}: {status}\n'
+           '{padding}{reason} ¯\_(ツ)_/¯'.format_map(locals())),
+          file=sys.stderr)
+
+
+# THIS IS A LOL ZONE
 
 #    /\O    |    _O    |      O
 #     /\/   |   //|_   |     /_
@@ -54,67 +94,51 @@ animation_spinner = '▁▂▃▄▅▆▇▆▅▄▃▁'
 #   /  \    |   /|     |    / |
 # LOL  LOL  |   LLOL   |  LOLLOL
 
+animation_diagram = "⣾⣽⣻⢿⡿⣟⣯"
+animation_spinner = '▁▂▃▄▅▆▇▆▅▄▃▁'
+
 
 def spinner(control):
-    animation = ''.join(x * 2 for x in animation_spinner)
+    animation = ''.join(x * 5 for x in animation_diagram)
     if not sys.stdout.isatty():  # not send to pipe/redirection
         return
-    anim = zip(cycle(animation), cycle(reversed(animation)))
+    anim = zip(cycle(animation), cycle(animation_spinner))
     for n, start_end_anim in enumerate(anim):
         start, end = start_end_anim
         padding = '█' * int(20 * abs(sin(0.05 * (n + control.position))))
         padding_colored = color.colorize(padding, 'cyan')
-        banner = color.colorize(start + " loading data " + end, 'cyan')
-        message = '\r' + padding_colored + banner
+        banner = '{} {} {}'.format(start, control.message, end)
+        banner_colored = color.colorize(banner, 'cyan')
+        message = '\r' + padding_colored + banner_colored
         sys.stdout.write(message)
-        time.sleep(0.03)
+        time.sleep(0.05)
         sys.stdout.write('\r' + len(message) * ' ')
         sys.stdout.write(2 * len(message) * "\010")
-        sys.stdout.flush()
         if control.done:
             control.position = n
             break
     sys.stdout.write(len(message) * ' ')
     sys.stdout.write('\r' + 2 * len(message) * "\010")
-    sys.stdout.flush()
 
-
-class Unbuffered(object):
-
-    def __init__(self, stream):
-        self.stream = stream
-
-    def write(self, data):
-        self.stream.write(data)
-        self.stream.flush()
-
-    def __getattr__(self, attr):
-        return getattr(self.stream, attr)
-
-
-sys.stdout = Unbuffered(sys.stdout)
-
-
-class StopSpinner:
-    done = False
-    position = 0
-
-sig = StopSpinner()
-
-
-def killed():
-    message = ("\n ┑(￣Д ￣)┍ somebody seems killed me..."    
-               "\nw a s  Y O U ?! ︵ヽ(`Д´)ﾉ︵﻿ ")
-    print(color.colorize(message, 'red'), file=sys.stderr)
-    os._exit(1)
+# D
+#   E
+#     C
+#       O
+#         R
+#           A
+#             T
+#               O
+#                 R
+#                   S
 
 
 # deal with it
-def spinnered(func):
+def animated(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
         global last_thread
         if not wrapper.running:
+            sig.message = func.__name__
             spinner_thread = threading.Thread(target=spinner, args=(sig,))
             spinner_thread.start()
             last_thread = spinner_thread
@@ -132,27 +156,38 @@ def spinnered(func):
 
     return wrapper
 
+# END OF THE LOL ZONE
+
+
+def checked_regex(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        result = None
+        try:
+            result = func(*args, **kwargs)
+        except BadRegexError:
+            print_error('BadRegexError', 'invalid regex', 'reason: you')
+            os._exit(1)
+
+        return result
+    return wrapper
+
 
 def checked_connection(func):
-
     @wraps(func)
     def wrapper(*args, **kwargs):
         result = None
         try:
             result = func(*args, **kwargs)
         except ConnectionError as e:
+            if 'last_thread' in globals():
+                sig.done = True
+                last_thread.join()
             err = e.args[0].args
             status, reason = err[0], err[1].args[1]
             error_name = e.__class__.__name__
-            padding = (len(error_name) + 2) * ' '
-            error = color.colorize(error_name, 'red', 'bold')
-            status = color.colorize(status, 'cyan')
-            sig.done = True
-            last_thread.join()
-            print('{error}: {status}\n{padding}{reason} ¯\_(ツ)_/¯'.format_map(locals()),
-                  file=sys.stderr)
+            print_error(error_name, status, reason)
             os._exit(1)
-
         return result
 
     return wrapper
