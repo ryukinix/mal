@@ -21,9 +21,9 @@ def usage():
           "       mal [list | all]\n"
           "       mal anime-by-regex\n")),
         (("Ex. for increment +1:\n\n\t"
-          "$ mal +1 'samurai champloo'\n")),
+          "$ mal +1 lain\n")),
         (("Ex. for decrement -1:\n\n\t"
-          "$ mal -1 'samurai champloo'\n")),
+          "$ mal -1 lain\n")),
         (("Ex. filtering for section:\n\n\t"
           "$ mal watching\n")),
         (("Ex. search return all anime whose start with s: \n\n\t"
