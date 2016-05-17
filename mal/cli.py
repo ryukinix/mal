@@ -42,7 +42,7 @@ def select_item(items):
     elif len(items) == 1:
         item = items[0]
     else:
-        print(color.colorize("No matches in list 😢", 'red'))
+        print(color.colorize("No matches in list ¯\_(⊙︿⊙)_/¯", 'red'))
         sys.exit(1)
 
     return item
@@ -97,7 +97,7 @@ def progress_update(mal, regex, inc):
 def find(mal, regex, filtering='all'):
     items = mal.find(regex)
     if len(items) == 0:
-        print(color.colorize("No matches in list 😢", 'red'))
+        print(color.colorize("No matches in list ᕙ(⇀‸↼‶)ᕗ", 'red'))
         return
 
     if filtering != 'all':
@@ -155,7 +155,7 @@ def commands(mal, args):
             query = isomorphic_increment({'dec', '-1'}, args)
             progress_update(mal, query, -1)
         else:
-            print('subcommand not supported. 😢')
+            print('subcommand not supported. ᕙ(⇀‸↼‶)ᕗ')
     elif len(args) == 1:
         if args[0].lower() in mal.status_names.values():
             find(mal, '.+', args[0].lower())

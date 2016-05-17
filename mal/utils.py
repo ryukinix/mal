@@ -11,12 +11,13 @@ import sys
 import mal
 import time
 import os
-from itertools import cycle
-from requests.exceptions import ConnectionError
-from functools import wraps
-from mal import color
-from math import sin
 import threading
+from math import sin
+from itertools import cycle
+from functools import wraps
+
+from requests.exceptions import ConnectionError
+from mal import color
 
 
 def usage():
@@ -40,12 +41,18 @@ def usage():
         "Hacked by {__author__} <{__email__}> | "
         "version {__version__}".format_map(vars(mal)),
     ]
-    print('\n'.join(usage_info))
+    print('\n'.join(usage_info), file=sys.stderr)
     sys.exit(1)
 
 
 animation_diagram = "⣾⣽⣻⢿⡿⣟⣯"
 animation_spinner = '▁▂▃▄▅▆▇▆▅▄▃▁'
+
+#    /\O    |    _O    |      O
+#     /\/   |   //|_   |     /_
+#    /\     |    |     |     |\
+#   /  \    |   /|     |    / |
+# LOL  LOL  |   LLOL   |  LOLLOL
 
 
 def spinner(control):
@@ -55,7 +62,7 @@ def spinner(control):
     anim = zip(cycle(animation), cycle(reversed(animation)))
     for n, start_end_anim in enumerate(anim):
         start, end = start_end_anim
-        padding = '█' * int(20 * abs(sin(0.05 * (n + control.start))))
+        padding = '█' * int(20 * abs(sin(0.05 * (n + control.position))))
         padding_colored = color.colorize(padding, 'cyan')
         banner = color.colorize(start + " loading data " + end, 'cyan')
         message = '\r' + padding_colored + banner
@@ -65,7 +72,7 @@ def spinner(control):
         sys.stdout.write(2 * len(message) * "\010")
         sys.stdout.flush()
         if control.done:
-            control.start = n
+            control.position = n
             break
     sys.stdout.write(len(message) * ' ')
     sys.stdout.write('\r' + 2 * len(message) * "\010")
@@ -90,16 +97,19 @@ sys.stdout = Unbuffered(sys.stdout)
 
 class StopSpinner:
     done = False
-    start = 0
+    position = 0
 
 sig = StopSpinner()
 
 
 def killed():
-    print(color.colorize("\nD: somebody killed me...", 'red'))
+    message = ("\n ┑(￣Д ￣)┍ somebody seems killed me..."    
+               "\nw a s  Y O U ?! ︵ヽ(`Д´)ﾉ︵﻿ ")
+    print(color.colorize(message, 'red'), file=sys.stderr)
     os._exit(1)
 
 
+# deal with it
 def spinnered(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
@@ -139,7 +149,8 @@ def checked_connection(func):
             status = color.colorize(status, 'cyan')
             sig.done = True
             last_thread.join()
-            print('{error}: {status}\n{padding}{reason}'.format_map(locals()))
+            print('{error}: {status}\n{padding}{reason} ¯\_(ツ)_/¯'.format_map(locals()),
+                  file=sys.stderr)
             os._exit(1)
 
         return result
