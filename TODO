@@ -17,3 +17,4 @@
  ☐ Integrate with TravisCI or other service of continuous integration (e.g.: shippable)
  ☐ Allow in some way a service of coverage (need tests done)
  ☐ Use properly a command line lib, like `argparse`
+ ☐ Put properly docstrings in all functions
