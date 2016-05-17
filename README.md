@@ -48,6 +48,7 @@ In develop mode an EGG file is linked with the actual source, that way you can t
 * `mal login`
 
 ![login](https://i.imgur.com/5PpIB8K.gif)
+
 The program need your credentials to access your list. In the first call, the program will ask your `username/password` and SAVE IN PLAIN TEXT on the default_path (generally `~/.myanimelist.ini`):
 
 
