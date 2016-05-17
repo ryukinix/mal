@@ -3,7 +3,7 @@
 #
 #   Python Script
 #
-#   Copyleft © Manoel Vilela
+#   Copyright © Manoel Vilela
 #
 #
 
