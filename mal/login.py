@@ -34,14 +34,14 @@ def get_credentials():
 def create_credentials():
     print(LOGIN_HEADER)
     config = ConfigParser()
-    with open(DEFAULT_PATH, 'w') as cfg:
-        config.add_section(DEFAULT_SECTION)
-        config.set(DEFAULT_SECTION, 'username', input('Username: '))
-        config.set(DEFAULT_SECTION, 'password',  getpass())
-        if MyAnimeList.login(config['mal']):
+    config.add_section(DEFAULT_SECTION)
+    config.set(DEFAULT_SECTION, 'username', input('Username: '))
+    config.set(DEFAULT_SECTION, 'password',  getpass())
+    if MyAnimeList.login(config['mal']): 
+        with open(DEFAULT_PATH, 'w') as cfg:
             config.write(cfg)
             print(SUCCESSFUL, 'saved in {}'.format(DEFAULT_PATH))
-        else:
-            print(INVALID)
-            config = create_credentials()
+    else:
+        print(INVALID)
+        config = create_credentials()
     return config
