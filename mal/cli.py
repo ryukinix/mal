@@ -42,7 +42,7 @@ def select_item(items):
     elif len(items) == 1:
         item = items[0]
     else:
-        print(color.colorize("No matches in list ¯\_(⊙︿⊙)_/¯", 'red'))
+        print(color.colorize("No matches in list ᕙ(⇀‸↼‶)ᕗ", 'red'))
         sys.exit(1)
 
     return item
