@@ -12,7 +12,7 @@ mal -- MyAnimeList Command Line Interface
 
 ## TL;DR | Demo
 
-![demonstration](https://i.imgur.com/4HgRdZ3.gif)
+![demonstration](https://i.imgur.com/f3ShSUe.gif)
 
 ## Requirements
 
