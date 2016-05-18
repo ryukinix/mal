@@ -34,7 +34,7 @@ with open('requirements-dev.txt') as f:
 
 
 setup(
-    name='mal',
+    name=mal.__name__,
     version=mal.__version__,
     description="A command line interface to your MyAnimeList profile",
     long_description=long_description,
