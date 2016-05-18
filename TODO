@@ -11,6 +11,7 @@
  ✔ Write a spinner animation in the terminal when something is fetched @done (16-05-17 00:37) v0.1.4
  ✔ Handle exceptions about bad regex format @done (16-05-17 07:22) v0.1.4
  ✔ Integrate with TravisCI or other service of continuous integration (e.g.: shippable) @done (16-05-17 22:08)
+ ✔ Setup the configurations on the proper config directory with cross-plataform way to fix #1 @done (16-05-18 19:19)
  ☐ Review implementation of isomorphic increment/decrement (very creep implementation)
  ☐ Score any anime of the list
  ☐ Add anime to watching list by global search
