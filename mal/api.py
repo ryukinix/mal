@@ -11,7 +11,8 @@ import re
 import requests
 
 from xml.etree import cElementTree as ET
-from mal.utils import checked_connection, checked_regex, animated
+from mal.utils import checked_connection, checked_regex
+from decorating import animated
 
 
 class MyAnimeList(object):
@@ -35,8 +36,8 @@ class MyAnimeList(object):
         self.username = config['username']
         self.password = config['password']
 
-    @animated
     @checked_connection
+    @animated('- validating login -')
     def validate_login(self):
         r = requests.get(
             self.base_url + '/account/verify_credentials.xml',
@@ -55,8 +56,8 @@ class MyAnimeList(object):
 
         return mal
 
-    @animated
     @checked_connection
+    @animated('- searching in database -')
     def search(self, query):
         payload = dict(q=query)
 
@@ -73,8 +74,8 @@ class MyAnimeList(object):
         elements = ET.fromstring(r.text)
         return [dict((attr.tag, attr.text) for attr in el) for el in elements]
 
-    @animated
     @checked_connection
+    @animated('- preparing animes -')
     def list(self, status='all', type='anime'):
         username = self.username
 
@@ -110,6 +111,7 @@ class MyAnimeList(object):
         return result
 
     @checked_regex
+    @animated('- matching animes -')
     def find(self, regex, status='all'):
         result = []
         for value in self.list(status).values():
@@ -117,8 +119,8 @@ class MyAnimeList(object):
                 result.append(value)
         return result
 
-    @animated
     @checked_connection
+    @animated('- updating -')
     def update(self, item_id, entry):
         tree = ET.Element('entry')
         for key, val in entry.items():

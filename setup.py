@@ -29,10 +29,6 @@ except ImportError:
 with open('requirements.txt') as f:
     install_requires = list(map(str.strip, f.readlines()))
 
-with open('requirements-dev.txt') as f:
-    develop_requires = list(map(str.strip, f.readlines()))
-
-
 setup(
     name=mal.__name__,
     version=mal.__version__,
@@ -67,7 +63,6 @@ setup(
     platforms='unix',
     install_requires=install_requires,
     extras_require={
-        'develop': develop_requires,
         "Requires-Dist": ["pypandoc"]
     },
     entry_points={

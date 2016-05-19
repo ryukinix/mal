@@ -16,7 +16,7 @@ from mal.api import MyAnimeList
 from mal import color
 from mal import __name__ as APP_NAME
 
-# variables for proper saving 
+# variables for proper saving
 APP_FILE = 'myanimelist.ini'
 APP_DIR = user_config_dir(APP_NAME)
 APP_PATH = path.join(APP_DIR, APP_FILE)

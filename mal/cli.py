@@ -17,8 +17,8 @@ from datetime import date
 # self-package
 from mal.api import MyAnimeList
 from mal.utils import usage, killed
-from mal import login
 from mal import color
+from mal import login
 
 signal.signal(signal.SIGINT, lambda x, y: killed())
 
@@ -166,8 +166,6 @@ def commands(mal, args):
 
 
 def main():
-    if not sys.stdout.isatty():
-        color.COLORED = False
     args = sys.argv[1:]
 
     if not any(args) or any(x in args for x in ('-h', '--help', 'help')):

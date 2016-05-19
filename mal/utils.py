@@ -9,15 +9,11 @@
 
 import sys
 import mal
-import time
 import os
-import threading
-from math import sin
-from itertools import cycle
 from functools import wraps
 from sre_constants import error as BadRegexError
-
 from requests.exceptions import ConnectionError
+from decorating.animation import AnimatedDecorator
 from mal import color
 
 
@@ -94,32 +90,6 @@ def print_error(error_name, status, reason):
 #   /  \    |   /|     |    / |
 # LOL  LOL  |   LLOL   |  LOLLOL
 
-animation_diagram = "⣾⣽⣻⢿⡿⣟⣯"
-animation_spinner = '▁▂▃▄▅▆▇▆▅▄▃▁'
-
-
-def spinner(control):
-    animation = ''.join(x * 5 for x in animation_diagram)
-    if not sys.stdout.isatty():  # not send to pipe/redirection
-        return
-    anim = zip(cycle(animation), cycle(animation_spinner))
-    for n, start_end_anim in enumerate(anim):
-        start, end = start_end_anim
-        padding = '█' * int(20 * abs(sin(0.05 * (n + control.position))))
-        padding_colored = color.colorize(padding, 'cyan')
-        banner = '{} {} {}'.format(start, control.message, end)
-        banner_colored = color.colorize(banner, 'cyan')
-        message = '\r' + padding_colored + banner_colored
-        sys.stdout.write(message)
-        time.sleep(0.05)
-        sys.stdout.write('\r' + len(message) * ' ')
-        sys.stdout.write(2 * len(message) * "\010")
-        if control.done:
-            control.position = n
-            break
-    sys.stdout.write(len(message) * ' ')
-    sys.stdout.write('\r' + 2 * len(message) * "\010")
-
 # D
 #   E
 #     C
@@ -131,34 +101,6 @@ def spinner(control):
 #                 R
 #                   S
 
-
-# deal with it
-def animated(func):
-    @wraps(func)
-    def wrapper(*args, **kwargs):
-        global last_thread
-        if not wrapper.running:
-            sig.message = func.__name__
-            spinner_thread = threading.Thread(target=spinner, args=(sig,))
-            spinner_thread.start()
-            last_thread = spinner_thread
-            wrapper.running = True
-        result = func(*args, **kwargs)
-        if wrapper.running:
-            sig.done = True
-            spinner_thread.join()
-            wrapper.running = False
-            sig.done = False
-
-        return result
-
-    wrapper.running = False
-
-    return wrapper
-
-# END OF THE LOL ZONE
-
-
 def checked_regex(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
@@ -166,8 +108,10 @@ def checked_regex(func):
         try:
             result = func(*args, **kwargs)
         except BadRegexError:
+            if AnimatedDecorator.controller.running:
+                AnimatedDecorator.stop_animation()
             print_error('BadRegexError', 'invalid regex', 'reason: you')
-            os._exit(1)
+            sys.exit(1)
 
         return result
     return wrapper
@@ -180,14 +124,13 @@ def checked_connection(func):
         try:
             result = func(*args, **kwargs)
         except ConnectionError as e:
-            if 'last_thread' in globals():
-                sig.done = True
-                last_thread.join()
+            if AnimatedDecorator.controller.running:
+                AnimatedDecorator.stop_animation()
             err = e.args[0].args
             status, reason = err[0], err[1].args[1]
             error_name = e.__class__.__name__
             print_error(error_name, status, reason)
-            os._exit(1)
+            sys.exit(1)
         return result
 
     return wrapper
