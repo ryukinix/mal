@@ -37,7 +37,7 @@ class MyAnimeList(object):
         self.password = config['password']
 
     @checked_connection
-    @animated('- validating login -')
+    @animated('validating login')
     def validate_login(self):
         r = requests.get(
             self.base_url + '/account/verify_credentials.xml',
@@ -57,7 +57,7 @@ class MyAnimeList(object):
         return mal
 
     @checked_connection
-    @animated('- searching in database -')
+    @animated('searching in database')
     def search(self, query):
         payload = dict(q=query)
 
@@ -75,7 +75,7 @@ class MyAnimeList(object):
         return [dict((attr.tag, attr.text) for attr in el) for el in elements]
 
     @checked_connection
-    @animated('- preparing animes -')
+    @animated('preparing animes')
     def list(self, status='all', type='anime'):
         username = self.username
 
@@ -111,7 +111,7 @@ class MyAnimeList(object):
         return result
 
     @checked_regex
-    @animated('- matching animes -')
+    @animated('matching animes')
     def find(self, regex, status='all'):
         result = []
         for value in self.list(status).values():
@@ -120,7 +120,7 @@ class MyAnimeList(object):
         return result
 
     @checked_connection
-    @animated('- updating -')
+    @animated('updating')
     def update(self, item_id, entry):
         tree = ET.Element('entry')
         for key, val in entry.items():
