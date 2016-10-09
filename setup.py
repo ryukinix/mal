@@ -26,9 +26,6 @@ except ImportError:
     with open(readme, encoding='utf-8') as f:
         long_description = f.read()
 
-with open('requirements.txt') as f:
-    install_requires = list(map(str.strip, f.readlines()))
-
 setup(
     name=mal.__name__,
     version=mal.__version__,
@@ -61,7 +58,7 @@ setup(
     packages=find_packages(exclude=['ez_setup', 'examples',
                                     'tests', 'docs', '__pycache__']),
     platforms='unix',
-    install_requires=install_requires,
+    install_requires=open('requirements.txt').read(),
     extras_require={
         "Requires-Dist": ["pypandoc"]
     },

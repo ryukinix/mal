@@ -21,3 +21,15 @@
  ☐ Allow in some way a service of coverage (need tests done)
  ☐ Use properly a command line lib, like `argparse`
  ☐ Put properly docstrings in all functions
+ ☐ add basic servers for streaming watch (per subs/language)
+ ☐ add basic servers for download anime content (per subs/language)
+ ☐ add a config subcommand
+   ☐ select the free servers avaible for streaming 
+   ☐ handle the free servers for download
+   ☐ select the default player for streaming
+ ☐ add a watch subcommand
+   ☐ handle for search the next epi whose you wants watch (example `mal watch lain next`)
+   ☐ use livestream to open your vlc with the episode
+ ☐ add a download subcommand
+   ☐ handle for search in the servers, update (example `mal download lain next`)
+   ☐ use tqdm to print the progressbar download
