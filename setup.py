@@ -27,7 +27,7 @@ except ImportError:
         long_description = f.read()
 
 with open('requirements.txt') as f:
-    install_requires = list(map(str.strip, f.readlines()))
+    install_requires = [str(x).strip() for x in f.readlines()]
 
 setup(
     name=mal.__name__,
