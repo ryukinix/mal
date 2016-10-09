@@ -9,11 +9,11 @@ python:
 sudo: true
 
 before_install:
-  - sudo pip install coverage --user
-  - sudo pip install nose2 
+  - pip install coverage --user
+  - pip install nose2
 
 install:
   - sudo python setup.py install
 
 script: nose2
-  
+
