@@ -11,6 +11,7 @@
 import sys
 import signal
 import math
+import argparse
 from operator import itemgetter
 from datetime import date
 
@@ -166,24 +167,26 @@ def commands(mal, args):
 
 
 def main():
-    args = sys.argv[1:]
+    parser = argparse.ArgumentParser(description='MyAnimeList command line client.')
+    args = parser.parse_args()
+    #args = sys.argv[1:]
 
-    if not any(args) or any(x in args for x in ('-h', '--help', 'help')):
-        usage()
+    #if not any(args) or any(x in args for x in ('-h', '--help', 'help')):
+        #usage()
 
-    if 'login' in args:
-        login.create_credentials()
-        sys.exit(0)
+    #if 'login' in args:
+        #login.create_credentials()
+        #sys.exit(0)
 
-    config = login.get_credentials()
-    mal = MyAnimeList.login(config)
-    if not mal:
-        print(color.colorize('Invalid credentials! :(', 'red', 'bold'))
-        print(color.colorize('Tip: Try "mal login" again :D', 'white', 'bold'))
-        sys.exit(1)
+    #config = login.get_credentials()
+    #mal = MyAnimeList.login(config)
+    #if not mal:
+        #print(color.colorize('Invalid credentials! :(', 'red', 'bold'))
+        #print(color.colorize('Tip: Try "mal login" again :D', 'white', 'bold'))
+        #sys.exit(1)
 
-    args = filtering_splitted(args)
-    commands(mal, args)
+    #args = filtering_splitted(args)
+    #commands(mal, args)
 
 
 if __name__ == '__main__':
