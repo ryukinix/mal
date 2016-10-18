@@ -130,15 +130,6 @@ def anime_pprint(index, item):
     print('\n'.join(message_lines))
 
 
-# parsing -> '$ mal on hold' -> '# mal "on hold"''
-def filtering_splitted(args):
-    subcommand_splitted = ' '.join(map(str.lower, args))
-    if subcommand_splitted in MyAnimeList.status_names.values():
-        args = [subcommand_splitted]
-
-    return args
-
-
 def search_command(mal, args):
     find(mal, vars(args)['anime-regex'].lower())
 
