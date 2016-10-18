@@ -139,25 +139,6 @@ def filtering_splitted(args):
     return args
 
 
-def commands(mal, args):
-    if 3 > len(args) > 1:
-        if any(x in args for x in ('inc', '+1')):
-            query = isomorphic_increment({'inc', '+1'}, args)
-            progress_update(mal, query, 1)
-        elif any(x in args for x in ('dec', '-1')):
-            query = isomorphic_increment({'dec', '-1'}, args)
-            progress_update(mal, query, -1)
-        else:
-            print('subcommand not supported. ᕙ(⇀‸↼‶)ᕗ')
-    elif len(args) == 1:
-        if args[0].lower() in mal.status_names.values():
-            find(mal, '.+', args[0].lower())
-        elif args[0] in ('all', 'list'):
-            find(mal, '.+')
-        else:
-            find(mal, args[0])
-
-
 def search_command(mal, args):
     find(mal, vars(args)['anime-regex'].lower())
 
@@ -175,6 +156,10 @@ def login_command(mal, args):
     sys.exit(0)
 
 
+def list_command(mal, args):
+    find(mal, '.+', args.section.lower())
+
+
 def main():
     parser = argparse.ArgumentParser(prog='mal', description='MyAnimeList command line client.')
     subparsers = parser.add_subparsers(help='commands')
@@ -185,18 +170,24 @@ def main():
     parser_search.set_defaults(func=search_command)
 
     # Parser for "increase" command
-    parser_increase = subparsers.add_parser('increase', help='increase anime\'s watched episodes', aliases=['inc'])
+    parser_increase = subparsers.add_parser('increase', help='increase anime\'s watched episodes by one', aliases=['inc'])
     parser_increase.add_argument('anime-regex', help='regex pattern to match anime titles')
     parser_increase.set_defaults(func=increase_command)
 
     # Parser for "decrease" command
-    parser_decrease = subparsers.add_parser('decrease', help='decrease anime\'s watched episodes', aliases=['dec'])
+    parser_decrease = subparsers.add_parser('decrease', help='decrease anime\'s watched episodes by one', aliases=['dec'])
     parser_decrease.add_argument('anime-regex', help='regex pattern to match anime titles')
     parser_decrease.set_defaults(func=decrease_command)
 
     # Parser for "login" command
     parser_search = subparsers.add_parser('login', help='save login credentials')
     parser_search.set_defaults(func=login_command)
+
+    # Parser for "list" command
+    parser_list = subparsers.add_parser('list', help='list animes')
+    parser_list.add_argument('section', help='section to display, can be one of [%(choices)s] (default: %(default)s)', nargs='?', default='all',metavar='section',
+            choices=['all', 'watching', 'completed', 'on hold', 'dropped', 'plan to watch', 'rewatching'])
+    parser_list.set_defaults(func=list_command)
 
     # Parse arguments
     if len(sys.argv) <= 1:
