@@ -154,6 +154,21 @@ def list_command(mal, args):
         find(mal, '.+', args.section)
 
 
+def config_command(mal, args):
+    # TODO implement config command
+    print("config - not implemented yet")
+
+
+def download_command(mal, args):
+    # TODO implement download command
+    print("download - not implemented yet")
+
+
+def watch_command(mal, args):
+    # TODO implement watch command
+    print("watch - not implemented yet")
+
+
 def main():
     parser = argparse.ArgumentParser(prog='mal', description='MyAnimeList command line client.')
     subparsers = parser.add_subparsers(help='commands')
@@ -182,6 +197,18 @@ def main():
     parser_list.add_argument('section', help='section to display, can be one of [%(choices)s] (default: %(default)s)', nargs='?', default='all',metavar='section',
             choices=['all', 'watching', 'completed', 'on hold', 'dropped', 'plan to watch', 'rewatching'])
     parser_list.set_defaults(func=list_command)
+
+    # Parser for "config" command
+    parser_config = subparsers.add_parser('config', help='config - not implemented yet')
+    parser_config.set_defaults(func=config_command)
+    
+    # Parser for "download" command
+    parser_download = subparsers.add_parser('download', help='download - not implemented yet')
+    parser_download.set_defaults(func=download_command)
+
+    # Parser for "watch" command
+    parser_watch = subparsers.add_parser('watch', help='watch - not implemented yet')
+    parser_watch.set_defaults(func=watch_command)
 
     # Parse arguments
     if len(sys.argv) <= 1:
