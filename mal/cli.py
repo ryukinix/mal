@@ -148,7 +148,10 @@ def login_command(mal, args):
 
 
 def list_command(mal, args):
-    find(mal, '.+', args.section.lower())
+    if (args.section == 'all'):
+        find(mal, '.+')
+    else: 
+        find(mal, '.+', args.section)
 
 
 def main():
