@@ -170,6 +170,18 @@ def search_command(mal, args):
     find(mal, vars(args)['anime-regex'].lower())
 
 
+def increase_command(mal, args):
+    # TODO fix this
+    query = isomorphic_increment({'inc', '+1'}, args)
+    progress_update(mal, query, 1)
+
+
+def decrease_command(mal, args):
+    # TODO fix this
+    query = isomorphic_increment({'dec', '-1'}, args)
+    progress_update(mal, query, -1)
+
+
 def login_command(mal, args):
     login.create_credentials()
     sys.exit(0)
@@ -183,6 +195,16 @@ def main():
     parser_search = subparsers.add_parser('search', help='search an anime')
     parser_search.add_argument('anime-regex', help='regex pattern to match anime titles')
     parser_search.set_defaults(func=search_command)
+
+    # Parser for "increase" command
+    parser_increase = subparsers.add_parser('increase', help='increase anime\'s watched episodes', aliases=['inc'])
+    parser_increase.add_argument('anime-regex', help='regex pattern to match anime titles')
+    parser_increase.set_defaults(func=increase_command)
+
+    # Parser for "decrease" command
+    parser_decrease = subparsers.add_parser('decrease', help='decrease anime\'s watched episodes', aliases=['dec'])
+    parser_decrease.add_argument('anime-regex', help='regex pattern to match anime titles')
+    parser_decrease.set_defaults(func=decrease_command)
 
     # Parser for "login" command
     parser_search = subparsers.add_parser('login', help='save login credentials')
