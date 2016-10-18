@@ -166,9 +166,45 @@ def commands(mal, args):
             find(mal, args[0])
 
 
+def search_command(mal, args):
+    find(mal, vars(args)['anime-regex'].lower())
+
+
+def login_command(mal, args):
+    login.create_credentials()
+    sys.exit(0)
+
+
 def main():
-    parser = argparse.ArgumentParser(description='MyAnimeList command line client.')
-    args = parser.parse_args()
+    parser = argparse.ArgumentParser(prog='mal', description='MyAnimeList command line client.')
+    subparsers = parser.add_subparsers(help='commands')
+
+    # Parser for "search" command
+    parser_search = subparsers.add_parser('search', help='search an anime')
+    parser_search.add_argument('anime-regex', help='regex pattern to match anime titles')
+    parser_search.set_defaults(func=search_command)
+
+    # Parser for "login" command
+    parser_search = subparsers.add_parser('login', help='save login credentials')
+    parser_search.set_defaults(func=login_command)
+
+    # Parse arguments
+    if len(sys.argv) <= 1:
+        args = parser.parse_args(['-h'])
+    else:
+        args = parser.parse_args()
+
+    # Check if authorized
+    config = login.get_credentials()
+    mal = MyAnimeList.login(config)
+    if not mal:
+        print(color.colorize('Invalid credentials! :(', 'red', 'bold'))
+        print(color.colorize('Tip: Try "mal login" again :D', 'white', 'bold'))
+        sys.exit(1)
+
+    # Execute sub command
+    args.func(mal, args)
+
     #args = sys.argv[1:]
 
     #if not any(args) or any(x in args for x in ('-h', '--help', 'help')):
@@ -178,12 +214,6 @@ def main():
         #login.create_credentials()
         #sys.exit(0)
 
-    #config = login.get_credentials()
-    #mal = MyAnimeList.login(config)
-    #if not mal:
-        #print(color.colorize('Invalid credentials! :(', 'red', 'bold'))
-        #print(color.colorize('Tip: Try "mal login" again :D', 'white', 'bold'))
-        #sys.exit(1)
 
     #args = filtering_splitted(args)
     #commands(mal, args)
