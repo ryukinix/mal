@@ -24,14 +24,6 @@ from mal import login
 signal.signal(signal.SIGINT, lambda x, y: killed())
 
 
-# creep mode activated
-# '$ mal +1 anime' <-> '$ mal anime +1'
-# where +1 is a alias inside of set aliases.
-def isomorphic_increment(aliases, arguments):
-    command = (aliases & set(arguments)).pop()
-    return arguments[arguments.index(command) - len(arguments[1:])]
-
-
 def select_item(items):
     item = None
     if len(items) > 1:
@@ -171,15 +163,11 @@ def search_command(mal, args):
 
 
 def increase_command(mal, args):
-    # TODO fix this
-    query = isomorphic_increment({'inc', '+1'}, args)
-    progress_update(mal, query, 1)
+    progress_update(mal, vars(args)['anime-regex'].lower(), 1)
 
 
 def decrease_command(mal, args):
-    # TODO fix this
-    query = isomorphic_increment({'dec', '-1'}, args)
-    progress_update(mal, query, -1)
+    progress_update(mal, vars(args)['anime-regex'].lower(), -1)
 
 
 def login_command(mal, args):
@@ -226,19 +214,6 @@ def main():
 
     # Execute sub command
     args.func(mal, args)
-
-    #args = sys.argv[1:]
-
-    #if not any(args) or any(x in args for x in ('-h', '--help', 'help')):
-        #usage()
-
-    #if 'login' in args:
-        #login.create_credentials()
-        #sys.exit(0)
-
-
-    #args = filtering_splitted(args)
-    #commands(mal, args)
 
 
 if __name__ == '__main__':
