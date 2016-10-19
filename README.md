@@ -22,6 +22,7 @@ mal -- MyAnimeList Command Line Interface
 - Python 3.2+
 - [pypandoc](https://pypi.python.org/pypi/pypandoc/) (only for developing & PyPI submission)
 - [requests](http://docs.python-requests.org/en/latest/index.html)
+- [argparse](https://docs.python.org/3.5/library/argparse.html)
 
 ## Installation
 

@@ -11,6 +11,7 @@
 import sys
 import signal
 import math
+import argparse
 from operator import itemgetter
 from datetime import date
 
@@ -21,14 +22,6 @@ from mal import color
 from mal import login
 
 signal.signal(signal.SIGINT, lambda x, y: killed())
-
-
-# creep mode activated
-# '$ mal +1 anime' <-> '$ mal anime +1'
-# where +1 is a alias inside of set aliases.
-def isomorphic_increment(aliases, arguments):
-    command = (aliases & set(arguments)).pop()
-    return arguments[arguments.index(command) - len(arguments[1:])]
 
 
 def select_item(items):
@@ -137,44 +130,93 @@ def anime_pprint(index, item):
     print('\n'.join(message_lines))
 
 
-# parsing -> '$ mal on hold' -> '# mal "on hold"''
-def filtering_splitted(args):
-    subcommand_splitted = ' '.join(map(str.lower, args))
-    if subcommand_splitted in MyAnimeList.status_names.values():
-        args = [subcommand_splitted]
-
-    return args
+def search_command(mal, args):
+    find(mal, vars(args)['anime-regex'].lower())
 
 
-def commands(mal, args):
-    if 3 > len(args) > 1:
-        if any(x in args for x in ('inc', '+1')):
-            query = isomorphic_increment({'inc', '+1'}, args)
-            progress_update(mal, query, 1)
-        elif any(x in args for x in ('dec', '-1')):
-            query = isomorphic_increment({'dec', '-1'}, args)
-            progress_update(mal, query, -1)
-        else:
-            print('subcommand not supported. ᕙ(⇀‸↼‶)ᕗ')
-    elif len(args) == 1:
-        if args[0].lower() in mal.status_names.values():
-            find(mal, '.+', args[0].lower())
-        elif args[0] in ('all', 'list'):
-            find(mal, '.+')
-        else:
-            find(mal, args[0])
+def increase_command(mal, args):
+    progress_update(mal, vars(args)['anime-regex'].lower(), 1)
+
+
+def decrease_command(mal, args):
+    progress_update(mal, vars(args)['anime-regex'].lower(), -1)
+
+
+def login_command(mal, args):
+    login.create_credentials()
+    sys.exit(0)
+
+
+def list_command(mal, args):
+    if (args.section == 'all'):
+        find(mal, '.+')
+    else: 
+        find(mal, '.+', args.section)
+
+
+def config_command(mal, args):
+    # TODO implement config command
+    print("config - not implemented yet")
+
+
+def download_command(mal, args):
+    # TODO implement download command
+    print("download - not implemented yet")
+
+
+def watch_command(mal, args):
+    # TODO implement watch command
+    print("watch - not implemented yet")
 
 
 def main():
-    args = sys.argv[1:]
+    parser = argparse.ArgumentParser(prog='mal', description='MyAnimeList command line client.')
+    subparsers = parser.add_subparsers(help='commands')
 
-    if not any(args) or any(x in args for x in ('-h', '--help', 'help')):
-        usage()
+    # Parser for "search" command
+    parser_search = subparsers.add_parser('search', help='search an anime')
+    parser_search.add_argument('anime-regex', help='regex pattern to match anime titles')
+    parser_search.set_defaults(func=search_command)
 
-    if 'login' in args:
-        login.create_credentials()
-        sys.exit(0)
+    # Parser for "increase" command
+    parser_increase = subparsers.add_parser('increase', help='increase anime\'s watched episodes by one', aliases=['inc'])
+    parser_increase.add_argument('anime-regex', help='regex pattern to match anime titles')
+    parser_increase.set_defaults(func=increase_command)
 
+    # Parser for "decrease" command
+    parser_decrease = subparsers.add_parser('decrease', help='decrease anime\'s watched episodes by one', aliases=['dec'])
+    parser_decrease.add_argument('anime-regex', help='regex pattern to match anime titles')
+    parser_decrease.set_defaults(func=decrease_command)
+
+    # Parser for "login" command
+    parser_search = subparsers.add_parser('login', help='save login credentials')
+    parser_search.set_defaults(func=login_command)
+
+    # Parser for "list" command
+    parser_list = subparsers.add_parser('list', help='list animes')
+    parser_list.add_argument('section', help='section to display, can be one of [%(choices)s] (default: %(default)s)', nargs='?', default='all',metavar='section',
+            choices=['all', 'watching', 'completed', 'on hold', 'dropped', 'plan to watch', 'rewatching'])
+    parser_list.set_defaults(func=list_command)
+
+    # Parser for "config" command
+    parser_config = subparsers.add_parser('config', help='config - not implemented yet')
+    parser_config.set_defaults(func=config_command)
+    
+    # Parser for "download" command
+    parser_download = subparsers.add_parser('download', help='download - not implemented yet')
+    parser_download.set_defaults(func=download_command)
+
+    # Parser for "watch" command
+    parser_watch = subparsers.add_parser('watch', help='watch - not implemented yet')
+    parser_watch.set_defaults(func=watch_command)
+
+    # Parse arguments
+    if len(sys.argv) <= 1:
+        args = parser.parse_args(['-h'])
+    else:
+        args = parser.parse_args()
+
+    # Check if authorized
     config = login.get_credentials()
     mal = MyAnimeList.login(config)
     if not mal:
@@ -182,8 +224,8 @@ def main():
         print(color.colorize('Tip: Try "mal login" again :D', 'white', 'bold'))
         sys.exit(1)
 
-    args = filtering_splitted(args)
-    commands(mal, args)
+    # Execute sub command
+    args.func(mal, args)
 
 
 if __name__ == '__main__':
