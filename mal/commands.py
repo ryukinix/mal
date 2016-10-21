@@ -12,6 +12,7 @@ import sys
 
 # self-package
 from mal import core
+from mal import login as _login
 
 def search(mal, args):
     core.find(mal, vars(args)['anime-regex'].lower())
@@ -26,7 +27,7 @@ def decrease(mal, args):
 
 
 def login(mal, args):
-    login.create_credentials()
+    _login.create_credentials()
     sys.exit(0)
 
 
