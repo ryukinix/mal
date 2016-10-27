@@ -1,5 +1,4 @@
-mal -- MyAnimeList Command Line Interface
-=============
+# mal -- MyAnimeList Command Line Interface
 
 [![Build Status](https://travis-ci.org/ryukinix/mal.svg?branch=master)](https://travis-ci.org/ryukinix/mal)
 [![PyPi version](https://img.shields.io/pypi/v/mal.svg)](https://pypi.python.org/pypi/mal/)
@@ -11,49 +10,98 @@ mal -- MyAnimeList Command Line Interface
 
 ## Description
 
-`mal` is a command-line client for [MyAnimeList.net](http://myanimelist.net/). It uses their official [API](http://myanimelist.net/modules.php?go=api), so it should remain functional indefinitely (unlike screen-scraping alternatives). But is in alpha development yet, so new ideas is welcome! This version is a inspired tool from the slow-maintained [mal](https://github.com/pushrax/mal).
+`mal` is a command-line client for [MyAnimeList.net](http://myanimelist.net/) which uses the official [API](http://myanimelist.net/modules.php?go=api).
+It should remain functional indefinitely (unlike web-scraping alternatives).
+It is currently in alpha development so new ideas are welcome!
+This project is inspired from [mal](https://github.com/pushrax/mal).
+
+## Features
+
+* Searching your anime list
+* Fetch your anime list
+* List animes in certain status (e.g. watching)
+* Increment or decrement episodes seen of animes
+
+And more are currently developed!
 
 ## TL;DR | Demo
 
+# TODO update gif
 ![demonstration](https://i.imgur.com/f3ShSUe.gif)
 
 ## Requirements
 
 - Python 3.2+
+- [setuptools](https://pypi.python.org/pypi/setuptools/3.5.1) (For installing and developing)
 - [pypandoc](https://pypi.python.org/pypi/pypandoc/) (only for developing & PyPI submission)
 - [requests](http://docs.python-requests.org/en/latest/index.html)
+- [appdirs](https://pypi.python.org/pypi/appdirs)
+- [decorating](https://pypi.python.org/pypi/decorating/)
 - [argparse](https://docs.python.org/3.5/library/argparse.html)
+
+Check [requirements.txt](requirements.txt) for exact versions.
 
 ## Installation
 
-* `sudo pip install mal`
+### Using pip
 
+From the command line run:
+
+```
+sudo pip install mal
+```
 
 ### Manual Installation
 
-Download the package using `git clone git@github.com:ryukinix/mal.git` or as `zip` file, so then: 
+Clone this project and run inside it:
 
-- `sudo python setup.py install`
-- `sudo make install` (alternative)
+```
+sudo python setup.py install
+```
 
-For develop you can try:
-- `sudo python setup.py develop`
-- `sudo make develop` (alternative)
+Or alternatively using make:
 
-In develop mode an EGG file is linked with the actual source, that way you can try modifications and get instant feedbacks in each execution
-
+```
+sudo make install
+```
 
 ## Usage
 
-## First Steps
+### Getting Started
 
-## Login
+When `mal` is executed without any arguments the help message is displayed:
 
-* `mal login`
+```
+usage: mal [-h]
+           {search,increase,inc,decrease,dec,login,list,config,download,watch}
+           ...
 
-![login](https://i.imgur.com/5PpIB8K.gif)
+MyAnimeList command line client.
 
-The program need your credentials to access your list. In the first call, the program will ask your `username/password` and SAVE IN PLAIN TEXT on the default_path (at linux `~/.config/mal/myanimelist.ini`):
+positional arguments:
+  {search,increase,inc,decrease,dec,login,list,config,download,watch}
+                        commands
+    search              search an anime
+    increase (inc)      increase anime's watched episodes by one
+    decrease (dec)      decrease anime's watched episodes by one
+    login               save login credentials
+    list                list animes
+    config              config - not implemented yet
+    download            download - not implemented yet
+    watch               watch - not implemented yet
+
+optional arguments:
+  -h, --help            show this help message and exit
+```
+
+You can also use the `-h` or `--help` options on `mal` or any of its subcommands to see specific help message.
+
+
+### Authentication
+
+The program needs your credentials to access your list. In the first call to any valid command the program will ask your username and password and save it in **plain text** in the default path (on linux `~/.config/mal/myanimelist.ini`).
+
+The file will be save in the following format:
 
 
 ```ini
@@ -63,61 +111,50 @@ password = your_password
 
 ```
 
-Why save in plain text? Because the bad design of MAL API, maybe we can change this in future, but for now you can blame her.
+Why save in plain text? Because of the bad design of MAL API.
 
-Now you can try any of the functionalties provide in the sequence above.
+Maybe we will change this in future but for now it stays the same.
 
+After authenticating you can use the program.
 
-## Functionalities:
+## Contributing
 
-* Search in your anime list
-* List anime in the sublist (e.g: watching)
-* Increment/Decrement anime watching
-* Score in final watching
-* Fetch all anime list
+We are looking for contributors. If you know some python and would like to help check out our [issues](https://github.com/ryukinix/mal/issues).
 
-## Search in your anime list 
-* `mal anime-by-regex`
+Also fill free to open new issues for any bug you found, features you think would be nice to have or questions in general.
 
-![search]( https://i.imgur.com/B8QNHzB.png)
+### Running The Source
 
-## Search current anime in the sublists:
+There are a few options to run the source in development.
 
-* `mal watching`
-* `mal plan to watch`
-* `mal rewatching`
-* `mal on hold`
-* `mal dropped`
+#### Development Mode
 
-![filtering](https://i.imgur.com/X1K9EyV.gif)
+For developing you can run:
 
-## Increment/Decrement
-- Increment/Decrement the number of episodes watched with `mal [inc | dec] [regex]` (you can swap the order too!). If there are multiple matches, it prompts you to select which one. If incrementing from `0`, it sets the anime status to "watching" and sets the start date to today. If incrementing to the total episode count, it sets the anime status to "completed" and sets the end date to today.
+```
+sudo python setup.py develop
+```
 
-* Increment:
-    - `mal inc anime-regex` 
-    - `mal anime-regex inc`
-    - `mal +1 anime-regex`
-    - `mal anime-regex +1`
+Or alternatively using make:
 
-* Decrement:
-    - `mal dec anime-regex`
-    - `mal anime-regex dec`
-    - `mal -1 anime-regex`
-    - `mal -1 anime-regex`
+```
+sudo make develop
+```
 
+In development mode an EGG file is linked with the actual source so that way you can modify it and test without reinstalling.
 
-![inc-dec](https://i.imgur.com/5b1RCX6.gif)
+For more information see [Development Mode](http://setuptools.readthedocs.io/en/latest/setuptools.html#development-mode).
 
+#### Running With Python
 
-# List all animes or any by regex
+Inside the project run:
 
-* `mal all`
-* `mal list`
-* `mal .+` (is regex right? :D)
+```
+PYTHONPATH=. python mal/cli.py
+```
 
-![all-regex](https://i.imgur.com/KofvxNY.gif)
+PYTHONPATH variable is set to look inside the project so it will look for the module [mal](mal/) before looking for installed `mal`.
 
-# License
+## License
 
-GPLv3
+[GPLv3](LICENSE)
