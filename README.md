@@ -66,7 +66,23 @@ sudo make install
 
 ## Usage
 
-### Getting Started
+### Authenticating
+
+The program needs your credentials to access your list. In the first call to any valid command the program will ask for your username and password and save it in **plain text** in the default path (on linux `~/.config/mal/myanimelist.ini`).
+
+The file will be save in the following format:
+
+
+```ini
+[mal]
+username = your_username
+password = your_password
+
+```
+
+After authenticating you can start using the program.
+
+### Using The Interface
 
 When `mal` is executed without any arguments the help message is displayed:
 
@@ -95,26 +111,6 @@ optional arguments:
 
 You can also use the `-h` or `--help` options on `mal` or any of its subcommands to see specific help message.
 
-
-### Authentication
-
-The program needs your credentials to access your list. In the first call to any valid command the program will ask for your username and password and save it in **plain text** in the default path (on linux `~/.config/mal/myanimelist.ini`).
-
-The file will be save in the following format:
-
-
-```ini
-[mal]
-username = your_username
-password = your_password
-
-```
-
-Why is it saved in plain text? Because of the bad design of MAL API.
-
-Maybe we will change this in future but for now it stays the same.
-
-After authenticating you can use the program.
 
 ## Contributing
 
