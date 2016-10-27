@@ -1,3 +1,4 @@
 requests==2.11.1
+argparse==1.4.0
 appdirs==1.4.0
 decorating==0.5
