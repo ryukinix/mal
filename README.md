@@ -22,12 +22,11 @@ This project is inspired from [mal](https://github.com/pushrax/mal).
 * List animes in certain status (e.g. watching)
 * Increment or decrement episodes seen of animes
 
-And more are currently developed!
+And more are currently being developed!
 
 ## TL;DR | Demo
 
 # TODO update gif
-![demonstration](https://i.imgur.com/f3ShSUe.gif)
 
 ## Requirements
 
@@ -99,7 +98,7 @@ You can also use the `-h` or `--help` options on `mal` or any of its subcommands
 
 ### Authentication
 
-The program needs your credentials to access your list. In the first call to any valid command the program will ask your username and password and save it in **plain text** in the default path (on linux `~/.config/mal/myanimelist.ini`).
+The program needs your credentials to access your list. In the first call to any valid command the program will ask for your username and password and save it in **plain text** in the default path (on linux `~/.config/mal/myanimelist.ini`).
 
 The file will be save in the following format:
 
@@ -111,7 +110,7 @@ password = your_password
 
 ```
 
-Why save in plain text? Because of the bad design of MAL API.
+Why is it saved in plain text? Because of the bad design of MAL API.
 
 Maybe we will change this in future but for now it stays the same.
 
@@ -121,7 +120,7 @@ After authenticating you can use the program.
 
 We are looking for contributors. If you know some python and would like to help check out our [issues](https://github.com/ryukinix/mal/issues).
 
-Also fill free to open new issues for any bug you found, features you think would be nice to have or questions in general.
+Also feel free to open new issues for any bug you found, features you think would be nice to have or questions in general.
 
 ### Running The Source
 
@@ -153,7 +152,7 @@ Inside the project run:
 PYTHONPATH=. python mal/cli.py
 ```
 
-PYTHONPATH variable is set to look inside the project so it will look for the module [mal](mal/) before looking for installed `mal`.
+PYTHONPATH variable is set to look inside the project so it will look for the local module [mal](mal/) before looking for installed `mal`.
 
 ## License
 
