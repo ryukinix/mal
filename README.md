@@ -1,4 +1,4 @@
-# mal -- MyAnimeList Command Line Interface
+# mal - MyAnimeList Command Line Interface
 
 [![Build Status](https://travis-ci.org/ryukinix/mal.svg?branch=master)](https://travis-ci.org/ryukinix/mal)
 [![PyPi version](https://img.shields.io/pypi/v/mal.svg)](https://pypi.python.org/pypi/mal/)
