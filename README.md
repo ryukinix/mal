@@ -65,10 +65,17 @@ sudo make install
 
 ### On ArchLinux
 
-If you're using archlinux distro this project has been pacakged and uploaded to
+If you're using archlinux distro this project has been packaged and uploaded to
 the AUR as [python-mal-git](https://aur.archlinux.org/packages/python-mal-git).
 
-You can install it using an AUR wrapper like `pacaur` which will be much simpler:
+You can install it using an AUR wrapper like `yaourt` or `pacaur` which will be much simpler.
+
+Using `yaourt`:
+```
+yaourt -S python-mal-git
+```
+
+Using `pacman`:
 
 ```
 pacaur -y python-mal-git
