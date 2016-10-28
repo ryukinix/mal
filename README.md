@@ -26,7 +26,10 @@ And more are currently being developed!
 
 ## TL;DR | Demo
 
-# TODO update gif
+![Main Usage](https://cloud.githubusercontent.com/assets/7642878/19803847/59295fd0-9ce1-11e6-9292-7e52266de4af.gif)
+
+
+![Listing Animes By Status](https://cloud.githubusercontent.com/assets/7642878/19803846/59157a9c-9ce1-11e6-93a7-30665ae859bf.gif)
 
 ## Requirements
 
