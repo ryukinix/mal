@@ -64,6 +64,28 @@ Or alternatively using make:
 sudo make install
 ```
 
+### On ArchLinux
+
+If you're using archlinux distro this project has been pacakged and uploaded to
+the AUR as [python-mal-git](https://aur.archlinux.org/packages/python-mal-git).
+
+You can install it using an AUR wrapper like `pacaur` which will be much simpler:
+
+```
+pacaur -y python-mal-git
+```
+
+Or manually download the `PKGBUILD` and package it:
+
+```
+wget https://aur.archlinux.org/cgit/aur.git/snapshot/python-mal-git.tar.gz
+tar xvzf python-mal-git.tar.gz
+cd python-mal-git/
+makepkg -si
+```
+
+Notice that in this method all dependencies should be installed too. 
+
 ## Usage
 
 ### Authenticating
