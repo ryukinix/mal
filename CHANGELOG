@@ -1,40 +1,50 @@
 
 # Milestones in general
 
-✔ v0.1 @done (16-05-16 01:40)
-  ✔ search: mal anime-regex  @done (16-05-16 01:40)
-  ✔ filtering: mal [sublist] @done (16-05-16 01:40)
-  ✔ increment/decrement: mal [inc | dec] anime-regex @done (16-05-16 01:40)
-  ✔ alias +1/-1 for inc/dec @done (16-05-16 01:42)
-  ✔ isomorphic increment order "$ mal +1 anime" <=> "$ mal anime +1" @done (16-05-16 01:42)
-  ✔ colorized terminal outputs @done (16-05-16 01:47)
-✔ v0.1.1 @done (16-05-16 01:43)
-  ✔ fix dec/-1 bug  @done (16-05-16 01:40)
-  ✔ setuptools & makefile @done (16-05-16 01:40)
-  ✔ revision about README.md and long_description with @done (16-05-16 01:40)
-✔ v0.1.2 @done (16-05-16 01:43)
-  ✔ register the package on PyPI @done (16-05-16 01:43)
-  ✔ submit functional version on PyPI @done (16-05-16 01:43)
-  ✔ add MANIFEST.in for correct handling the external data into distributed package @done (16-05-16 01:48)
-  ✔ fix makefile about test-register key: register->test_register @done (16-05-16 01:49)
-  ✔ allow pre-check on makefile on deploy operations (deploy & register) @done (16-05-16 01:49)
-  ✔ add badges for readme.md about the repository status (license, version, pypi downloads...) @done (16-05-16 01:50)
-  ✔ remove docs/ folder and use direct links with imgur at README.md @done (16-05-16 01:50)
-✔ v0.1.3 @done (16-05-16 19:16)
-  ✔ Disable colors when sys.stdout.istty() is False @done (16-05-16 03:13)
-  ✔ added checked_connection decorator for handling the exceptions (into utils.py) @done (16-05-16 17:47)
-  ✔ Exception Handling about connections @done (16-05-16 17:45)
-  ✔ Validate login in two steps: create_credentials and MyAnimeList.login instance @done (16-05-16 17:45)
-  ✔ Remove PyPI Downloads from README.md because since January-2016 is broken @done (16-05-16 19:13)
-  ✔ Add help and develop-uninstall targets to makefile @done (16-05-16 19:13)
-✔ v0.1.4 @done (16-05-17 13:01)
-  ✔ Add animations with the @animated decorator (previously called @spinnered) @done (16-05-17 13:01)
-  ✔ Add colored login: login header & [in]valid credentials events @done (16-05-17 13:01)
-  ✔ General refactoring on cli.py, more clear code and remove global variables @done (16-05-17 13:01)
-  ✔ Fixed bug about 'today' undefined when the user finish some series @done (16-05-17 13:01)
-  ✔ Sigint output colorized with 'red' @done (16-05-17 13:01)
-  ✔ Avoid writing the config file until validate login (this fix some annoying troubles) @done (16-05-17 13:01)
-  ✔ Replace all static images from readme.md to usefull gifs @done (16-05-17 13:01)
-  ✔ Regex exception handling as @checked_regex decorator @done (16-05-17 13:01)
-  ✔ Add requirements badge to readme.md @done (16-05-17 13:02)
-  ✔ add a lot of funny emoji to errors message @done (16-05-17 13:04)
+- v0.1
+  * search: mal anime-regex 
+  * filtering: mal [sublist]
+  * increment/decrement: mal [inc | dec] anime-regex
+  * alias +1/-1 for inc/dec
+  * isomorphic increment order "$ mal +1 anime" <=> "$ mal anime +1"
+  * colorized terminal outputs
+- v0.1.1
+  * fix dec/-1 bug 
+  * setuptools & makefile
+  * revision about README.md and long_description with
+- v0.1.2
+  * register the package on PyPI
+  * submit functional version on PyPI
+  * add MANIFEST.in for correct handling the external data into distributed package
+  * fix makefile about test-register key: register->test_register
+  * allow pre-check on makefile on deploy operations (deploy & register)
+  * add badges for readme.md about the repository status (license, version, pypi downloads...)
+  * remove docs/ folder and use direct links with imgur at README.md
+- v0.1.3
+  * Disable colors when sys.stdout.istty() is False
+  * added checked_connection decorator for handling the exceptions (into utils.py)
+  * Exception Handling about connections
+  * Validate login in two steps: create_credentials and MyAnimeList.login instance
+  * Remove PyPI Downloads from README.md because since January-2016 is broken
+  * Add help and develop-uninstall targets to makefile
+- v0.1.4
+  * Add animations with the @animated decorator (previously called @spinnered)
+  * Add colored login: login header & [in]valid credentials events
+  * General refactoring on cli.py, more clear code and remove global variables
+  * Fixed bug about 'today' undefined when the user finish some series
+  * Sigint output colorized with 'red'
+  * Avoid writing the config file until validate login (this fix some annoying troubles)
+  * Replace all static images from readme.md to usefull gifs
+  * Regex exception handling as @checked_regex decorator
+  * Add requirements badge to readme.md
+  * add a lot of funny emoji to errors message
+- v0.1.5
+  * Use appdirs to handle the local for save credentials
+  * Use decorating package to handle animation
+- v0.2
+  * Refactor command line interface using Argparse
+  * Refactor source tree: keep more simple
+  * Update decorating package dependency (new animations) (0.5.2)
+  * Update requests dependency (2.11.1)
+  * Update README.md: usage & gifs
+  * Create package on AUR!
