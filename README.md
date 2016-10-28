@@ -24,7 +24,7 @@ This project is inspired from [mal](https://github.com/pushrax/mal).
 
 And more are currently being developed!
 
-## TL;DR | Demo
+## TL;DR | Demos
 
 ![Main Usage](https://cloud.githubusercontent.com/assets/7642878/19803847/59295fd0-9ce1-11e6-9292-7e52266de4af.gif)
 
@@ -68,23 +68,23 @@ sudo make install
 
 ### On ArchLinux
 
-If you're using archlinux distro this project has been packaged and uploaded to
+If you're using the archlinux distro this project has been packaged and uploaded to
 the AUR as [python-mal-git](https://aur.archlinux.org/packages/python-mal-git).
 
-You can install it using an AUR wrapper like `yaourt` or `pacaur` which will be much simpler.
+You can install it using an AUR wrappers like `yaourt` or `pacaur` which will be much simpler.
 
 Using `yaourt`:
 ```
 yaourt -S python-mal-git
 ```
 
-Using `pacman`:
+Using `pacaur`:
 
 ```
 pacaur -y python-mal-git
 ```
 
-Or manually download the `PKGBUILD` and package it:
+Or doing it manually:
 
 ```
 wget https://aur.archlinux.org/cgit/aur.git/snapshot/python-mal-git.tar.gz
@@ -93,7 +93,7 @@ cd python-mal-git/
 makepkg -si
 ```
 
-Notice that in this method all dependencies should be installed too. 
+Notice that before using this method all dependencies should be installed. 
 
 ## Usage
 
