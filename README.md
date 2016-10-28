@@ -32,7 +32,6 @@ And more are currently being developed!
 
 - Python 3.2+
 - [setuptools](https://pypi.python.org/pypi/setuptools/3.5.1) (For installing and developing)
-- [pypandoc](https://pypi.python.org/pypi/pypandoc/) (only for developing & PyPI submission)
 - [requests](http://docs.python-requests.org/en/latest/index.html)
 - [appdirs](https://pypi.python.org/pypi/appdirs)
 - [decorating](https://pypi.python.org/pypi/decorating/)
