@@ -38,7 +38,7 @@ And more are currently being developed!
 - [requests](http://docs.python-requests.org/en/latest/index.html)
 - [appdirs](https://pypi.python.org/pypi/appdirs)
 - [decorating](https://pypi.python.org/pypi/decorating/)
-- [argparse](https://docs.python.org/3.5/library/argparse.html)
+- [argparse](https://docs.python.org/3.5/library/argparse.html) (Merged into stdlib since version 3.2)
 
 Check [requirements.txt](requirements.txt) for exact versions.
 
@@ -84,7 +84,7 @@ Using `pacaur`:
 pacaur -y python-mal-git
 ```
 
-Or doing it manually:
+Or do it manually:
 
 ```
 wget https://aur.archlinux.org/cgit/aur.git/snapshot/python-mal-git.tar.gz
