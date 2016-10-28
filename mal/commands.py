@@ -14,6 +14,7 @@ import sys
 from mal import core
 from mal import login as _login
 
+
 def search(mal, args):
     core.find(mal, vars(args)['anime-regex'].lower())
 
@@ -34,7 +35,7 @@ def login(mal, args):
 def list(mal, args):
     if (args.section == 'all'):
         core.find(mal, '.+')
-    else: 
+    else:
         core.find(mal, '.+', args.section)
 
 
