@@ -7,12 +7,16 @@
 #
 #
 
+# stdlib
 import re
-import requests
-
 from xml.etree import cElementTree as ET
-from mal.utils import checked_connection, checked_regex
+
+# 3rd party
+import requests
 from decorating import animated
+
+# self-package
+from mal.utils import checked_connection, checked_regex
 
 
 class MyAnimeList(object):
