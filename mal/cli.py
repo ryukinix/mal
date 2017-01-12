@@ -19,6 +19,7 @@ from mal import color
 from mal import login
 from mal import commands
 
+# catch if the user presses Ctrl+c and exit a special message
 signal.signal(signal.SIGINT, lambda x, y: killed())
 
 def create_parser():

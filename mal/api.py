@@ -49,8 +49,9 @@ class MyAnimeList(object):
 
     @classmethod
     def login(cls, config):
-        mal = cls(config)
+        mal = cls(config) # start instance of MyAnimeList
 
+        # 401 = unauthorized
         if mal.validate_login() == 401:
             return None
 
