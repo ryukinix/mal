@@ -7,12 +7,17 @@
 #
 #
 
+# stdlib
 import sys
 import os
 from functools import wraps
 from sre_constants import error as BadRegexError
-from requests.exceptions import ConnectionError
+
+# 3rd party
 from decorating.animation import AnimatedDecorator
+from requests.exceptions import ConnectionError
+
+# self-package
 from mal import color
 
 
