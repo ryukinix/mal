@@ -31,6 +31,8 @@ def decrease(mal, args):
 
 
 def login(mal, args):
+    """Creates login credentials so that next time the program is called
+    it can log in right at the start without any problem."""
     _login.create_credentials()
     sys.exit(0)
 

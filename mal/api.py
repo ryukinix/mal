@@ -20,6 +20,7 @@ from mal.utils import checked_connection, checked_regex
 
 
 class MyAnimeList(object):
+    """Does all the actual communicating with the MAL api."""
     base_url = 'http://myanimelist.net/api'
     user_agent = ('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) '
                   'AppleWebKit/537.36 (KHTML, like Gecko) '
@@ -34,6 +35,7 @@ class MyAnimeList(object):
         7: 'rewatching'  # this not exists in API
     }                    # check list function about 'rewatching'
 
+    # reverse of status_names dict
     status_codes = {v: k for k, v in status_names.items()}
 
     def __init__(self, config):
@@ -53,6 +55,7 @@ class MyAnimeList(object):
 
     @classmethod
     def login(cls, config):
+        """Create an instante of MyAnimeList and log it in."""
         mal = cls(config) # start instance of MyAnimeList
 
         # 401 = unauthorized

@@ -46,6 +46,7 @@ sig = StopSpinner()
 
 
 def killed():
+    """Show a message if user terminated the program."""
     message = ("\n ┑(￣Д ￣)┍ somebody seems killed me..."
                "\nw a s  Y O U ?! ︵ヽ(`Д´)ﾉ︵﻿ ")
     print(color.colorize(message, 'red'), file=sys.stderr)
@@ -81,7 +82,8 @@ def print_error(error_name, status, reason):
 #                   S
 
 def checked_regex(func):
-    @wraps(func)
+    """Wrap the function in a try/except to catch and handle a BadRegexError."""
+    @wraps(func) # keeps the wrapped function's name and docstring intact
     def wrapper(*args, **kwargs):
         result = None
         try:
@@ -97,7 +99,8 @@ def checked_regex(func):
 
 
 def checked_connection(func):
-    @wraps(func)
+    """Wrap the function in a try/except to catch and handle a ConnectionError."""
+    @wraps(func) # keeps the wrapped function's name and docstring intact
     def wrapper(*args, **kwargs):
         result = None
         try:
