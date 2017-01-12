@@ -11,6 +11,7 @@ from decorating.color import colorize
 
 
 def score_color(score):
+    """Choose color of output based on how high the score is."""
     if score == 10:
         return colorize(score, 'green', 'bold')
     if score >= 9:
@@ -26,6 +27,7 @@ def score_color(score):
 
 
 def procedure_color(increment):
+    """Choose output color when incrementing/decrementing."""
     if increment >= 1:
         procedure = 'Incrementing'
         procedure_color = 'green'

@@ -6,6 +6,9 @@
 #   Copyright © Manoel Vilela
 #
 #
+"""These function serve as an entry point for the several subcommands
+of mal. All they do is basically call the functions that do actual work
+in the core module."""
 
 # stdlib
 import sys
