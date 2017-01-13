@@ -19,6 +19,7 @@ from mal import login as _login
 
 
 def search(mal, args):
+    """Search MAL (not just the user) anime database."""
     core.find(mal, vars(args)['anime-regex'].lower())
 
 
@@ -38,6 +39,9 @@ def login(mal, args):
 
 
 def list(mal, args):
+    """Show all the animes on the users list."""
+    # . matches any character except line breaks
+    # + matches one or more occurences of the previous character
     if (args.section == 'all'):
         core.find(mal, '.+')
     else:

@@ -19,9 +19,11 @@ from mal import color
 
 
 def select_item(items):
+    """Select a single item from a list of results."""
     item = None
-    if len(items) > 1:
+    if len(items) > 1: # ambigious search results
         print(color.colorize('Multiple results:', 'cyan'))
+        # show user the results and make them choose one
         for index, title in enumerate(map(itemgetter('title'), items)):
             print('{index}: {title}'.format_map(locals()))
         index = int(input('Which one? '))
@@ -36,6 +38,7 @@ def select_item(items):
 
 
 def start_end(entry, episode, total_episodes):
+    """Fill details of anime if user just started it or finished it."""
     if total_episodes == episode:
         entry['status'] = MyAnimeList.status_codes['completed']
         entry['date_finish'] = date.today().strftime('%m%d%Y')
@@ -51,7 +54,7 @@ def start_end(entry, episode, total_episodes):
 
 
 def remove_completed(items):
-    # remove animes whose is already completed
+    # remove animes that are already completed
     # preserves (rewatching)
     for index, status in enumerate(map(itemgetter('status_name'), items)):
         if status == 'completed':
@@ -62,7 +65,7 @@ def remove_completed(items):
 
 def progress_update(mal, regex, inc):
     items = remove_completed(mal.find(regex))
-    item = select_item(items)
+    item = select_item(items) # also handles ambigious searches
     episode = item['episode'] + inc
     entry = dict(episode=episode)
     template = {
@@ -82,23 +85,27 @@ def progress_update(mal, regex, inc):
 
 
 def find(mal, regex, filtering='all'):
+    """Find all anime in a certain status given a regex."""
     items = mal.find(regex)
     if len(items) == 0:
         print(color.colorize("No matches in list ᕙ(⇀‸↼‶)ᕗ", 'red'))
         return
 
+    # filter the results if necessary
     if filtering != 'all':
         items = [x for x in items if x['status_name'] == filtering]
 
     n_items = color.colorize(str(len(items)), 'cyan', 'underline')
     print("Matched {} items:".format(n_items))
 
+    # pretty print all the animes found
     sorted_items = sorted(items, key=itemgetter('status'), reverse=True)
     for index, item in enumerate(sorted_items):
         anime_pprint(index + 1, item)
 
 
 def anime_pprint(index, item):
+    """Pretty print an anime's information."""
     padding = int(math.log10(index)) + 3
     remaining_color = ('blue' if item['episode'] < item['total_episodes']
                        else 'green')
