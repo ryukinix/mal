@@ -1,3 +1,3 @@
-requests==2.11.1
+requests==2.12.4
 appdirs==1.4.0
 decorating==0.5.2
