@@ -7,7 +7,7 @@ TEST_REGISTER = register --repository pypitest
 DEPLOY = sdist bdist_wheel upload --repository pypi --sign
 REGISTER = register --repository pypi
 BUILD_GARBAGE = build/ dist/
-EGG = *.egg-info 
+EGG = *.egg-info
 CHECK = check --metadata --restructuredtext --strict
 CLEAN = clean
 UNINSTALL = --uninstall
@@ -54,7 +54,7 @@ test-register:
 	@echo "+===============+"
 	@echo "| TEST-REGISTER |"
 	@echo "+===============+"
-	$(PYTHON) $(TARGET) $(TEST_REGISTER) 
+	$(PYTHON) $(TARGET) $(TEST_REGISTER)
 
 develop-uninstall:
 	@echo "+===============+"
@@ -69,7 +69,7 @@ test-deploy:
 	@echo "+===============+"
 	@echo "| TEST-DEPLOY   |"
 	@echo "+===============+"
-	$(PYTHON) $(TARGET) $(TEST_DEPLOY) 
+	$(PYTHON) $(TARGET) $(TEST_DEPLOY)
 
 deploy:
 	@make check
@@ -93,30 +93,29 @@ help:
 	@echo "----------------------------------------------"
 	@echo "make check:"
 	@echo "	 check the build pass on PyPI"
-	@echo 
+	@echo
 	@echo "make clean:"
 	@echo "	 clean the build (build/ __pyache__, sdist/)"
-	@echo 
+	@echo
 	@echo "make install:"
 	@echo "	 install the package in your system"
-	@echo 
+	@echo
 	@echo "make build:"
 	@echo "  build the package as egg-file"
 	@echo "make develop:"
 	@echo "	 install in develop mode (symlink)"
-	@echo 
+	@echo
 	@echo "make develop-uninstall:"
 	@echo "	 uninstall develop files and clean build"
-	@echo 
+	@echo
 	@echo "make test-register:"
 	@echo "	 test register using the testPyPI server "
-	@echo 
+	@echo
 	@echo "test-deploy:"
 	@echo "	 test deploy using the testPyPI server"
-	@echo 
+	@echo
 	@echo "deploy:"
 	@echo "	 deploy to PyPY"
-	@echo 
+	@echo
 	@echo "register:"
 	@echo "	 register to PyPI"
-

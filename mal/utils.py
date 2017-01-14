@@ -7,12 +7,17 @@
 #
 #
 
+# stdlib
 import sys
 import os
 from functools import wraps
 from sre_constants import error as BadRegexError
-from requests.exceptions import ConnectionError
+
+# 3rd party
 from decorating.animation import AnimatedDecorator
+from requests.exceptions import ConnectionError
+
+# self-package
 from mal import color
 
 
@@ -41,6 +46,7 @@ sig = StopSpinner()
 
 
 def killed():
+    """Show a message if user terminated the program."""
     message = ("\n ┑(￣Д ￣)┍ somebody seems killed me..."
                "\nw a s  Y O U ?! ︵ヽ(`Д´)ﾉ︵﻿ ")
     print(color.colorize(message, 'red'), file=sys.stderr)
@@ -76,7 +82,8 @@ def print_error(error_name, status, reason):
 #                   S
 
 def checked_regex(func):
-    @wraps(func)
+    """Wrap the function in a try/except to catch and handle a BadRegexError."""
+    @wraps(func) # keeps the wrapped function's name and docstring intact
     def wrapper(*args, **kwargs):
         result = None
         try:
@@ -92,7 +99,8 @@ def checked_regex(func):
 
 
 def checked_connection(func):
-    @wraps(func)
+    """Wrap the function in a try/except to catch and handle a ConnectionError."""
+    @wraps(func) # keeps the wrapped function's name and docstring intact
     def wrapper(*args, **kwargs):
         result = None
         try:

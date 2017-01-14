@@ -2,14 +2,14 @@
 # Milestones in general
 
 - v0.1
-  * search: mal anime-regex 
+  * search: mal anime-regex
   * filtering: mal [sublist]
   * increment/decrement: mal [inc | dec] anime-regex
   * alias +1/-1 for inc/dec
   * isomorphic increment order "$ mal +1 anime" <=> "$ mal anime +1"
   * colorized terminal outputs
 - v0.1.1
-  * fix dec/-1 bug 
+  * fix dec/-1 bug
   * setuptools & makefile
   * revision about README.md and long_description with
 - v0.1.2

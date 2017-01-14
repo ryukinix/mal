@@ -7,15 +7,20 @@
 #
 #
 
+# stdlib
 import re
-import requests
-
 from xml.etree import cElementTree as ET
-from mal.utils import checked_connection, checked_regex
+
+# 3rd party
+import requests
 from decorating import animated
+
+# self-package
+from mal.utils import checked_connection, checked_regex
 
 
 class MyAnimeList(object):
+    """Does all the actual communicating with the MAL api."""
     base_url = 'http://myanimelist.net/api'
     user_agent = ('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) '
                   'AppleWebKit/537.36 (KHTML, like Gecko) '
@@ -28,8 +33,9 @@ class MyAnimeList(object):
         4: 'dropped',
         6: 'plan to watch',  # not a typo
         7: 'rewatching'  # this not exists in API
-    }                    # check list functino about 'rewatching'
+    }                    # check list function about 'rewatching'
 
+    # reverse of status_names dict
     status_codes = {v: k for k, v in status_names.items()}
 
     def __init__(self, config):
@@ -49,8 +55,10 @@ class MyAnimeList(object):
 
     @classmethod
     def login(cls, config):
-        mal = cls(config)
+        """Create an instante of MyAnimeList and log it in."""
+        mal = cls(config) # start instance of MyAnimeList
 
+        # 401 = unauthorized
         if mal.validate_login() == 401:
             return None
 

@@ -7,11 +7,16 @@
 #
 #
 
+# stdlib
 from os import path
 from os import makedirs
 from configparser import ConfigParser
 from getpass import getpass
+
+# 3rd party
 from appdirs import user_config_dir
+
+# self-package
 from mal.api import MyAnimeList
 from mal import color
 from mal import __name__ as APP_NAME
@@ -29,6 +34,7 @@ INVALID = color.colorize(':: invalid credentials! try again', 'red')
 
 
 def get_credentials():
+    """Fetch the username and password from the right file."""
     config = ConfigParser()
     config.read(APP_PATH)
     if LOGIN_SECTION not in config:
