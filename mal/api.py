@@ -28,7 +28,7 @@ class MyAnimeList(object):
         4: 'dropped',
         6: 'plan to watch',  # not a typo
         7: 'rewatching'  # this not exists in API
-    }                    # check list functino about 'rewatching'
+    }                    # check list function about 'rewatching'
 
     status_codes = {v: k for k, v in status_names.items()}
 

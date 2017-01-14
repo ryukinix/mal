@@ -17,6 +17,7 @@ from datetime import date
 from mal.api import MyAnimeList
 from mal import color
 
+
 def select_item(items):
     item = None
     if len(items) > 1:
@@ -121,4 +122,3 @@ def anime_pprint(index, item):
     ]
 
     print('\n'.join(message_lines))
-
