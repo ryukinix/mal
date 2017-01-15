@@ -21,7 +21,7 @@ from mal.utils import checked_connection, checked_regex
 
 class MyAnimeList(object):
     """Does all the actual communicating with the MAL api."""
-    base_url = 'http://myanimelist.net/api'
+    base_url = 'https://myanimelist.net/api'
     user_agent = ('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) '
                   'AppleWebKit/537.36 (KHTML, like Gecko) '
                   'Chrome/34.0.1847.116 Safari/537.36')
