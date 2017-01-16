@@ -121,10 +121,11 @@ def anime_pprint(index, item, extra=False):
         'score': color.score_color(item['score']),
         'rewatching': (color.colorize(in_rewatching, 'yellow', 'bold'))
     }
+    # add formating options for extra info
     if extra:
         template.update({
-            'start': item['start_date'],
-            'finish': item['finish_date'],
+            'start': item['start_date'] if item['start_date'] != '0000-00-00' else 'NA',
+            'finish': item['finish_date'] if item['finish_date'] != '0000-00-00' else 'NA',
             'tags': item['tags']
         })
 
