@@ -20,15 +20,15 @@ from mal import login as _login
 
 def search(mal, args):
     """Search MAL (not just the user) anime database."""
-    core.find(mal, vars(args)['anime-regex'].lower())
+    core.find(mal, args.anime_regex.lower())
 
 
 def increase(mal, args):
-    core.progress_update(mal, vars(args)['anime-regex'].lower(), args.episodes)
+    core.progress_update(mal, args.anime_regex.lower(), args.n)
 
 
 def decrease(mal, args):
-    core.progress_update(mal, vars(args)['anime-regex'].lower(), -args.episodes)
+    core.progress_update(mal, args.anime_regex.lower(), -args.n)
 
 
 def login(mal, args):

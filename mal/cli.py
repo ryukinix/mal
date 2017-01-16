@@ -31,7 +31,7 @@ def create_parser():
     # Parser for "search" command
     parser_search = subparsers.add_parser('search',
                                           help='search an anime')
-    parser_search.add_argument('anime-regex',
+    parser_search.add_argument('anime_regex',
                                help='regex pattern to match anime titles')
     parser_search.set_defaults(func=commands.search)
 
@@ -39,9 +39,9 @@ def create_parser():
     parser_increase = subparsers.add_parser('increase',
                                             help="increase anime's watched episodes by one",
                                             aliases=['inc'])
-    parser_increase.add_argument('anime-regex',
+    parser_increase.add_argument('anime_regex',
                                  help='regex pattern to match anime titles')
-    parser_increase.add_argument('episodes', type=int, default=1,
+    parser_increase.add_argument('-n', type=int, default=1,
                                  help='number of episodes to increase')
     parser_increase.set_defaults(func=commands.increase)
 
@@ -49,9 +49,9 @@ def create_parser():
     parser_decrease = subparsers.add_parser('decrease',
                                             help="decrease anime's watched episodes by one",
                                             aliases=['dec'])
-    parser_decrease.add_argument('anime-regex', 
+    parser_decrease.add_argument('anime_regex',
                                   help='regex pattern to match anime titles')
-    parser_decrease.add_argument('episodes', type=int, default=1,
+    parser_decrease.add_argument('-n', type=int, default=1,
                                  help='number of episodes to decrease')
 
     parser_decrease.set_defaults(func=commands.decrease)
