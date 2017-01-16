@@ -84,7 +84,7 @@ class MyAnimeList(object):
 
     @checked_connection
     @animated('preparing animes')
-    def list(self, status='all', type='anime'):
+    def list(self, status='all', type='anime', extra=False):
         username = self.username
 
         payload = dict(u=username, status=status, type=type)
@@ -116,13 +116,22 @@ class MyAnimeList(object):
                 if result[entry_id]['rewatching']:
                     result[entry_id]['status_name'] = 'rewatching'
 
+                # if extra information was requested (via --extend cmd line flag) add it to the result
+                if extra:
+                    extra_info = {
+                        'start_date': entry['my_start_date'],
+                        'finish_date': entry['my_finish_date'],
+                        'tags': entry['my_tags']
+                    }
+                    result[entry_id].update(extra_info)
+
         return result
 
     @checked_regex
     @animated('matching animes')
-    def find(self, regex, status='all'):
+    def find(self, regex, status='all', extra=False):
         result = []
-        for value in self.list(status).values():
+        for value in self.list(status, extra=extra).values():
             if re.search(regex, value['title'], re.I):
                 result.append(value)
         return result

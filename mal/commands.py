@@ -45,7 +45,7 @@ def list(mal, args):
     if (args.section == 'all'):
         core.find(mal, '.+')
     else:
-        core.find(mal, '.+', args.section)
+        core.find(mal, '.+', args.section, args.extend)
 
 
 def config(mal, args):
