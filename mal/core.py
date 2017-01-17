@@ -18,10 +18,15 @@ from mal.api import MyAnimeList
 from mal import color
 
 
+def report_if_fails(response):
+    if response != 200:
+        print(color.colorize("Failed with HTTP: {}".format(response), 'red'))
+
+
 def select_item(items):
     """Select a single item from a list of results."""
     item = None
-    if len(items) > 1: # ambigious search results
+    if len(items) > 1:  # ambigious search results
         print(color.colorize('Multiple results:', 'cyan'))
         # show user the results and make them choose one
         for index, title in enumerate(map(itemgetter('title'), items)):
@@ -65,7 +70,7 @@ def remove_completed(items):
 
 def progress_update(mal, regex, inc):
     items = remove_completed(mal.find(regex))
-    item = select_item(items) # also handles ambigious searches
+    item = select_item(items)  # also handles ambigious searches
     episode = item['episode'] + inc
     entry = dict(episode=episode)
     template = {
@@ -80,8 +85,26 @@ def progress_update(mal, regex, inc):
 
     entry = start_end(entry, episode, item['total_episodes'])
     response = mal.update(item['id'], entry)
-    if response != 200:
-        print(color.colorize("Failed with HTTP: {}".format(response), 'red'))
+    report_if_fails(response)
+
+
+def drop(mal, regex):
+    """Drop a anime based a regex expression"""
+    items = remove_completed(mal.find(regex))
+    item = select_item(items)
+    entry = dict(status=mal.status_codes['dropped'])
+    old_status = mal.status_names[item['status']]
+    template = {
+        'title': color.colorize(item['title'], 'yellow', 'bold'),
+        'old-status': color.colorize(old_status, 'green', 'bold'),
+        'action': color.colorize('Dropping', 'red', 'bold')
+
+    }
+
+    print(('{action} anime {title} from list '
+           '{old-status}'.format_map(template)))
+    response = mal.update(item['id'], entry)
+    report_if_fails(response)
 
 
 def find(mal, regex, filtering='all', extra=False):

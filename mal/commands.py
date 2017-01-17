@@ -6,6 +6,7 @@
 #   Copyright © Manoel Vilela
 #
 #
+
 """These function serve as an entry point for the several subcommands
 of mal. All they do is basically call the functions that do actual work
 in the core module."""
@@ -43,6 +44,11 @@ def list(mal, args):
     # . matches any character except line breaks
     # + matches one or more occurences of the previous character
     core.find(mal, '.+', args.section, args.extend)
+
+
+def drop(mal, args):
+    """Drop a anime from lists based in a regex expression"""
+    core.drop(mal, args.anime_regex)
 
 
 def config(mal, args):

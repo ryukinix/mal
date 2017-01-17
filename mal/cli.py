@@ -97,6 +97,13 @@ def create_parser():
                                          help='watch - not implemented yet')
     parser_watch.set_defaults(func=commands.watch)
 
+    parser_drop = subparsers.add_parser('drop',
+                                        help='Put a selected anime on drop list')
+    parser_drop.add_argument('anime_regex',
+                             help='regex pattern to match anime titles')
+
+    parser_drop.set_defaults(func=commands.drop)
+
     return parser
 
 
