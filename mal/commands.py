@@ -24,11 +24,11 @@ def search(mal, args):
 
 
 def increase(mal, args):
-    core.progress_update(mal, args.anime_regex.lower(), args.n)
+    core.progress_update(mal, args.anime_regex.lower(), args.episodes)
 
 
 def decrease(mal, args):
-    core.progress_update(mal, args.anime_regex.lower(), -args.n)
+    core.progress_update(mal, args.anime_regex.lower(), -args.episodes)
 
 
 def login(mal, args):
