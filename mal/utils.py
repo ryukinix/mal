@@ -21,30 +21,6 @@ from requests.exceptions import ConnectionError
 from mal import color
 
 
-class Unbuffered(object):
-
-    def __init__(self, stream):
-        self.stream = stream
-
-    def write(self, data):
-        self.stream.write(data)
-        self.stream.flush()
-
-    def __getattr__(self, attr):
-        return getattr(self.stream, attr)
-
-
-class StopSpinner(object):
-    done = False
-    position = 0
-    message = 'loading'
-
-
-# global variables from hell
-sys.stdout = Unbuffered(sys.stdout)
-sig = StopSpinner()
-
-
 def killed():
     """Show a message if user terminated the program."""
     message = ("\n ┑(￣Д ￣)┍ somebody seems killed me..."
@@ -83,7 +59,7 @@ def print_error(error_name, status, reason):
 
 def checked_regex(func):
     """Wrap the function in a try/except to catch and handle a BadRegexError."""
-    @wraps(func) # keeps the wrapped function's name and docstring intact
+    @wraps(func)  # keeps the wrapped function's name and docstring intact
     def wrapper(*args, **kwargs):
         result = None
         try:
@@ -100,7 +76,7 @@ def checked_regex(func):
 
 def checked_connection(func):
     """Wrap the function in a try/except to catch and handle a ConnectionError."""
-    @wraps(func) # keeps the wrapped function's name and docstring intact
+    @wraps(func)  # keeps the wrapped function's name and docstring intact
     def wrapper(*args, **kwargs):
         result = None
         try:
