@@ -42,10 +42,7 @@ def list(mal, args):
     """Show all the animes on the users list."""
     # . matches any character except line breaks
     # + matches one or more occurences of the previous character
-    if (args.section == 'all'):
-        core.find(mal, '.+')
-    else:
-        core.find(mal, '.+', args.section)
+    core.find(mal, '.+', args.section, args.extend)
 
 
 def config(mal, args):

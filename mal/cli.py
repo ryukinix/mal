@@ -78,6 +78,8 @@ def create_parser():
                              choices=['all', 'watching', 'completed',
                                       'on hold', 'dropped',
                                       'plan to watch', 'rewatching'])
+    parser_list.add_argument('--extend', action='store_true', # defaults to False
+                             help='display extra info such as start/finish dates and tags')
     parser_list.set_defaults(func=commands.list)
 
     # Parser for "config" command

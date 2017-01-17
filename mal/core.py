@@ -84,9 +84,9 @@ def progress_update(mal, regex, inc):
         print(color.colorize("Failed with HTTP: {}".format(response), 'red'))
 
 
-def find(mal, regex, filtering='all'):
+def find(mal, regex, filtering='all', extra=False):
     """Find all anime in a certain status given a regex."""
-    items = mal.find(regex)
+    items = mal.find(regex, extra=extra)
     if len(items) == 0:
         print(color.colorize("No matches in list ᕙ(⇀‸↼‶)ᕗ", 'red'))
         return
@@ -101,10 +101,10 @@ def find(mal, regex, filtering='all'):
     # pretty print all the animes found
     sorted_items = sorted(items, key=itemgetter('status'), reverse=True)
     for index, item in enumerate(sorted_items):
-        anime_pprint(index + 1, item)
+        anime_pprint(index + 1, item, extra=extra)
 
 
-def anime_pprint(index, item):
+def anime_pprint(index, item, extra=False):
     """Pretty print an anime's information."""
     padding = int(math.log10(index)) + 3
     remaining_color = ('blue' if item['episode'] < item['total_episodes']
@@ -121,11 +121,25 @@ def anime_pprint(index, item):
         'score': color.score_color(item['score']),
         'rewatching': (color.colorize(in_rewatching, 'yellow', 'bold'))
     }
+    # add formating options for extra info
+    if extra:
+        template.update({
+            'start': item['start_date'] if item['start_date'] != '0000-00-00' else 'NA',
+            'finish': item['finish_date'] if item['finish_date'] != '0000-00-00' else 'NA',
+            'tags': item['tags']
+        })
 
     message_lines = [
         "{index}: {title}".format_map(template),
         ("{padding}{status} at {remaining} episodes "
-         "with score {score} {rewatching}\n".format_map(template)),
+         "with score {score} {rewatching}".format_map(template))
     ]
 
-    print('\n'.join(message_lines))
+    # the extra information lines
+    if extra:
+        message_lines.extend([
+            "{padding}Started: {start} \t Finished: {finish}".format_map(template),
+            "{padding}Tags: {tags}".format_map(template)
+        ])
+
+    print('\n'.join(message_lines), "\n")
