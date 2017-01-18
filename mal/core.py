@@ -109,15 +109,56 @@ def drop(mal, regex):
 
 def stats(mal):
     """Print user anime stats."""
+    statuses = ["watching", "completed", "onhold", "dropped", "plantowatch"]
+    status_colors = ["green", "blue", "yellow", "red", "gray"]
+
     # get all the info
     animes = mal.list(get_stats=True)
-    user_info = animes['stats']
+    user_info = animes["stats"]
 
-    # do the maths needed
+    total_entries = sum(int(user_info[status]) for status in statuses)
+    rewatched, episodes, mean_score, scored = 0, 0, 0, 0
+    # gather all the numbers
+    for anime in animes:
+        pass
 
-    # print info
-    for stat in ['watching', 'completed', 'onhold', 'dropped', 'plantowatch']:
-        print('{}: {}'.format(stat.capitalize(), user_info[stat]))
+    if scored != 0: mean_score /= scored
+    line_size = 44 # code for calculating this was so messy I hardcoded instead
+    # it's 20 spaces for each of the 'sides' and 4 spaces in between them
+
+    # colored bar. borrowed the bar char from neofetch
+    bar = "█"
+    # format the lines to print more easily afterwards
+    template = {
+        "days": user_info["days_spent_watching"],
+        "mean_score": mean_score,
+        "watching": user_info["watching"],
+        "completed": user_info["completed"],
+        "hold": user_info["onhold"],
+        "plan": user_info["plantowatch"],
+        "total_entries": str(total_entries),
+        "episodes": str(episodes),
+        "rewatched": str(rewatched),
+        "padding": "{p}" # needed to format with padding afterwards
+    }
+
+    def padd_str(string, final_size):
+        return string.format(p=(" " * (final_size - len(string) - len("{p}"))))
+    
+    lines = [ 
+        "Days: {days} \t Mean Score: {mean_score}",
+        color.colorize(bar * line_size, "gray"),
+        "Watching: {watching} \t Total Entries: {total_entries}",
+        "Completed: {completed} \t Rewatched: {rewatched}",
+        "On-Hold: {hold} \t Episodes: {episodes}",
+        "Plan to Watch: {plan}"
+    ]
+    # add info to lines and format them to look nice
+    lines = [line.format_map(template) for line in lines]
+
+    print(color.colorize("Anime Stats", "white", "underline"))
+    print("\n".join(lines))
+
 
 def find(mal, regex, filtering='all', extra=False):
     """Find all anime in a certain status given a regex."""
