@@ -107,6 +107,18 @@ def drop(mal, regex):
     report_if_fails(response)
 
 
+def stats(mal):
+    """Print user anime stats."""
+    # get all the info
+    animes = mal.list(get_stats=True)
+    user_info = animes['stats']
+
+    # do the maths needed
+
+    # print info
+    for stat in ['watching', 'completed', 'onhold', 'dropped', 'plantowatch']:
+        print('{}: {}'.format(stat.capitalize(), user_info[stat]))
+
 def find(mal, regex, filtering='all', extra=False):
     """Find all anime in a certain status given a regex."""
     items = mal.find(regex, extra=extra)
