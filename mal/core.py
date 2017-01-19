@@ -109,18 +109,18 @@ def drop(mal, regex):
 
 def stats(mal):
     """Print user anime stats."""
-    statuses = ["watching", "completed", "onhold", "dropped", "plantowatch"]
-    status_colors = ["green", "blue", "yellow", "red", "gray"]
-
     # get all the info
     animes = mal.list(get_stats=True)
-    user_info = animes["stats"]
+    user_info = animes.pop("stats") # remove stats from anime list
 
-    total_entries = sum(int(user_info[status]) for status in statuses)
-    rewatched, episodes, mean_score, scored = 0, 0, 0, 0
     # gather all the numbers
-    for anime in animes:
-        pass
+    total_entries = len(animes)
+    rewatched, episodes, mean_score, scored = 0, 0, 0, 0
+    for anime in animes.values():
+        episodes += anime["episode"] # this is watched episodes
+        rewatched += anime["rewatching"]
+        if anime["score"] != 0: scored += 1
+        mean_score += anime["score"]
 
     if scored != 0: mean_score /= scored
     line_size = 44 # code for calculating this was so messy I hardcoded instead
@@ -131,30 +131,36 @@ def stats(mal):
     # format the lines to print more easily afterwards
     template = {
         "days": user_info["days_spent_watching"],
-        "mean_score": mean_score,
+        "mean_score": "{:.2f}".format(mean_score),
         "watching": user_info["watching"],
         "completed": user_info["completed"],
         "hold": user_info["onhold"],
         "plan": user_info["plantowatch"],
+        "dropped": user_info["dropped"],
         "total_entries": str(total_entries),
         "episodes": str(episodes),
         "rewatched": str(rewatched),
-        "padding": "{p}" # needed to format with padding afterwards
+        "padd": "{p}" # needed to format with padding afterwards
     }
 
-    def padd_str(string, final_size):
-        return string.format(p=(" " * (final_size - len(string) - len("{p}"))))
-    
-    lines = [ 
-        "Days: {days} \t Mean Score: {mean_score}",
+    lines = [
+        "Days: {days}{padd}Mean Score: {mean_score}",
         color.colorize(bar * line_size, "gray"),
-        "Watching: {watching} \t Total Entries: {total_entries}",
-        "Completed: {completed} \t Rewatched: {rewatched}",
-        "On-Hold: {hold} \t Episodes: {episodes}",
-        "Plan to Watch: {plan}"
+        ["Watching:{padd}{watching}", "Total Entries:{padd}{total_entries}"],
+        ["Completed:{padd}{completed}", "Rewatched:{padd}{rewatched}"],
+        ["On-Hold:{padd}{hold}", "Episodes:{padd}{episodes}"],
+        ["Dropped:{padd}{dropped}"],
+        ["Plan to Watch:{padd}{plan}"]
     ]
     # add info to lines and format them to look nice
-    lines = [line.format_map(template) for line in lines]
+    def padd_str(string, final_size):
+        return string.replace("{p}", " " * (final_size - len(string) + len("{p}")))
+    lines = [
+        padd_str(line.format_map(template), 44) if not isinstance(line, list) else
+        # first format each side, then add padding then join with the tab
+        (" " * 4).join(padd_str(side.format_map(template), 20) for side in line)
+        for line in lines
+    ]
 
     print(color.colorize("Anime Stats", "white", "underline"))
     print("\n".join(lines))
