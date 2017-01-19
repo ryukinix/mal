@@ -128,6 +128,13 @@ def stats(mal):
 
     # colored bar. borrowed the bar char from neofetch
     bar = "█"
+    colors = ["green", "blue", "yellow", "red", "gray"]
+    colored = str()
+    for i, status in enumerate(["watching", "completed", "onhold", "dropped", "plantowatch"]):
+        entries = int(user_info[status])
+        bars = round(line_size * (entries / total_entries))
+        colored += color.colorize(bar * bars, colors[i])
+
     # format the lines to print more easily afterwards
     template = {
         "days": user_info["days_spent_watching"],
@@ -145,7 +152,7 @@ def stats(mal):
 
     lines = [
         "Days: {days}{padd}Mean Score: {mean_score}",
-        color.colorize(bar * line_size, "gray"),
+        colored,
         ["Watching:{padd}{watching}", "Total Entries:{padd}{total_entries}"],
         ["Completed:{padd}{completed}", "Rewatched:{padd}{rewatched}"],
         ["On-Hold:{padd}{hold}", "Episodes:{padd}{episodes}"],
