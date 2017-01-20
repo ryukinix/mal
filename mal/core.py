@@ -118,7 +118,11 @@ def stats(mal):
     rewatched, episodes, mean_score, scored = 0, 0, 0, 0
     for anime in animes.values():
         episodes += anime["episode"] # this is watched episodes
-        rewatched += anime["rewatching"]
+        if anime["rewatching"] != 0:
+            rewatched += anime["rewatching"]
+            # take into account episodes seen in previous watchings
+            episodes += anime["rewatching"] * anime["total_episodes"]
+
         if anime["score"] != 0: scored += 1
         mean_score += anime["score"]
 
