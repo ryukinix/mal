@@ -123,7 +123,8 @@ def stats(mal):
         mean_score += anime["score"]
 
     if scored != 0: mean_score /= scored
-    line_size = 44 # code for calculating this was so messy I hardcoded instead
+    # added two for circle colored + space on each list
+    line_size = 44 + 2 # code for calculating this was so messy I hardcoded instead
     # it's 20 spaces for each of the 'sides' and 4 spaces in between them
 
     # colored bar. borrowed the bar char from neofetch
@@ -147,25 +148,32 @@ def stats(mal):
         "total_entries": str(total_entries),
         "episodes": str(episodes),
         "rewatched": str(rewatched),
-        "padd": "{p}" # needed to format with padding afterwards
+        "padd": "{p}"  # needed to format with padding afterwards
     }
+
+    def point_color(color_name):
+        return color.colorize("● ", color_name, "bold")
 
     lines = [
         "Days: {days}{padd}Mean Score: {mean_score}",
         colored,
-        ["Watching:{padd}{watching}", "Total Entries:{padd}{total_entries}"],
-        ["Completed:{padd}{completed}", "Rewatched:{padd}{rewatched}"],
-        ["On-Hold:{padd}{hold}", "Episodes:{padd}{episodes}"],
-        ["Dropped:{padd}{dropped}"],
-        ["Plan to Watch:{padd}{plan}"]
+        (point_color("green"),
+            ["Watching:{padd}{watching}", "Total Entries:{padd}{total_entries}"]),
+        (point_color("blue"),
+            ["Completed:{padd}{completed}", "Rewatched:{padd}{rewatched}"]),
+        (point_color("yellow"),
+            ["On-Hold:{padd}{hold}", "Episodes:{padd}{episodes}"]),
+        (point_color("red"), ["Dropped:{padd}{dropped}"]),
+        (point_color("gray"), ["Plan to Watch:{padd}{plan}"])
     ]
     # add info to lines and format them to look nice
     def padd_str(string, final_size):
         return string.replace("{p}", " " * (final_size - len(string) + len("{p}")))
+
     lines = [
-        padd_str(line.format_map(template), 44) if not isinstance(line, list) else
+        padd_str(line.format_map(template), line_size) if not isinstance(line, tuple) else
         # first format each side, then add padding then join with the tab
-        (" " * 4).join(padd_str(side.format_map(template), 20) for side in line)
+        line[0] + (" " * 4).join(padd_str(side.format_map(template), 20) for side in line[1])
         for line in lines
     ]
 
