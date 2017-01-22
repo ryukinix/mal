@@ -51,6 +51,11 @@ def drop(mal, args):
     core.drop(mal, args.anime_regex)
 
 
+def stats(mal, args):
+    """Show the users anime watching statistics as presented on MAL."""
+    core.stats(mal)
+
+
 def config(mal, args):
     # TODO implement config command
     print("config - not implemented yet")

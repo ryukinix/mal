@@ -84,7 +84,7 @@ class MyAnimeList(object):
 
     @checked_connection
     @animated('preparing animes')
-    def list(self, status='all', type='anime', extra=False):
+    def list(self, status='all', type='anime', extra=False, get_stats=False):
         username = self.username
 
         payload = dict(u=username, status=status, type=type)
@@ -100,6 +100,7 @@ class MyAnimeList(object):
         for raw_entry in ET.fromstring(r.text):
             entry = dict((attr.tag, attr.text) for attr in raw_entry)
 
+            # anime information
             if 'series_animedb_id' in entry:
                 entry_id = int(entry['series_animedb_id'])
                 result[entry_id] = {
@@ -116,7 +117,7 @@ class MyAnimeList(object):
                 if result[entry_id]['rewatching']:
                     result[entry_id]['status_name'] = 'rewatching'
 
-                # if extra information was requested (via --extend cmd line flag) add it to the result
+                # add extra info about anime if needed
                 if extra:
                     extra_info = {
                         'start_date': entry['my_start_date'],
@@ -124,6 +125,14 @@ class MyAnimeList(object):
                         'tags': entry['my_tags']
                     }
                     result[entry_id].update(extra_info)
+
+            # user stats
+            if get_stats and 'user_id' in entry:
+                result['stats'] = {}
+                # copy entry dict to result['stats'] without all the 'user_'
+                for k, v in entry.items():
+                    result['stats'][k.replace('user_', '')] = v
+
 
         return result
 
