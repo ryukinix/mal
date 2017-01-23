@@ -65,8 +65,8 @@ def checked_regex(func):
         try:
             result = func(*args, **kwargs)
         except BadRegexError:
-            if AnimatedDecorator.controller.running:
-                AnimatedDecorator.stop_animation()
+            if AnimatedDecorator.spinner.running:
+                AnimatedDecorator.stop()
             print_error('BadRegexError', 'invalid regex', 'reason: you')
             sys.exit(1)
 
@@ -82,12 +82,12 @@ def checked_connection(func):
         try:
             result = func(*args, **kwargs)
         except ConnectionError as e:
-            if AnimatedDecorator.controller.running:
-                AnimatedDecorator.stop_animation()
-            err = e.args[0].args
-            status, reason = err[0], err[1].args[1]
+            if AnimatedDecorator.spinner.running:
+                AnimatedDecorator.stop()
             error_name = e.__class__.__name__
-            print_error(error_name, status, reason)
+            status = e.args[0].__class__.__name__
+            reason = e.args[0].reason.__class__.__name__
+            print_error(error_name, status, "reason: {}".format(reason))
             sys.exit(1)
         return result
 
