@@ -107,10 +107,10 @@ def drop(mal, regex):
     report_if_fails(response)
 
 
-def stats(mal):
+def stats(mal, username=None):
     """Print user anime stats."""
     # get all the info
-    animes = mal.list(get_stats=True)
+    animes = mal.list(stats=True, user=username)
     user_info = animes.pop("stats") # remove stats from anime list
 
     # gather all the numbers

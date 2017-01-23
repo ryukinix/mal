@@ -107,6 +107,8 @@ def create_parser():
     # Parser for "stats" command
     parser_stats = subparsers.add_parser('stats',
                                          help='Show anime watch stats')
+    parser_stats.add_argument('--user', type=str, default=None,
+                              help='which users list to pull stats from')
     parser_stats.set_defaults(func=commands.stats)
 
     return parser

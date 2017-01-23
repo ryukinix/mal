@@ -84,8 +84,8 @@ class MyAnimeList(object):
 
     @checked_connection
     @animated('preparing animes')
-    def list(self, status='all', type='anime', extra=False, get_stats=False):
-        username = self.username
+    def list(self, status='all', type='anime', extra=False, stats=False, user=None):
+        username = self.username if not user else user
 
         payload = dict(u=username, status=status, type=type)
         r = requests.get(
@@ -127,7 +127,7 @@ class MyAnimeList(object):
                     result[entry_id].update(extra_info)
 
             # user stats
-            if get_stats and 'user_id' in entry:
+            if stats and 'user_id' in entry:
                 result['stats'] = {}
                 # copy entry dict to result['stats'] without all the 'user_'
                 for k, v in entry.items():
