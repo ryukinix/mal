@@ -111,6 +111,7 @@ def stats(mal, username=None):
     """Print user anime stats."""
     # get all the info
     animes = mal.list(stats=True, user=username)
+    print(animes)
     user_info = animes.pop("stats") # remove stats from anime list
 
     # gather all the numbers
@@ -135,10 +136,13 @@ def stats(mal, username=None):
     bar = "█"
     colors = ["green", "blue", "yellow", "red", "gray"]
     colored = str()
-    for i, status in enumerate(["watching", "completed", "onhold", "dropped", "plantowatch"]):
-        entries = int(user_info[status])
-        bars = round(line_size * (entries / total_entries))
-        colored += color.colorize(bar * bars, colors[i])
+    if total_entries != 0:  # to prevent division by zero
+        for i, status in enumerate(["watching", "completed", "onhold", "dropped", "plantowatch"]):
+            entries = int(user_info[status])
+            bars = round(line_size * (entries / total_entries))
+            colored += color.colorize(bar * bars, colors[i])
+    else:
+        colored = color.colorize(bar * line_size, "white")
 
     # format the lines to print more easily afterwards
     template = {
