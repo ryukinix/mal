@@ -80,6 +80,8 @@ def create_parser():
                                       'plan to watch', 'rewatching'])
     parser_list.add_argument('--extend', action='store_true', # defaults to False
                              help='display extra info such as start/finish dates and tags')
+    parser_list.add_argument('--user', type=str, default=None,
+                              help='choose which users list to show')
     parser_list.set_defaults(func=commands.list)
 
     # Parser for "config" command
@@ -107,6 +109,8 @@ def create_parser():
     # Parser for "stats" command
     parser_stats = subparsers.add_parser('stats',
                                          help='Show anime watch stats')
+    parser_stats.add_argument('--user', type=str, default=None,
+                              help='which users list to pull stats from')
     parser_stats.set_defaults(func=commands.stats)
 
     return parser

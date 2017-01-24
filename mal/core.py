@@ -15,6 +15,7 @@ from datetime import date
 
 # self-package
 from mal.api import MyAnimeList
+from mal.utils import print_error
 from mal import color
 
 
@@ -107,10 +108,12 @@ def drop(mal, regex):
     report_if_fails(response)
 
 
-def stats(mal):
+def stats(mal, username=None):
     """Print user anime stats."""
     # get all the info
-    animes = mal.list(get_stats=True)
+    animes = mal.list(stats=True, user=username)
+    if not animes: print_error("Empty query", "username not found",
+                               "could not fetch list for user '{}'".format(username), kill=True)
     user_info = animes.pop("stats") # remove stats from anime list
 
     # gather all the numbers
@@ -135,10 +138,13 @@ def stats(mal):
     bar = "█"
     colors = ["green", "blue", "yellow", "red", "gray"]
     colored = str()
-    for i, status in enumerate(["watching", "completed", "onhold", "dropped", "plantowatch"]):
-        entries = int(user_info[status])
-        bars = round(line_size * (entries / total_entries))
-        colored += color.colorize(bar * bars, colors[i])
+    if total_entries != 0:  # to prevent division by zero
+        for i, status in enumerate(["watching", "completed", "onhold", "dropped", "plantowatch"]):
+            entries = int(user_info[status])
+            bars = round(line_size * (entries / total_entries))
+            colored += color.colorize(bar * bars, colors[i])
+    else:
+        colored = color.colorize(bar * line_size, "white")
 
     # format the lines to print more easily afterwards
     template = {
@@ -185,9 +191,9 @@ def stats(mal):
     print("\n".join(lines))
 
 
-def find(mal, regex, filtering='all', extra=False):
+def find(mal, regex, filtering='all', extra=False, user=None):
     """Find all anime in a certain status given a regex."""
-    items = mal.find(regex, extra=extra)
+    items = mal.find(regex, extra=extra, user=user)
     if len(items) == 0:
         print(color.colorize("No matches in list ᕙ(⇀‸↼‶)ᕗ", 'red'))
         return
