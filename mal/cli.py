@@ -80,6 +80,8 @@ def create_parser():
                                       'plan to watch', 'rewatching'])
     parser_list.add_argument('--extend', action='store_true', # defaults to False
                              help='display extra info such as start/finish dates and tags')
+    parser_list.add_argument('--user', type=str, default=None,
+                              help='choose which users list to show')
     parser_list.set_defaults(func=commands.list)
 
     # Parser for "config" command

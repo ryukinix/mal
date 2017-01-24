@@ -138,9 +138,9 @@ class MyAnimeList(object):
 
     @checked_regex
     @animated('matching animes')
-    def find(self, regex, status='all', extra=False):
+    def find(self, regex, status='all', extra=False, user=None):
         result = []
-        for value in self.list(status, extra=extra).values():
+        for value in self.list(status, extra=extra, user=user).values():
             if re.search(regex, value['title'], re.I):
                 result.append(value)
         return result

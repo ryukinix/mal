@@ -191,9 +191,9 @@ def stats(mal, username=None):
     print("\n".join(lines))
 
 
-def find(mal, regex, filtering='all', extra=False):
+def find(mal, regex, filtering='all', extra=False, user=None):
     """Find all anime in a certain status given a regex."""
-    items = mal.find(regex, extra=extra)
+    items = mal.find(regex, extra=extra, user=user)
     if len(items) == 0:
         print(color.colorize("No matches in list ᕙ(⇀‸↼‶)ᕗ", 'red'))
         return
