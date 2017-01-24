@@ -29,13 +29,14 @@ def killed():
     os._exit(1)
 
 
-def print_error(error_name, status, reason):
+def print_error(error_name, status, reason, kill=False):
     padding = (len(error_name) + 2) * ' '
     error = color.colorize(error_name, 'red', 'bold')
     status = color.colorize(status, 'cyan')
     print(('{error}: {status}\n'
            '{padding}{reason} ¯\_(ツ)_/¯'.format_map(locals())),
           file=sys.stderr)
+    if kill: os._exit(1)
 
 
 # THIS IS A LOL ZONE

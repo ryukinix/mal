@@ -15,6 +15,7 @@ from datetime import date
 
 # self-package
 from mal.api import MyAnimeList
+from mal.utils import print_error
 from mal import color
 
 
@@ -111,7 +112,8 @@ def stats(mal, username=None):
     """Print user anime stats."""
     # get all the info
     animes = mal.list(stats=True, user=username)
-    print(animes)
+    if not animes: print_error("Empty query", "username not found",
+                               "could not fetch list for user '{}'".format(username), kill=True)
     user_info = animes.pop("stats") # remove stats from anime list
 
     # gather all the numbers
