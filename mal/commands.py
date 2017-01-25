@@ -27,7 +27,7 @@ def search(mal, args):
 
 def filter(mal, args):
     """Search and find an anime in the users list."""
-    core.find(mal, args.anime_regex.lower())
+    core.find(mal, args.anime_regex.lower(), user=args.user)
 
 
 def increase(mal, args):
@@ -49,7 +49,7 @@ def list(mal, args):
     """Show all the animes on the users list."""
     # . matches any character except line breaks
     # + matches one or more occurences of the previous character
-    core.find(mal, '.+', args.section, args.extend, args.user)
+    core.find(mal, '.+', args.section, extra=args.extend, user=args.user)
 
 
 def drop(mal, args):
