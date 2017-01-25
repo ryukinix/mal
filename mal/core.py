@@ -89,6 +89,22 @@ def progress_update(mal, regex, inc):
     report_if_fails(response)
 
 
+def search(mal, regex):
+    """Search the MAL database for an anime."""
+    result = mal.search(regex)
+
+    for anime in result:
+        synopsis = anime["synopsis"]
+        template = {
+            'title': color.colorize(anime['title'], 'red', 'bold'),
+            'episodes': color.colorize(anime["episodes"], "yellow", 'bold'),
+            'score': color.score_color(float(anime['score'])),
+            'synopsis': synopsis[:70] if len(synopsis) > 70 else synopsis[:70] + "..."
+        }
+        for k, v in template.items():
+            print(k.capitalize(), v, sep=": ")
+        print("\n")
+
 def drop(mal, regex):
     """Drop a anime based a regex expression"""
     items = remove_completed(mal.find(regex))

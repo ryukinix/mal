@@ -35,6 +35,13 @@ def create_parser():
                                help='regex pattern to match anime titles')
     parser_search.set_defaults(func=commands.search)
 
+    # Parser for "filter" command
+    parser_search = subparsers.add_parser('filter',
+                                          help='find anime in users list')
+    parser_search.add_argument('anime_regex',
+                               help='regex pattern to match anime titles')
+    parser_search.set_defaults(func=commands.filter)
+
     # Parser for "increase" command
     parser_increase = subparsers.add_parser('increase',
                                             help="increase anime's watched episodes by one",
