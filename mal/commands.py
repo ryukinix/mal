@@ -22,7 +22,7 @@ from mal import setup
 
 def search(mal, args):
     """Search MAL (not just the user) anime database."""
-    core.search(mal, args.anime_regex.lower())
+    core.search(mal, args.anime_regex.lower(), args.full)
 
 
 def filter(mal, args):
