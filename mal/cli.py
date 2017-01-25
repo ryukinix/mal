@@ -33,6 +33,8 @@ def create_parser():
                                           help='search an anime')
     parser_search.add_argument('anime_regex',
                                help='regex pattern to match anime titles')
+    parser_search.add_argument('--full', action='store_true', # defaults to false
+                               help='display all available information on anime')
     parser_search.set_defaults(func=commands.search)
 
     # Parser for "filter" command
@@ -41,7 +43,7 @@ def create_parser():
     parser_filter.add_argument('anime_regex',
                                help='regex pattern to match anime titles')
     parser_filter.add_argument('--user', type=str, default=None,
-                              help='choose which users list to show')
+                              help='choose which users list to filter through')
     parser_filter.set_defaults(func=commands.filter)
 
     # Parser for "increase" command

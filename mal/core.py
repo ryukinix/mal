@@ -89,20 +89,30 @@ def progress_update(mal, regex, inc):
     report_if_fails(response)
 
 
-def search(mal, regex):
+def search(mal, regex, full=False):
     """Search the MAL database for an anime."""
     result = mal.search(regex)
+    if len(result) == 1: full = True # if full info if only one anime was found
 
-    for anime in result:
+    lines = ["{index}: {title}", "  Episodes: {episodes}\tScore: {score}", "  Synopsis: {synopsis}"]
+    extra_lines = ["  Start date: {start}\tEnd data: {end}", "  Status: {status}"]
+
+    print("Found", color.colorize(str(len(result)), "cyan", "underline"), "animes:")
+    for i, anime in enumerate(result):
         synopsis = anime["synopsis"]
+        # this template/line stuff might need some refactoring
         template = {
-            'title': color.colorize(anime['title'], 'red', 'bold'),
-            'episodes': color.colorize(anime["episodes"], "yellow", 'bold'),
-            'score': color.score_color(float(anime['score'])),
-            'synopsis': synopsis[:70] if len(synopsis) > 70 else synopsis[:70] + "..."
+            "index": str(i + 1),
+            "title": color.colorize(anime["title"], "red", "bold"),
+            "episodes": color.colorize(anime["episodes"], "white", "bold"),
+            "score": color.score_color(float(anime["score"])),
+            "synopsis": synopsis[:70] if len(synopsis) < 70 and not full else synopsis[:70] + "...",
+            "start": anime["start_date"] if anime["start_date"] != "0000-00-00" else "NA",
+            "end": anime["end_date"] if anime["end_date"] != "0000-00-00" else "NA",
+            "status": anime["status"]
         }
-        for k, v in template.items():
-            print(k.capitalize(), v, sep=": ")
+        print("\n".join(line.format_map(template) for line in lines))
+        if full: print("\n".join(line.format_map(template) for line in extra_lines))
         print("\n")
 
 def drop(mal, regex):
