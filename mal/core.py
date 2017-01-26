@@ -92,14 +92,14 @@ def progress_update(mal, regex, inc):
 def search(mal, regex, full=False):
     """Search the MAL database for an anime."""
     result = mal.search(regex)
-    if len(result) == 1: full = True # if full info if only one anime was found
+    if len(result) == 1: full = True # full info if only one anime was found
 
     lines = ["{index}: {title}", "  Episodes: {episodes}\tScore: {score}", "  Synopsis: {synopsis}"]
     extra_lines = ["  Start date: {start}\tEnd data: {end}", "  Status: {status}"]
 
     print("Found", color.colorize(str(len(result)), "cyan", "underline"), "animes:")
     for i, anime in enumerate(result):
-        synopsis = anime["synopsis"]
+        synopsis = str(anime["synopsis"])
         # this template/line stuff might need some refactoring
         template = {
             "index": str(i + 1),
