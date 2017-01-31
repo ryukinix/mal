@@ -10,7 +10,6 @@
 # stdlib
 from os import path
 from configparser import ConfigParser
-from datetime import datetime
 
 # 3rd party
 from appdirs import user_config_dir
