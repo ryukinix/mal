@@ -48,3 +48,22 @@
   * Update requests dependency (2.11.1)
   * Update README.md: usage & gifs
   * Create package on AUR!
+- v0.2.1
+  * Add episode argument number on inc/dec commands
+  * Lint all files
+  * Remove useless files from tree (./.env)
+  * Update version of requests on requirements.txt
+- v0.2.2
+  * Fix HTTP-403 error on inc/dec commands
+  * Make episodes on inc/dec commands optional using -n flag (default 1)
+  * Use anime_regex instead anime-regex name for subparsers
+- v0.2.3
+  * Make episode at positional argument default 1 for inc/dec commands
+- v0.3.0
+  * Add sphinx docs config and setup mal.readthedocs.io
+  * Use hyphens instead 'undefined' for non-classified score animes (mal list)
+  * Implement --extend flag on list command
+  * Implement drop command to setup any anime to dropped list
+  * Implement the stats command, just like the web version from oficial mal
+  * Fix some checkers decorators on mal.utils after new upgrades of requests and decorating
+  * Create a entry for date-format on config file (effect with `mal list --extend`)
