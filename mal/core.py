@@ -112,34 +112,40 @@ def stats(mal, username=None):
     """Print user anime stats."""
     # get all the info
     animes = mal.list(stats=True, user=username)
-    if not animes: print_error("Empty query", "username not found",
-                               "could not fetch list for user '{}'".format(username), kill=True)
-    user_info = animes.pop("stats") # remove stats from anime list
+    if not animes:
+        print_error("Empty query", "username not found",
+                    "could not fetch list for user '{}'".format(username),
+                    kill=True)
+    user_info = animes.pop("stats")  # remove stats from anime list
 
     # gather all the numbers
     total_entries = len(animes)
     rewatched, episodes, mean_score, scored = 0, 0, 0, 0
     for anime in animes.values():
-        episodes += anime["episode"] # this is watched episodes
+        episodes += anime["episode"]  # this is watched episodes
         if anime["rewatching"] != 0:
             rewatched += anime["rewatching"]
             # take into account episodes seen in previous watchings
             episodes += anime["rewatching"] * anime["total_episodes"]
 
-        if anime["score"] != 0: scored += 1
+        if anime["score"] != 0:
+            scored += 1
         mean_score += anime["score"]
 
-    if scored != 0: mean_score /= scored
+    if scored != 0:
+        mean_score /= scored
     # added two for circle colored + space on each list
-    line_size = 44 + 2 # code for calculating this was so messy I hardcoded instead
+    line_size = 44 + 2
+    # ↑ code for calculating this was so messy I hardcoded instead
     # it's 20 spaces for each of the 'sides' and 4 spaces in between them
 
     # colored bar. borrowed the bar char from neofetch
     bar = "█"
     colors = ["green", "blue", "yellow", "red", "gray"]
+    lists = ["watching", "completed", "onhold", "dropped", "plantowatch"]
     colored = str()
     if total_entries != 0:  # to prevent division by zero
-        for i, status in enumerate(["watching", "completed", "onhold", "dropped", "plantowatch"]):
+        for i, status in enumerate(lists):
             entries = int(user_info[status])
             bars = round(line_size * (entries / total_entries))
             colored += color.colorize(bar * bars, colors[i])
