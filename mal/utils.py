@@ -21,30 +21,6 @@ from requests.exceptions import ConnectionError
 from mal import color
 
 
-class Unbuffered(object):
-
-    def __init__(self, stream):
-        self.stream = stream
-
-    def write(self, data):
-        self.stream.write(data)
-        self.stream.flush()
-
-    def __getattr__(self, attr):
-        return getattr(self.stream, attr)
-
-
-class StopSpinner(object):
-    done = False
-    position = 0
-    message = 'loading'
-
-
-# global variables from hell
-sys.stdout = Unbuffered(sys.stdout)
-sig = StopSpinner()
-
-
 def killed():
     """Show a message if user terminated the program."""
     message = ("\n ┑(￣Д ￣)┍ somebody seems killed me..."
@@ -53,13 +29,15 @@ def killed():
     os._exit(1)
 
 
-def print_error(error_name, status, reason):
+def print_error(error_name, status, reason, kill=False):
     padding = (len(error_name) + 2) * ' '
     error = color.colorize(error_name, 'red', 'bold')
     status = color.colorize(status, 'cyan')
     print(('{error}: {status}\n'
            '{padding}{reason} ¯\_(ツ)_/¯'.format_map(locals())),
           file=sys.stderr)
+    if kill:
+        os._exit(1)
 
 
 # THIS IS A LOL ZONE
@@ -83,14 +61,14 @@ def print_error(error_name, status, reason):
 
 def checked_regex(func):
     """Wrap the function in a try/except to catch and handle a BadRegexError."""
-    @wraps(func) # keeps the wrapped function's name and docstring intact
+    @wraps(func)  # keeps the wrapped function's name and docstring intact
     def wrapper(*args, **kwargs):
         result = None
         try:
             result = func(*args, **kwargs)
         except BadRegexError:
-            if AnimatedDecorator.controller.running:
-                AnimatedDecorator.stop_animation()
+            if AnimatedDecorator.spinner.running:
+                AnimatedDecorator.stop()
             print_error('BadRegexError', 'invalid regex', 'reason: you')
             sys.exit(1)
 
@@ -100,18 +78,18 @@ def checked_regex(func):
 
 def checked_connection(func):
     """Wrap the function in a try/except to catch and handle a ConnectionError."""
-    @wraps(func) # keeps the wrapped function's name and docstring intact
+    @wraps(func)  # keeps the wrapped function's name and docstring intact
     def wrapper(*args, **kwargs):
         result = None
         try:
             result = func(*args, **kwargs)
         except ConnectionError as e:
-            if AnimatedDecorator.controller.running:
-                AnimatedDecorator.stop_animation()
-            err = e.args[0].args
-            status, reason = err[0], err[1].args[1]
+            if AnimatedDecorator.spinner.running:
+                AnimatedDecorator.stop()
             error_name = e.__class__.__name__
-            print_error(error_name, status, reason)
+            status = e.args[0].__class__.__name__
+            reason = e.args[0].reason.__class__.__name__
+            print_error(error_name, status, "reason: {}".format(reason))
             sys.exit(1)
         return result
 

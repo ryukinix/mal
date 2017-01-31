@@ -10,6 +10,7 @@
 # stdlib
 import re
 from xml.etree import cElementTree as ET
+from datetime import datetime
 
 # 3rd party
 import requests
@@ -17,6 +18,7 @@ from decorating import animated
 
 # self-package
 from mal.utils import checked_connection, checked_regex
+from mal import setup
 
 
 class MyAnimeList(object):
@@ -39,8 +41,9 @@ class MyAnimeList(object):
     status_codes = {v: k for k, v in status_names.items()}
 
     def __init__(self, config):
-        self.username = config['username']
-        self.password = config['password']
+        self.username = config[setup.LOGIN_SECTION]['username']
+        self.password = config[setup.LOGIN_SECTION]['password']
+        self.date_format = config[setup.CONFIG_SECTION]['date_format']
 
     @checked_connection
     @animated('validating login')
@@ -56,7 +59,7 @@ class MyAnimeList(object):
     @classmethod
     def login(cls, config):
         """Create an instante of MyAnimeList and log it in."""
-        mal = cls(config) # start instance of MyAnimeList
+        mal = cls(config)  # start instance of MyAnimeList
 
         # 401 = unauthorized
         if mal.validate_login() == 401:
@@ -84,8 +87,8 @@ class MyAnimeList(object):
 
     @checked_connection
     @animated('preparing animes')
-    def list(self, status='all', type='anime'):
-        username = self.username
+    def list(self, status='all', type='anime', extra=False, stats=False, user=None):
+        username = self.username if not user else user
 
         payload = dict(u=username, status=status, type=type)
         r = requests.get(
@@ -100,6 +103,7 @@ class MyAnimeList(object):
         for raw_entry in ET.fromstring(r.text):
             entry = dict((attr.tag, attr.text) for attr in raw_entry)
 
+            # anime information
             if 'series_animedb_id' in entry:
                 entry_id = int(entry['series_animedb_id'])
                 result[entry_id] = {
@@ -116,13 +120,35 @@ class MyAnimeList(object):
                 if result[entry_id]['rewatching']:
                     result[entry_id]['status_name'] = 'rewatching'
 
+                # add extra info about anime if needed
+                if extra:
+                    extra_info = {
+                        'start_date': self._fdate(entry['my_start_date']),
+                        'finish_date': self._fdate(entry['my_finish_date']),
+                        'tags': entry['my_tags']
+                    }
+                    result[entry_id].update(extra_info)
+
+            # user stats
+            if stats and 'user_id' in entry:
+                result['stats'] = {}
+                # copy entry dict to result['stats'] without all the 'user_'
+                for k, v in entry.items():
+                    result['stats'][k.replace('user_', '')] = v
+
         return result
+
+    def _fdate(self, date, api_format='%Y-%m-%d'):
+        """Format date based on the user config format"""
+        if date == '0000-00-00':
+            return date
+        return datetime.strptime(date, api_format).strftime(self.date_format)
 
     @checked_regex
     @animated('matching animes')
-    def find(self, regex, status='all'):
+    def find(self, regex, status='all', extra=False, user=None):
         result = []
-        for value in self.list(status).values():
+        for value in self.list(status, extra=extra, user=user).values():
             if re.search(regex, value['title'], re.I):
                 result.append(value)
         return result

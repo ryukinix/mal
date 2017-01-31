@@ -15,13 +15,19 @@ from datetime import date
 
 # self-package
 from mal.api import MyAnimeList
+from mal.utils import print_error
 from mal import color
+
+
+def report_if_fails(response):
+    if response != 200:
+        print(color.colorize("Failed with HTTP: {}".format(response), 'red'))
 
 
 def select_item(items):
     """Select a single item from a list of results."""
     item = None
-    if len(items) > 1: # ambigious search results
+    if len(items) > 1:  # ambigious search results
         print(color.colorize('Multiple results:', 'cyan'))
         # show user the results and make them choose one
         for index, title in enumerate(map(itemgetter('title'), items)):
@@ -65,7 +71,7 @@ def remove_completed(items):
 
 def progress_update(mal, regex, inc):
     items = remove_completed(mal.find(regex))
-    item = select_item(items) # also handles ambigious searches
+    item = select_item(items)  # also handles ambigious searches
     episode = item['episode'] + inc
     entry = dict(episode=episode)
     template = {
@@ -80,13 +86,120 @@ def progress_update(mal, regex, inc):
 
     entry = start_end(entry, episode, item['total_episodes'])
     response = mal.update(item['id'], entry)
-    if response != 200:
-        print(color.colorize("Failed with HTTP: {}".format(response), 'red'))
+    report_if_fails(response)
 
 
-def find(mal, regex, filtering='all'):
+def drop(mal, regex):
+    """Drop a anime based a regex expression"""
+    items = remove_completed(mal.find(regex))
+    item = select_item(items)
+    entry = dict(status=mal.status_codes['dropped'])
+    old_status = mal.status_names[item['status']]
+    template = {
+        'title': color.colorize(item['title'], 'yellow', 'bold'),
+        'old-status': color.colorize(old_status, 'green', 'bold'),
+        'action': color.colorize('Dropping', 'red', 'bold')
+
+    }
+
+    print(('{action} anime {title} from list '
+           '{old-status}'.format_map(template)))
+    response = mal.update(item['id'], entry)
+    report_if_fails(response)
+
+
+def stats(mal, username=None):
+    """Print user anime stats."""
+    # get all the info
+    animes = mal.list(stats=True, user=username)
+    if not animes:
+        print_error("Empty query", "username not found",
+                    "could not fetch list for user '{}'".format(username),
+                    kill=True)
+    user_info = animes.pop("stats")  # remove stats from anime list
+
+    # gather all the numbers
+    total_entries = len(animes)
+    rewatched, episodes, mean_score, scored = 0, 0, 0, 0
+    for anime in animes.values():
+        episodes += anime["episode"]  # this is watched episodes
+        if anime["rewatching"] != 0:
+            rewatched += anime["rewatching"]
+            # take into account episodes seen in previous watchings
+            episodes += anime["rewatching"] * anime["total_episodes"]
+
+        if anime["score"] != 0:
+            scored += 1
+        mean_score += anime["score"]
+
+    if scored != 0:
+        mean_score /= scored
+    # added two for circle colored + space on each list
+    line_size = 44 + 2
+    # ↑ code for calculating this was so messy I hardcoded instead
+    # it's 20 spaces for each of the 'sides' and 4 spaces in between them
+
+    # colored bar. borrowed the bar char from neofetch
+    bar = "█"
+    colors = ["green", "blue", "yellow", "red", "gray"]
+    lists = ["watching", "completed", "onhold", "dropped", "plantowatch"]
+    colored = str()
+    if total_entries != 0:  # to prevent division by zero
+        for i, status in enumerate(lists):
+            entries = int(user_info[status])
+            bars = round(line_size * (entries / total_entries))
+            colored += color.colorize(bar * bars, colors[i])
+    else:
+        colored = color.colorize(bar * line_size, "white")
+
+    # format the lines to print more easily afterwards
+    template = {
+        "days": user_info["days_spent_watching"],
+        "mean_score": "{:.2f}".format(mean_score),
+        "watching": user_info["watching"],
+        "completed": user_info["completed"],
+        "hold": user_info["onhold"],
+        "plan": user_info["plantowatch"],
+        "dropped": user_info["dropped"],
+        "total_entries": str(total_entries),
+        "episodes": str(episodes),
+        "rewatched": str(rewatched),
+        "padd": "{p}"  # needed to format with padding afterwards
+    }
+
+    def point_color(color_name):
+        return color.colorize("● ", color_name, "bold")
+
+    lines = [
+        "Days: {days}{padd}Mean Score: {mean_score}",
+        colored,
+        (point_color("green"),
+            ["Watching:{padd}{watching}", "Total Entries:{padd}{total_entries}"]),
+        (point_color("blue"),
+            ["Completed:{padd}{completed}", "Rewatched:{padd}{rewatched}"]),
+        (point_color("yellow"),
+            ["On-Hold:{padd}{hold}", "Episodes:{padd}{episodes}"]),
+        (point_color("red"), ["Dropped:{padd}{dropped}"]),
+        (point_color("gray"), ["Plan to Watch:{padd}{plan}"])
+    ]
+    # add info to lines and format them to look nice
+    def padd_str(string, final_size):
+        return string.replace("{p}", " " * (final_size - len(string) + len("{p}")))
+
+    lines = [
+        padd_str(line.format_map(template), line_size) if not isinstance(line, tuple) else
+        # first format each side, then add padding then join with the tab
+        line[0] + (" " * 4).join(padd_str(side.format_map(template), 20) for side in line[1])
+        for line in lines
+    ]
+
+    print(color.colorize("Anime Stats", "white", "underline"))
+    print("\n".join(lines))
+
+
+def find(mal, regex, filtering='all', extra=False, user=None):
     """Find all anime in a certain status given a regex."""
-    items = mal.find(regex)
+    items = mal.find(regex, extra=extra, user=user)
     if len(items) == 0:
         print(color.colorize("No matches in list ᕙ(⇀‸↼‶)ᕗ", 'red'))
         return
@@ -101,10 +214,10 @@ def find(mal, regex, filtering='all'):
     # pretty print all the animes found
     sorted_items = sorted(items, key=itemgetter('status'), reverse=True)
     for index, item in enumerate(sorted_items):
-        anime_pprint(index + 1, item)
+        anime_pprint(index + 1, item, extra=extra)
 
 
-def anime_pprint(index, item):
+def anime_pprint(index, item, extra=False):
     """Pretty print an anime's information."""
     padding = int(math.log10(index)) + 3
     remaining_color = ('blue' if item['episode'] < item['total_episodes']
@@ -121,11 +234,25 @@ def anime_pprint(index, item):
         'score': color.score_color(item['score']),
         'rewatching': (color.colorize(in_rewatching, 'yellow', 'bold'))
     }
+    # add formating options for extra info
+    if extra:
+        template.update({
+            'start': item['start_date'] if item['start_date'] != '0000-00-00' else 'NA',
+            'finish': item['finish_date'] if item['finish_date'] != '0000-00-00' else 'NA',
+            'tags': item['tags']
+        })
 
     message_lines = [
         "{index}: {title}".format_map(template),
         ("{padding}{status} at {remaining} episodes "
-         "with score {score} {rewatching}\n".format_map(template)),
+         "with score {score} {rewatching}".format_map(template))
     ]
 
-    print('\n'.join(message_lines))
+    # the extra information lines
+    if extra:
+        message_lines.extend([
+            "{padding}Started: {start} \t Finished: {finish}".format_map(template),
+            "{padding}Tags: {tags}".format_map(template)
+        ])
+
+    print('\n'.join(message_lines), "\n")

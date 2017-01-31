@@ -24,7 +24,7 @@ def score_color(score):
     elif score > 1:
         return colorize(score, 'red', 'bold')
     else:
-        return colorize('undefined', 'pink', 'bold')
+        return colorize('-', 'pink', 'bold')
 
 
 def procedure_color(increment):

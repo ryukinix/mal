@@ -6,6 +6,7 @@
 #   Copyright © Manoel Vilela
 #
 #
+
 """These function serve as an entry point for the several subcommands
 of mal. All they do is basically call the functions that do actual work
 in the core module."""
@@ -16,6 +17,7 @@ import sys
 # self-package
 from mal import core
 from mal import login as _login
+from mal import setup
 
 
 def search(mal, args):
@@ -42,15 +44,22 @@ def list(mal, args):
     """Show all the animes on the users list."""
     # . matches any character except line breaks
     # + matches one or more occurences of the previous character
-    if (args.section == 'all'):
-        core.find(mal, '.+')
-    else:
-        core.find(mal, '.+', args.section)
+    core.find(mal, '.+', args.section, args.extend, args.user)
+
+
+def drop(mal, args):
+    """Drop a anime from lists based in a regex expression"""
+    core.drop(mal, args.anime_regex)
+
+
+def stats(mal, args):
+    """Show the users anime watching statistics as presented on MAL."""
+    core.stats(mal, args.user)
 
 
 def config(mal, args):
-    # TODO implement config command
-    print("config - not implemented yet")
+    # Show the current config file
+    setup.print_config()
 
 
 def download(mal, args):
