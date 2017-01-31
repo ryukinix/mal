@@ -17,6 +17,7 @@ import sys
 # self-package
 from mal import core
 from mal import login as _login
+from mal import setup
 
 
 def search(mal, args):
@@ -57,8 +58,8 @@ def stats(mal, args):
 
 
 def config(mal, args):
-    # TODO implement config command
-    print("config - not implemented yet")
+    # Show the current config file
+    setup.print_config()
 
 
 def download(mal, args):
