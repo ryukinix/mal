@@ -86,7 +86,7 @@ def create_parser():
 
     # Parser for "config" command
     parser_config = subparsers.add_parser('config',
-                                          help='config - not implemented yet')
+                                          help='Print current config file and its path')
     parser_config.set_defaults(func=commands.config)
 
     # Parser for "download" command
