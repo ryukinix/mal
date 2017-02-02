@@ -10,6 +10,7 @@
 # stdlib
 import sys
 import math
+import html
 from operator import itemgetter
 from datetime import date
 
@@ -88,6 +89,40 @@ def progress_update(mal, regex, inc):
     response = mal.update(item['id'], entry)
     report_if_fails(response)
 
+
+def search(mal, regex, full=False):
+    """Search the MAL database for an anime."""
+    result = mal.search(regex)
+    # if no results or only one was found we treat them special
+    if len(result) == 0:
+        print(color.colorize("No matches in MAL database ᕙ(⇀‸↼‶)ᕗ", 'red'))
+        return
+    if len(result) == 1: full = True # full info if only one anime was found
+
+    lines = ["{index}: {title}", "  Episodes: {episodes}\tScore: {score}", "  Synopsis: {synopsis}"]
+    extra_lines = ["  Start date: {start}\tEnd data: {end}", "  Status: {status}"]
+
+    print("Found", color.colorize(str(len(result)), "cyan", "underline"), "animes:")
+    for i, anime in enumerate(result):
+        # replace tags and special html chars (like &mdash;) with actual characters
+        synopsis = html.unescape(str(anime["synopsis"])).replace("<br />", "")
+        if len(synopsis) > 70 and not full:
+            synopsis = synopsis[:70] + "..."
+
+        # this template/line stuff might need some refactoring
+        template = {
+            "index": str(i + 1),
+            "title": color.colorize(anime["title"], "red", "bold"),
+            "episodes": color.colorize(anime["episodes"], "white", "bold"),
+            "score": color.score_color(float(anime["score"])),
+            "synopsis": synopsis,
+            "start": anime["start_date"] if anime["start_date"] != "0000-00-00" else "NA",
+            "end": anime["end_date"] if anime["end_date"] != "0000-00-00" else "NA",
+            "status": anime["status"]
+        }
+        print("\n".join(line.format_map(template) for line in lines))
+        if full: print("\n".join(line.format_map(template) for line in extra_lines))
+        print("\n")
 
 def drop(mal, regex):
     """Drop a anime based a regex expression"""
