@@ -10,6 +10,7 @@
 # stdlib
 import sys
 import math
+import html
 from operator import itemgetter
 from datetime import date
 
@@ -103,16 +104,18 @@ def search(mal, regex, full=False):
 
     print("Found", color.colorize(str(len(result)), "cyan", "underline"), "animes:")
     for i, anime in enumerate(result):
-        synopsis = str(anime["synopsis"])
+        # replace tags and special html chars (like &mdash;) with actual characters
+        synopsis = html.unescape(str(anime["synopsis"])).replace("<br />", "")
+        if len(synopsis) > 70 and not full:
+            synopsis = synopsis[:70] + "..."
+
         # this template/line stuff might need some refactoring
         template = {
             "index": str(i + 1),
             "title": color.colorize(anime["title"], "red", "bold"),
             "episodes": color.colorize(anime["episodes"], "white", "bold"),
             "score": color.score_color(float(anime["score"])),
-            # TODO: strip the synopsis of all the tags (like bold and italics)
-            # and special chars (&mdash;) or it will look very ugly when displayed fully
-            "synopsis": synopsis[:70] if len(synopsis) < 70 and not full else synopsis[:70] + "...",
+            "synopsis": synopsis,
             "start": anime["start_date"] if anime["start_date"] != "0000-00-00" else "NA",
             "end": anime["end_date"] if anime["end_date"] != "0000-00-00" else "NA",
             "status": anime["status"]
