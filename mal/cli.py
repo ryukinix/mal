@@ -42,6 +42,8 @@ def create_parser():
                                           help='find anime in users list')
     parser_filter.add_argument('anime_regex',
                                help='regex pattern to match anime titles')
+    parser_filter.add_argument('--extend', action='store_true',
+                               help='display all available information on anime')
     parser_filter.add_argument('--user', type=str, default=None,
                               help='choose which users list to filter through')
     parser_filter.set_defaults(func=commands.filter)

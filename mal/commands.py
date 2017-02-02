@@ -27,7 +27,7 @@ def search(mal, args):
 
 def filter(mal, args):
     """Search and find an anime in the users list."""
-    core.find(mal, args.anime_regex.lower(), user=args.user)
+    core.find(mal, args.anime_regex.lower(), extra=args.extend, user=args.user)
 
 
 def increase(mal, args):
