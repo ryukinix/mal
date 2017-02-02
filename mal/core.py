@@ -92,6 +92,10 @@ def progress_update(mal, regex, inc):
 def search(mal, regex, full=False):
     """Search the MAL database for an anime."""
     result = mal.search(regex)
+    # if no results or only one was found we treat them special
+    if len(result) == 0:
+        print(color.colorize("No matches in MAL database ᕙ(⇀‸↼‶)ᕗ", 'red'))
+        return
     if len(result) == 1: full = True # full info if only one anime was found
 
     lines = ["{index}: {title}", "  Episodes: {episodes}\tScore: {score}", "  Synopsis: {synopsis}"]
@@ -106,6 +110,8 @@ def search(mal, regex, full=False):
             "title": color.colorize(anime["title"], "red", "bold"),
             "episodes": color.colorize(anime["episodes"], "white", "bold"),
             "score": color.score_color(float(anime["score"])),
+            # TODO: strip the synopsis of all the tags (like bold and italics)
+            # and special chars (&mdash;) or it will look very ugly when displayed fully
             "synopsis": synopsis[:70] if len(synopsis) < 70 and not full else synopsis[:70] + "...",
             "start": anime["start_date"] if anime["start_date"] != "0000-00-00" else "NA",
             "end": anime["end_date"] if anime["end_date"] != "0000-00-00" else "NA",
