@@ -126,6 +126,13 @@ def create_parser():
                               help='which users list to pull stats from')
     parser_stats.set_defaults(func=commands.stats)
 
+    # Parser for "add" command
+    parser_add = subparsers.add_parser('add',
+                                      help='add an anime to the list')
+    parser_add.add_argument('anime_regex',
+                            help='regex pattern to match anime titles')
+    parser_add.set_defaults(func=commands.add)
+
     return parser
 
 
