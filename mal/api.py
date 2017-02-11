@@ -155,7 +155,7 @@ class MyAnimeList(object):
 
     @checked_connection
     @animated('updating')
-    def update(self, item_id, entry):
+    def update(self, item_id, entry, action="update"):
         tree = ET.Element('entry')
         for key, val in entry.items():
             ET.SubElement(tree, key).text = str(val)
@@ -165,7 +165,7 @@ class MyAnimeList(object):
 
         payload = {'data': xml_item}
         r = requests.post(
-            self.base_url + '/animelist/update/' + str(item_id) + '.xml',
+            self.base_url + '/animelist/{}/'.format(action) + str(item_id) + '.xml',
             data=payload,
             auth=(self.username, self.password),
             headers={'User-Agent': self.user_agent}
