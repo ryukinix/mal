@@ -143,13 +143,20 @@ def drop(mal, regex):
     report_if_fails(response)
 
 
-def add(mal, regex):
+def add(mal, regex, status="plan to watch"):
     """Add an entry to the user list."""
     results = mal.search(regex)
     selected = select_item(results)
 
-    print("adding", selected["title"], " to list with status 'plan to watch'")
-    mal.update(selected["id"], {"status": mal.status_codes["plan to watch"]}, action="add")
+    print("Adding {title} to list as '{status}'".format(
+        title=color.colorize(selected["title"], "yellow", "bold"),
+        status=status)
+    )
+    mal.update(
+        selected["id"],
+        {"status": mal.status_codes["plan to watch"]},
+        action="add"
+    )
 
 
 def stats(mal, username=None):
