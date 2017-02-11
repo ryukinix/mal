@@ -64,7 +64,7 @@ def stats(mal, args):
 
 def add(mal, args):
     """Add an anime with a certain status to the list."""
-    core.add(mal, args.anime_regex.lower())
+    core.add(mal, args.anime_regex.lower(), status=args.status)
 
 
 def config(mal, args):

@@ -154,7 +154,7 @@ def add(mal, regex, status="plan to watch"):
     )
     mal.update(
         selected["id"],
-        {"status": mal.status_codes["plan to watch"]},
+        {"status": mal.status_codes[status]},
         action="add"
     )
 
