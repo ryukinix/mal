@@ -143,6 +143,15 @@ def drop(mal, regex):
     report_if_fails(response)
 
 
+def add(mal, regex):
+    """Add an entry to the user list."""
+    results = mal.search(regex)
+    selected = select_item(results)
+
+    print("adding", selected["title"], " to list with status 'plan to watch'")
+    mal.update(selected["id"], {"status": mal.status_codes["plan to watch"]}, action="add")
+
+
 def stats(mal, username=None):
     """Print user anime stats."""
     # get all the info
