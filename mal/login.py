@@ -32,15 +32,19 @@ def create_credentials():
     successful = color.colorize(':: valid credentials!', 'green')
     invalid = color.colorize(':: invalid credentials! try again', 'red')
     print(login_header)
+
     config = setup.config()
     config.add_section(setup.LOGIN_SECTION)
     config.set(setup.LOGIN_SECTION, 'username', input('Username: '))
     config.set(setup.LOGIN_SECTION, 'password',  getpass())
-    if MyAnimeList.validate_login(config[setup.LOGIN_SECTION]):
+
+    # confirm that account credentials are correct by trying to log in
+    if MyAnimeList.login(config):
+        # account is ok, create a config file
         makedirs(setup.APP_DIR, exist_ok=True)
-        with open(setup.APP_PATH, 'w') as cfg:
+        with open(setup.CONFIG_PATH, 'w') as cfg:
             config.write(cfg)
-            print(successful, 'saved in {}'.format(setup.APP_PATH))
+            print(successful, 'saved in {}'.format(setup.CONFIG_PATH))
     else:
         print(invalid)
         config = create_credentials()
