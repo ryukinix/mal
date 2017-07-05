@@ -8,6 +8,7 @@
 #
 
 # stdlib
+import os
 from os import path
 from configparser import ConfigParser
 
@@ -45,6 +46,8 @@ def config():
 
     if CONFIG_SECTION not in parser:
         parser.read_dict(DEFAULT_CONFIG)
+        # ensure that directory app_dir exists or creates otherwise
+        os.makedirs(APP_DIR, exist_ok=True)
         with open(CONFIG_PATH, 'w') as f:
             parser.write(f)
 

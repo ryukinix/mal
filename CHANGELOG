@@ -1,4 +1,3 @@
-
 # Milestones in general
 
 - v0.1
@@ -67,3 +66,10 @@
   * Implement the stats command, just like the web version from oficial mal
   * Fix some checkers decorators on mal.utils after new upgrades of requests and decorating
   * Create a entry for date-format on config file (effect with `mal list --extend`)
+- v0.3.1
+  * Allow new version from appdirs and requests
+  * Rename search command to filter (local account search)
+  * Add a new command search for global search
+  * Add --user option for filter command
+  * Add a new command `add` to add new animes to user list
+  * Fix issues on login and CONFIG_FILE creation
