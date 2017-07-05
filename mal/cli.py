@@ -26,7 +26,7 @@ signal.signal(signal.SIGINT, lambda x, y: killed())
 def create_parser():
     parser = argparse.ArgumentParser(prog='mal',
                                      description='MyAnimeList command line client.')
-    subparsers = parser.add_subparsers(help='commands')
+    subparsers = parser.add_subparsers(help='commands', dest='command')
 
     # Parser for "search" command
     parser_search = subparsers.add_parser('search',
@@ -76,9 +76,9 @@ def create_parser():
     parser_decrease.set_defaults(func=commands.decrease)
 
     # Parser for "login" command
-    parser_search = subparsers.add_parser('login',
+    parser_login = subparsers.add_parser('login',
                                           help='save login credentials')
-    parser_search.set_defaults(func=commands.login)
+    parser_login.set_defaults(func=commands.login)
 
     # Parser for "list" command
     parser_list = subparsers.add_parser('list', help='list animes')
@@ -146,6 +146,14 @@ def main():
         args = parser.parse_args(['-h'])
     else:
         args = parser.parse_args()
+
+    # if the command is login, create credentials and exits
+    # NOTE: if this statement is removed the `mal login` and
+    # no credentials exists, login.create_credentials() will
+    # be called twice! On login.get_credentials and args.func(mal, args)
+    if args.command == 'login':
+        login.create_credentials()
+        sys.exit(0)
 
     # Check if authorized
     config = login.get_credentials()
