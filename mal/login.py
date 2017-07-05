@@ -34,14 +34,14 @@ def create_credentials():
     print(login_header)
 
     config = setup.config()
-    config.add_section(setup.LOGIN_SECTION)
+    if setup.LOGIN_SECTION not in config:
+        config.add_section(setup.LOGIN_SECTION)
     config.set(setup.LOGIN_SECTION, 'username', input('Username: '))
     config.set(setup.LOGIN_SECTION, 'password',  getpass())
 
     # confirm that account credentials are correct by trying to log in
     if MyAnimeList.login(config):
         # account is ok, create a config file
-        makedirs(setup.APP_DIR, exist_ok=True)
         with open(setup.CONFIG_PATH, 'w') as cfg:
             config.write(cfg)
             print(successful, 'saved in {}'.format(setup.CONFIG_PATH))
