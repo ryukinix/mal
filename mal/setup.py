@@ -10,7 +10,7 @@
 # stdlib
 import os
 from os import path
-from configparser import ConfigParser
+from configparser import RawConfigParser
 
 # 3rd party
 from appdirs import user_config_dir
@@ -34,12 +34,12 @@ DEFAULT_CONFIG = {
 
 
 def config():
-    """Create a ConfigParser and if exists read it before return
+    """Create a RawConfigParser and if exists read it before return
 
     :returns: the current config or a new one
-    :rtype: configparser.ConfigParser
+    :rtype: configparser.RawConfigParser
     """
-    parser = ConfigParser()
+    parser = RawConfigParser()
     if path.exists(CONFIG_PATH):
         with open(CONFIG_PATH, 'r') as f:
             parser.read_file(f)
