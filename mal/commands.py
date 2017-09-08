@@ -70,13 +70,3 @@ def add(mal, args):
 def config(mal, args):
     # Show the current config file
     setup.print_config()
-
-
-def download(mal, args):
-    # TODO implement download command
-    print("download - not implemented yet")
-
-
-def watch(mal, args):
-    # TODO implement watch command
-    print("watch - not implemented yet")

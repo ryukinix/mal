@@ -107,16 +107,6 @@ def create_parser():
                                           help='Print current config file and its path')
     parser_config.set_defaults(func=commands.config)
 
-    # Parser for "download" command
-    parser_download = subparsers.add_parser('download',
-                                            help='download - not implemented yet')
-    parser_download.set_defaults(func=commands.download)
-
-    # Parser for "watch" command
-    parser_watch = subparsers.add_parser('watch',
-                                         help='watch - not implemented yet')
-    parser_watch.set_defaults(func=commands.watch)
-
     # Parser for "drop" command
     parser_drop = subparsers.add_parser('drop',
                                         help='Put a selected anime on drop list')
