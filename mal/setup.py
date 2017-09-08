@@ -26,9 +26,7 @@ LOGIN_SECTION = 'login'
 CONFIG_SECTION = 'config'
 DEFAULT_CONFIG = {
     CONFIG_SECTION: {
-        # needs double % because ConfigParser interpolation
-        # just one throw an exception
-        'date_format': '%%Y-%%m-%%d',
+        'date_format': '%Y-%m-%d',
     },
 }
 
