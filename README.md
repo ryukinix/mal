@@ -34,7 +34,7 @@ And more are currently being developed!
 
 ## Requirements
 
-- Python 3.2+
+- Python 3.4+
 - [setuptools](https://pypi.python.org/pypi/setuptools/3.5.1) (For installing and developing)
 - [requests](http://docs.python-requests.org/en/latest/index.html)
 - [appdirs](https://pypi.python.org/pypi/appdirs)
@@ -94,7 +94,7 @@ cd python-mal-git/
 makepkg -si
 ```
 
-Notice that before using this method all dependencies should be installed. 
+Notice that before using this method all dependencies should be installed.
 
 ## Usage
 

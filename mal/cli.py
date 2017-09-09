@@ -13,6 +13,7 @@ import signal
 import argparse
 
 # self-package
+import mal
 from mal.api import MyAnimeList
 from mal.utils import killed
 from mal import color
@@ -26,6 +27,10 @@ signal.signal(signal.SIGINT, lambda x, y: killed())
 def create_parser():
     parser = argparse.ArgumentParser(prog='mal',
                                      description='MyAnimeList command line client.')
+    parser.add_argument('-v',
+                        '--version',
+                        action='store_true',
+                        help='show the version of mal')
     subparsers = parser.add_subparsers(help='commands', dest='command')
 
     # Parser for "search" command
@@ -102,16 +107,6 @@ def create_parser():
                                           help='Print current config file and its path')
     parser_config.set_defaults(func=commands.config)
 
-    # Parser for "download" command
-    parser_download = subparsers.add_parser('download',
-                                            help='download - not implemented yet')
-    parser_download.set_defaults(func=commands.download)
-
-    # Parser for "watch" command
-    parser_watch = subparsers.add_parser('watch',
-                                         help='watch - not implemented yet')
-    parser_watch.set_defaults(func=commands.watch)
-
     # Parser for "drop" command
     parser_drop = subparsers.add_parser('drop',
                                         help='Put a selected anime on drop list')
@@ -147,6 +142,10 @@ def main():
     else:
         args = parser.parse_args()
 
+    if args.version:
+        print(mal.__version__)
+        sys.exit(0)
+
     # if the command is login, create credentials and exits
     # NOTE: if this statement is removed the `mal login` and
     # no credentials exists, login.create_credentials() will
@@ -157,14 +156,14 @@ def main():
 
     # Check if authorized
     config = login.get_credentials()
-    mal = MyAnimeList.login(config)
-    if not mal:
+    mal_api = MyAnimeList.login(config)
+    if not mal_api:
         print(color.colorize('Invalid credentials! :(', 'red', 'bold'))
         print(color.colorize('Tip: Try "mal login" again :D', 'white', 'bold'))
         sys.exit(1)
 
     # Execute sub command
-    args.func(mal, args)
+    args.func(mal_api, args)
 
 
 if __name__ == '__main__':

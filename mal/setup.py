@@ -10,7 +10,7 @@
 # stdlib
 import os
 from os import path
-from configparser import ConfigParser
+from configparser import RawConfigParser
 
 # 3rd party
 from appdirs import user_config_dir
@@ -26,20 +26,18 @@ LOGIN_SECTION = 'login'
 CONFIG_SECTION = 'config'
 DEFAULT_CONFIG = {
     CONFIG_SECTION: {
-        # needs double % because ConfigParser interpolation
-        # just one throw an exception
-        'date_format': '%%Y-%%m-%%d',
+        'date_format': '%Y-%m-%d',
     },
 }
 
 
 def config():
-    """Create a ConfigParser and if exists read it before return
+    """Create a RawConfigParser and if exists read it before return
 
     :returns: the current config or a new one
-    :rtype: configparser.ConfigParser
+    :rtype: configparser.RawConfigParser
     """
-    parser = ConfigParser()
+    parser = RawConfigParser()
     if path.exists(CONFIG_PATH):
         with open(CONFIG_PATH, 'r') as f:
             parser.read_file(f)
