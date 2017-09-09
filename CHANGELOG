@@ -1,5 +1,3 @@
-# Milestones in general
-
 - v0.1
   * search: mal anime-regex
   * filtering: mal [sublist]
@@ -73,3 +71,13 @@
   * Add --user option for filter command
   * Add a new command `add` to add new animes to user list
   * Fix issues on login and CONFIG_FILE creation
+- v0.3.2
+  * Add version -v and --version flags
+  * Add requirements-dev.txt to build packages and docs
+  * Add basic documentation on docs/source/index.rst from README.md (used pandoc)
+  * Remove support for watch and download commands
+  * Use RawConfigParser instead of ConfigParser for configuration
+  * Setup ReadTheDocs on docs/ and integrate with mal package to fetch the new
+          version from `mal.__version__` variable.
+  * Note: old users should fix date_format on ~/.config/mal/myanimelist.ini
+          manually changing from %%d-%%m-%%Y to %d-%m-%Y.
