@@ -140,7 +140,7 @@ class MyAnimeList(object):
 
     def _fdate(self, date, api_format='%Y-%m-%d'):
         """Format date based on the user config format"""
-        if date == '0000-00-00':
+        if any(int(s) == 0 for s in date.split('-')):
             return date
         return datetime.strptime(date, api_format).strftime(self.date_format)
 
