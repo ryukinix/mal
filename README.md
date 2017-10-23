@@ -1,6 +1,7 @@
 # mal - MyAnimeList Command Line Interface
 
 [![Build Status](https://travis-ci.org/ryukinix/mal.svg?branch=master)](https://travis-ci.org/ryukinix/mal)
+[![codecov](https://codecov.io/gh/ryukinix/mal/branch/master/graph/badge.svg)](https://codecov.io/gh/ryukinix/mal)
 [![PyPi version](https://img.shields.io/pypi/v/mal.svg)](https://pypi.python.org/pypi/mal/)
 [![Requirements Status](https://requires.io/github/ryukinix/mal/requirements.svg?branch=master)](https://requires.io/github/ryukinix/mal/requirements/?branch=master)
 [![PyPi License](https://img.shields.io/pypi/l/mal.svg)](https://pypi.python.org/pypi/mal/)
