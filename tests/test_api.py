@@ -4,6 +4,8 @@ from unittest import mock
 
 import requests
 
+from pprint import pprint
+
 from mal import api
 from mal import setup
 from tests.list_response_builder import MalListResponseBuilder
@@ -40,8 +42,7 @@ class TestApiList(unittest.TestCase):
             'my_score': 3,
             'series_episodes': 2,
             'my_rewatching': 1})
-
-        text = list.get_response_xml()       
+      
         mock_response_get.return_value = mock.Mock(
             text=list.get_response_xml())
         result = self.mal.list()
@@ -74,8 +75,7 @@ class TestApiList(unittest.TestCase):
             'my_finish_date': '2016-01-01',
             'my_tags': 'moe'
         })
-
-        text = list.get_response_xml()       
+      
         mock_response_get.return_value = mock.Mock(
             text=list.get_response_xml())
         result = self.mal.list(extra=True)
@@ -111,8 +111,7 @@ class TestApiList(unittest.TestCase):
             'series_animedb_id': 3,
             'series_title': 'anime3',
         })
-
-        text = list.get_response_xml()       
+      
         mock_response_get.return_value = mock.Mock(
             text=list.get_response_xml())
         result = self.mal.list(stats=True)
@@ -123,8 +122,6 @@ class TestApiList(unittest.TestCase):
         self.assertTrue('stats' in result)
         anime_stats_props_valid = lambda x: all(
             result['stats'].get(k) == v for k, v in x.items())
-
-        pprint(result['stats'])
 
         self.assertTrue(anime.get('title') == 'anime3')
         self.assertTrue(anime_stats_props_valid({
@@ -137,6 +134,76 @@ class TestApiList(unittest.TestCase):
             'watching': '6',
             'plantowatch': '7'
         }))
+
+
+class TestApiFind(unittest.TestCase):
+
+    @mock.patch.object(api.MyAnimeList, 'validate_login')
+    def setUp(self, mock_validate_login):
+        mock_validate_login.return_value = 200
+        self.mal = api.MyAnimeList.login(MOCK_CONFIG)
+
+    @mock.patch.object(requests, 'get')
+    def test_find_anime_found_and_lost(self, mock_response_get):
+        list = MalListResponseBuilder()
+        list.set_profile({'user_name': 'any'})
+        list.add_series({
+            'series_animedb_id': 1,
+            'series_title': 'found_anime'
+        })
+        list.add_series({
+            'series_animedb_id': 2,
+            'series_title': 'lost_anime'
+        })
+       
+        mock_response_get.return_value = mock.Mock(
+            text=list.get_response_xml())
+        results = self.mal.find('found_anime')
+
+        self.assertTrue(len(results) == 1)
+        anime = results[0]
+        self.assertTrue(anime.get('title') == 'found_anime')
+
+    @mock.patch.object(requests, 'get')
+    def test_find_anime_found_more_than_one(self, mock_response_get):
+        list = MalListResponseBuilder()
+        list.set_profile({'user_name': 'any'})
+        list.add_series({
+            'series_animedb_id': 1,
+            'series_title': 'found_anime'
+        })
+        list.add_series({
+            'series_animedb_id': 2,
+            'series_title': 'found_anime2'
+        })
+       
+        mock_response_get.return_value = mock.Mock(
+            text=list.get_response_xml())
+        results = self.mal.find('found_anime')
+
+        self.assertTrue(len(results) == 2)
+        first_title = results[0].get('title')
+        second_title = results[1].get('title')
+
+        self.assertTrue(
+            first_title == 'found_anime' or second_title == 'found_anime')
+        self.assertTrue(
+            first_title == 'found_anime2' or second_title == 'found_anime2')
+
+
+class TestApiLogin(unittest.TestCase):
+
+    @mock.patch.object(api.MyAnimeList, 'validate_login')
+    def test_login_authorized(self, mock_validate_login):
+        mock_validate_login.return_value = 200
+        result = api.MyAnimeList.login(MOCK_CONFIG)
+        self.assertTrue(isinstance(result, api.MyAnimeList))
+
+    @mock.patch.object(api.MyAnimeList, 'validate_login')
+    def test_login_unauthorized(self, mock_validate_login):
+        mock_validate_login.return_value = 401
+        result = api.MyAnimeList.login(MOCK_CONFIG)
+        self.assertTrue(result == None)
 
 
 if __name__ == '__main__':
