@@ -32,7 +32,7 @@ SERIES = {
         'my_start_date': '0000-00-00',
         'my_finish_date': '0000-00-00',
         'my_score': 0,
-        'my_status': 0,
+        'my_status': 1,
         'my_last_updated': 0,
         'my_tags': ''
     },
