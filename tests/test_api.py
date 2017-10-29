@@ -1,21 +1,22 @@
 
 import unittest
 from unittest import mock
+from unittest.mock import ANY
 
 import requests
 
-from pprint import pprint
-
 from mal import api
 from mal import setup
-from tests.list_response_builder import MalListResponseBuilder
+from tests.mal_responses import MalListResponseBuilder
+from tests.mal_responses import MalSearchResponseBuilder
 
 DATE_FORMAT = '%d-%m-%Y'
-
+MOCK_USER = 'dummy_user'
+MOCK_PASS = 'dummy_pass'
 MOCK_CONFIG = {
     setup.LOGIN_SECTION: {
-        'username': 'dummy_user',
-        'password': 'dummy_pass'
+        'username': MOCK_USER,
+        'password': MOCK_PASS
     },
     setup.CONFIG_SECTION: {
         'date_format': DATE_FORMAT
@@ -31,7 +32,7 @@ class TestApiList(unittest.TestCase):
         self.mal = api.MyAnimeList.login(MOCK_CONFIG)
 
     @mock.patch.object(requests, 'get')
-    def test_list_anime_single(self, mock_response_get):
+    def test_list_anime_single(self, mock_requests_get):
         list = MalListResponseBuilder()
         list.set_profile({'user_name': 'any'})
         list.add_series({
@@ -43,7 +44,7 @@ class TestApiList(unittest.TestCase):
             'series_episodes': 2,
             'my_rewatching': 1})
       
-        mock_response_get.return_value = mock.Mock(
+        mock_requests_get.return_value = mock.Mock(
             text=list.get_response_xml())
         result = self.mal.list()
 
@@ -65,7 +66,7 @@ class TestApiList(unittest.TestCase):
         }))
 
     @mock.patch.object(requests, 'get')
-    def test_list_anime_single_extended(self, mock_response_get):
+    def test_list_anime_single_extended(self, mock_requests_get):
         list = MalListResponseBuilder()
         list.set_profile({'user_name': 'any'})
         list.add_series({
@@ -76,7 +77,7 @@ class TestApiList(unittest.TestCase):
             'my_tags': 'moe'
         })
       
-        mock_response_get.return_value = mock.Mock(
+        mock_requests_get.return_value = mock.Mock(
             text=list.get_response_xml())
         result = self.mal.list(extra=True)
 
@@ -95,7 +96,7 @@ class TestApiList(unittest.TestCase):
         }))
 
     @mock.patch.object(requests, 'get')
-    def test_list_anime_single_with_stats(self, mock_response_get):
+    def test_list_anime_single_with_stats(self, mock_requests_get):
         list = MalListResponseBuilder()
         list.set_profile({
             'user_id': 1,
@@ -112,7 +113,7 @@ class TestApiList(unittest.TestCase):
             'series_title': 'anime3',
         })
       
-        mock_response_get.return_value = mock.Mock(
+        mock_requests_get.return_value = mock.Mock(
             text=list.get_response_xml())
         result = self.mal.list(stats=True)
 
@@ -144,7 +145,7 @@ class TestApiFind(unittest.TestCase):
         self.mal = api.MyAnimeList.login(MOCK_CONFIG)
 
     @mock.patch.object(requests, 'get')
-    def test_find_anime_found_and_lost(self, mock_response_get):
+    def test_find_anime_found_and_lost(self, mock_requests_get):
         list = MalListResponseBuilder()
         list.set_profile({'user_name': 'any'})
         list.add_series({
@@ -156,7 +157,7 @@ class TestApiFind(unittest.TestCase):
             'series_title': 'lost_anime'
         })
        
-        mock_response_get.return_value = mock.Mock(
+        mock_requests_get.return_value = mock.Mock(
             text=list.get_response_xml())
         results = self.mal.find('found_anime')
 
@@ -165,7 +166,7 @@ class TestApiFind(unittest.TestCase):
         self.assertTrue(anime.get('title') == 'found_anime')
 
     @mock.patch.object(requests, 'get')
-    def test_find_anime_found_more_than_one(self, mock_response_get):
+    def test_find_anime_found_more_than_one(self, mock_requests_get):
         list = MalListResponseBuilder()
         list.set_profile({'user_name': 'any'})
         list.add_series({
@@ -177,7 +178,7 @@ class TestApiFind(unittest.TestCase):
             'series_title': 'found_anime2'
         })
        
-        mock_response_get.return_value = mock.Mock(
+        mock_requests_get.return_value = mock.Mock(
             text=list.get_response_xml())
         results = self.mal.find('found_anime')
 
@@ -204,6 +205,126 @@ class TestApiLogin(unittest.TestCase):
         mock_validate_login.return_value = 401
         result = api.MyAnimeList.login(MOCK_CONFIG)
         self.assertTrue(result == None)
+
+
+class TestApiValidateLogin(unittest.TestCase):
+
+    @mock.patch.object(requests, 'get')
+    def test_validate_login(self, mock_requests_get):
+        mal = api.MyAnimeList(MOCK_CONFIG)
+        mock_status_code = 1
+        mock_requests_get.return_value = mock.Mock(
+            status_code=mock_status_code)
+        result = mal.validate_login()
+
+        mock_requests_get.assert_called_with(
+            'https://myanimelist.net/api/account/verify_credentials.xml',
+            auth=(MOCK_USER, MOCK_PASS),
+            headers=ANY
+        )
+
+        self.assertTrue(result == mock_status_code)
+
+
+class TestApiSearch(unittest.TestCase):
+
+    @mock.patch.object(api.MyAnimeList, 'validate_login')
+    def setUp(self, mock_validate_login):
+        mock_validate_login.return_value = 200
+        self.mal = api.MyAnimeList.login(MOCK_CONFIG)
+
+    @mock.patch.object(requests, 'get')
+    def test_search_found(self, mock_requests_get):
+        search_query = 'test'
+        search_results = MalSearchResponseBuilder()
+        search_results.add_result({'title': search_query})
+        mock_requests_get.return_value = mock.Mock(
+            status_code=200,
+            text=search_results.get_response_xml()
+        )
+        results = self.mal.search(search_query)
+
+        mock_requests_get.assert_called_with(
+            ANY,
+            params=dict(q=search_query),
+            auth=ANY,
+            headers=ANY
+        )
+
+        self.assertTrue(len(results) == 1)
+        first_result = results[0]
+        self.assertTrue(first_result['title'] == search_query)
+
+    @mock.patch.object(requests, 'get')
+    def test_search_found_more_than_one(self, mock_requests_get):
+        search_query = 'test'
+        search_results = MalSearchResponseBuilder()
+        search_results.add_result({'title': 'test1'})
+        search_results.add_result({'title': 'test2'})
+        mock_requests_get.return_value = mock.Mock(
+            status_code=200,
+            text=search_results.get_response_xml()
+        )
+        results = self.mal.search(search_query)
+
+        mock_requests_get.assert_called_with(
+            ANY,
+            params=dict(q=search_query),
+            auth=ANY,
+            headers=ANY
+        )
+
+        self.assertTrue(len(results) > 1)
+        for result in results:
+            self.assertTrue(search_query in result['title'])
+
+    @mock.patch.object(requests, 'get')
+    def test_search_not_found(self, mock_requests_get):
+        search_query = 'not found'
+        mock_requests_get.return_value = mock.Mock(
+            status_code=204
+        )
+        results = self.mal.search(search_query)
+
+        mock_requests_get.assert_called_with(
+            ANY,
+            params=dict(q=search_query),
+            auth=ANY,
+            headers=ANY
+        )
+
+        self.assertTrue(len(results) == 0)
+
+
+class TestApiUpdate(unittest.TestCase):
+
+    @mock.patch.object(api.MyAnimeList, 'validate_login')
+    def setUp(self, mock_validate_login):
+        mock_validate_login.return_value = 200
+        self.mal = api.MyAnimeList.login(MOCK_CONFIG)
+
+    @mock.patch.object(requests, 'post')
+    def test_update_post(self, mock_requests_post):
+        item_id = 1
+        entry = {'episode': 10}
+        expected_xml = '<entry><episode>10</episode></entry>'
+        expected_response_code = 200
+
+        xml_header='<?xml version="1.0" encoding="UTF-8"?>'
+        mock_requests_post.return_value = mock.Mock(
+            status_code=expected_response_code
+        )
+        result = self.mal.update(item_id, entry)
+        
+        mock_requests_post.assert_called_with(
+            'https://myanimelist.net/api/animelist/update/{0}.xml'.format(
+                item_id),
+            data={'data': xml_header + expected_xml},
+            auth=(MOCK_USER, MOCK_PASS),
+            headers=ANY
+        )
+
+        self.assertTrue(result == expected_response_code)
 
 
 if __name__ == '__main__':
