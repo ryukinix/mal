@@ -1,5 +1,5 @@
 
-PROFILE = {
+USER_PROFILE = {
     'shared': {
         'user_id': 0,
         'user_name': '',
@@ -18,8 +18,7 @@ PROFILE = {
     }
 }
 
-
-SERIES = {
+LIST_SERIES = {
     'shared': {
         'series_title': '',
         'series_synonyms': '',
@@ -54,6 +53,24 @@ SERIES = {
     }
 }
 
+SEARCH_RESULT = {
+    'shared': {
+        'id': 1,
+        'title': '',
+        'english': '',
+        'synonyms': '',
+        'type': '',
+        'status': '',
+        'start_date': '0000-00-00',
+        'end_date': '0000-00-00',
+        'synopsys': '',
+        'image': ''
+    },
+    'anime': {
+        'episodes': 0,
+    }
+}
+
 
 class MalListResponseBuilder(object):
 
@@ -63,8 +80,8 @@ class MalListResponseBuilder(object):
         self.series = ''
 
     def set_profile(self, profile_options):
-        all_options = PROFILE['shared'].copy()
-        all_options.update(PROFILE[self.type])
+        all_options = USER_PROFILE['shared'].copy()
+        all_options.update(USER_PROFILE[self.type])
         all_options.update(profile_options)
         
         result = ''
@@ -74,8 +91,8 @@ class MalListResponseBuilder(object):
         self.myinfo = '<myinfo>{0}</myinfo>'.format(result)
 
     def add_series(self, series_options):
-        all_options = SERIES['shared'].copy()
-        all_options.update(SERIES[self.type])
+        all_options = LIST_SERIES['shared'].copy()
+        all_options.update(LIST_SERIES[self.type])
         all_options.update(series_options)
 
         result = ''
@@ -88,3 +105,25 @@ class MalListResponseBuilder(object):
         xml_head = '<?xml version="1.0" encoding="UTF-8"?>'
         return '<myanimelist>{0}{1}</myanimelist>'.format(
             self.myinfo, self.series)
+
+
+class MalSearchResponseBuilder(object):
+
+    def __init__(self, type='anime'):
+        self.type = type
+        self.results = ''
+
+    def add_result(self, result_options):
+        all_options = SEARCH_RESULT['shared'].copy()
+        all_options.update(SEARCH_RESULT[self.type])
+        all_options.update(result_options)
+
+        result = ''
+        for key, value in all_options.items():
+            result += '<{0}>{1}</{0}>'.format(key, value)
+
+        self.results += '<entry>{0}</entry>'.format(result)
+
+    def get_response_xml(self):
+        xml_head = '<?xml version="1.0" encoding="utf-8"?>'
+        return '<{0}>{1}</{0}>'.format(self.type, self.results)
