@@ -159,7 +159,7 @@ def main():
 
     # Check if authorized
     config = login.get_credentials()
-    if config['config']['animation'] == 'False':
+    if config['config']['animation'].lower() == 'false':
         decorating.animated.enabled = False
 
     mal_api = MyAnimeList.login(config)
