@@ -57,8 +57,10 @@ def start_end(entry, episode, total_episodes):
             entry.get('score', 0))
         ).strip()
         if user_score: # do nothing if blank answer
-            try: entry['score'] = int(user_score)
-            except ValueError: print(color.colorize('Invalid score.', 'red'))
+            try:
+                entry['score'] = int(user_score)
+            except ValueError:
+                print(color.colorize('Invalid score.', 'red'))
 
     elif episode == 1:
         entry['status'] = MyAnimeList.status_codes['watching']
