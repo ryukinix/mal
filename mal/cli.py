@@ -19,6 +19,9 @@ from mal.utils import killed
 from mal import color
 from mal import login
 from mal import commands
+from mal import setup
+
+import decorating
 
 # catch if the user presses Ctrl+c and exit a special message
 signal.signal(signal.SIGINT, lambda x, y: killed())
@@ -156,6 +159,9 @@ def main():
 
     # Check if authorized
     config = login.get_credentials()
+    if config['config']['animation'] == 'False':
+        decorating.animated.enabled = False
+
     mal_api = MyAnimeList.login(config)
     if not mal_api:
         print(color.colorize('Invalid credentials! :(', 'red', 'bold'))
