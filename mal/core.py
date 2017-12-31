@@ -50,9 +50,16 @@ def start_end(entry, episode, total_episodes):
         entry['status'] = MyAnimeList.status_codes['completed']
         entry['date_finish'] = date.today().strftime('%m%d%Y')
         print(color.colorize('Series completed!', 'green'))
-        score = int(input('Enter a score (or 0 for no score): '))
-        if score != 0:
-            entry['score'] = score
+
+        # set/change score
+        user_score = input(
+            'Enter new score (leave blank to keep score at {}): '.format(
+            entry.get('score', 0))
+        ).strip()
+        if user_score: # do nothing if blank answer
+            try: entry['score'] = int(user_score)
+            except ValueError: print(color.colorize('Invalid score.', 'red'))
+
     elif episode == 1:
         entry['status'] = MyAnimeList.status_codes['watching']
         entry['date_start'] = date.today().strftime('%m%d%Y')
@@ -74,7 +81,7 @@ def progress_update(mal, regex, inc):
     items = remove_completed(mal.find(regex))
     item = select_item(items)  # also handles ambigious searches
     episode = item['episode'] + inc
-    entry = dict(episode=episode)
+    entry = dict(episode=episode, score=item.get('score', 0))
     template = {
         'title': color.colorize(item['title'], 'yellow', 'bold'),
         'episode': color.colorize(episode, 'red' if inc < 1 else 'green'),
