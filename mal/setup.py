@@ -14,6 +14,7 @@ from configparser import RawConfigParser
 
 # 3rd party
 from appdirs import user_config_dir
+import decorating
 
 # self-package
 from mal import __name__ as APP_NAME
@@ -27,6 +28,7 @@ CONFIG_SECTION = 'config'
 DEFAULT_CONFIG = {
     CONFIG_SECTION: {
         'date_format': '%Y-%m-%d',
+        'animation': True,
     },
 }
 
@@ -48,10 +50,15 @@ def config():
         os.makedirs(APP_DIR, exist_ok=True)
         with open(CONFIG_PATH, 'w') as f:
             parser.write(f)
+    elif 'animation' not in parser[CONFIG_SECTION]:
+        parser.set(CONFIG_SECTION, 'animation', True)
+        with open(CONFIG_PATH, 'w') as f:
+            parser.write(f)
 
     return parser
 
 
+@decorating.cache
 def date_format():
     """Get current date format from config file"""
     return config()['date_format']
