@@ -70,3 +70,8 @@ def add(mal, args):
 def config(mal, args):
     # Show the current config file
     setup.print_config()
+
+
+def edit(mal, args):
+    """Edit an entry in the users list, if it was present. Notify otherwise."""
+    pass
