@@ -74,4 +74,9 @@ def config(mal, args):
 
 def edit(mal, args):
     """Edit an entry in the users list, if it was present. Notify otherwise."""
-    pass
+    changes = dict()
+    for field in ['score', 'status', 'tags']:
+        attr = getattr(args, field)
+        if attr is not None: changes[field] = attr
+
+    core.edit(mal, args.anime_regex.lower(), changes)

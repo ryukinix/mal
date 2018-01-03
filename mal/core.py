@@ -277,6 +277,19 @@ def find(mal, regex, filtering='all', extra=False, user=None):
         anime_pprint(index + 1, item, extra=extra)
 
 
+def edit(mal, regex, changes):
+    """Select and change entry. Opens file with data to change if no
+    field was given."""
+    # find the correct entry to modify (handles animes not found)
+    entry = select_item(mal.find(regex, extra=True))
+
+    if not changes: # open file for user to choose changes manually
+        pass
+
+    print("core.edit: entry:", entry)
+    print("core.edit: changes:", changes)
+
+
 def anime_pprint(index, item, extra=False):
     """Pretty print an anime's information."""
     padding = int(math.log10(index)) + 3

@@ -139,10 +139,10 @@ def create_parser():
                                         help='edit entry')
     parser_edit.add_argument('anime_regex',
                              help='regex pattern to match anime titles')
-    parser_edit.add_argument('--score', type=int, nargs=1)
+    parser_edit.add_argument('--score', type=int)
     parser_edit.add_argument('--tags', nargs='+',
                              help='space separated list of tags')
-    parser_edit.add_argument('--status', nargs=1,
+    parser_edit.add_argument('--status',
                              help='status to assign to entry',
                              choices=['watching', 'completed',
                                       'on hold', 'dropped',
