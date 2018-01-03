@@ -288,6 +288,23 @@ def edit(mal, regex, changes):
 
     print("core.edit: entry:", entry)
     print("core.edit: changes:", changes)
+    # change entry
+    for field, new in changes.items():
+        if field == 'add_tags':
+            if not entry.get('tags', True): entry['tags'] = str()
+            entry['tags'] += ' ' + new
+        else:
+            entry[field] = new
+
+    # if the entry didn't have a tag before and none was provived by
+    # the user as a change we need to remove the entry from the dict
+    # to prevent the api from thinking we want to add the 'None' tag
+    if entry.get('tags', True) is None: entry.pop('tags')
+
+    # send it back to update
+    print("core.edit: sending changes to MAL")
+    response = mal.update(entry['id'], entry)
+    report_if_fails(response)
 
 
 def anime_pprint(index, item, extra=False):
