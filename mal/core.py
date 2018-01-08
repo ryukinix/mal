@@ -8,9 +8,12 @@
 #
 
 # stdlib
+import os
 import sys
 import math
 import html
+import tempfile
+import subprocess
 from operator import itemgetter
 from datetime import date
 
@@ -282,9 +285,34 @@ def edit(mal, regex, changes):
     field was given."""
     # find the correct entry to modify (handles animes not found)
     entry = select_item(mal.find(regex, extra=True))
+    print("entry:", entry)
 
     if not changes: # open file for user to choose changes manually
-        pass
+        tmp_path = tempfile.gettempdir() + '/mal_tmp'
+        print("tmp_path:", tmp_path)
+        editor = os.environ.get('EDITOR', '/usr/bin/vi')
+        print("editor:", editor)
+        # write information to tmp file
+        with open(tmp_path, 'w') as tmp:
+            tmp.write('# change fields for "{}"\n'.format(entry['title']))
+            tmp.write('status: {}\n'.format(mal.status_names[entry['status']]))
+            for field in ['score', 'tags']:
+                tmp.write('{}: {}\n'.format(field, entry[field]))
+
+        # open the file with the default editor
+        subprocess.call([editor, tmp_path]) 
+
+        # read back the data into a dict if any changes were made
+        with open(tmp_path, 'r') as tmp:
+            lines = [l for l in tmp.read().split('\n') if l and not l.startswith('#')]
+        changes = dict()
+        for field, value in [tuple(l.split(':')) for l in lines]:
+            field, value = field.strip(), value.strip()
+            if field == 'status': value = str(mal.status_codes[value])
+            print("stripped:", field, value, str(entry[field]))
+            if str(entry[field]) != value: changes[field] = value
+        print("changes:", changes)
+        if not changes: return
 
     print("core.edit: entry:", entry)
     print("core.edit: changes:", changes)
