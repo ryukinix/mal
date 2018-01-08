@@ -302,25 +302,34 @@ def edit(mal, regex, changes):
         # read back the data into a dict if any changes were made
         with open(tmp_path, 'r') as tmp:
             lines = [l for l in tmp.read().split('\n') if l and not l.startswith('#')]
+
+        # delete tmp file, we don't need it anymore
+        os.remove(tmp_path)
+
         changes = dict()
         for field, value in [tuple(l.split(':')) for l in lines]:
             field, value = field.strip(), value.strip()
-            if field == 'status': value = str(mal.status_codes[value])
-            if str(entry[field]) != value: changes[field] = value
+            if field == 'status':
+                value = str(mal.status_codes[value])
+            if str(entry[field]) != value:
+                changes[field] = value
         if not changes: return
 
     # change entry
     for field, new in changes.items():
         if field == 'add_tags':
-            if entry.get('tags') is None: entry['tags'] = new
-            else: entry['tags'] += ' ' + new
+            if entry.get('tags') is None:
+                entry['tags'] = new
+            else:
+                entry['tags'] += ' ' + new
         else:
             entry[field] = new
 
     # if the entry didn't have a tag before and none was provived by
     # the user as a change we need to remove the entry from the dict
     # to prevent the api from thinking we want to add the 'None' tag
-    if entry.get('tags') is None: entry.pop('tags')
+    if entry.get('tags') is None:
+        entry.pop('tags')
 
     # send it back to update
     response = mal.update(entry['id'], entry)

@@ -146,10 +146,11 @@ def create_parser():
                                       'on hold', 'dropped',
                                       'plan to watch', 'rewatching'])
     parser_edit_tags = parser_edit.add_mutually_exclusive_group()
-    parser_edit_tags.add_argument('--tags', nargs='+',
+    parser_edit_tags.add_argument('--set-tags', nargs='+', metavar='tag',
+                                  dest='tags',
                                   help=('space separated list of tags'
                                         ' (replaces current tags)'))
-    parser_edit_tags.add_argument('--add-tags', nargs='+',
+    parser_edit_tags.add_argument('--add-tags', nargs='+', metavar='tag',
                                   help='add these tags to the current ones')
     parser_edit.set_defaults(func=commands.edit)
 
