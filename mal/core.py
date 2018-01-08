@@ -285,13 +285,10 @@ def edit(mal, regex, changes):
     field was given."""
     # find the correct entry to modify (handles animes not found)
     entry = select_item(mal.find(regex, extra=True))
-    print("entry:", entry)
 
     if not changes: # open file for user to choose changes manually
         tmp_path = tempfile.gettempdir() + '/mal_tmp'
-        print("tmp_path:", tmp_path)
         editor = os.environ.get('EDITOR', '/usr/bin/vi')
-        print("editor:", editor)
         # write information to tmp file
         with open(tmp_path, 'w') as tmp:
             tmp.write('# change fields for "{}"\n'.format(entry['title']))
@@ -309,28 +306,23 @@ def edit(mal, regex, changes):
         for field, value in [tuple(l.split(':')) for l in lines]:
             field, value = field.strip(), value.strip()
             if field == 'status': value = str(mal.status_codes[value])
-            print("stripped:", field, value, str(entry[field]))
             if str(entry[field]) != value: changes[field] = value
-        print("changes:", changes)
         if not changes: return
 
-    print("core.edit: entry:", entry)
-    print("core.edit: changes:", changes)
     # change entry
     for field, new in changes.items():
         if field == 'add_tags':
-            if not entry.get('tags', True): entry['tags'] = str()
-            entry['tags'] += ' ' + new
+            if entry.get('tags') is None: entry['tags'] = new
+            else: entry['tags'] += ' ' + new
         else:
             entry[field] = new
 
     # if the entry didn't have a tag before and none was provived by
     # the user as a change we need to remove the entry from the dict
     # to prevent the api from thinking we want to add the 'None' tag
-    if entry.get('tags', True) is None: entry.pop('tags')
+    if entry.get('tags') is None: entry.pop('tags')
 
     # send it back to update
-    print("core.edit: sending changes to MAL")
     response = mal.update(entry['id'], entry)
     report_if_fails(response)
 

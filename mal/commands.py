@@ -74,7 +74,6 @@ def config(mal, args):
 
 def edit(mal, args):
     """Edit an entry in the users list, if it was present. Notify otherwise."""
-    print(args)
     changes = dict()
     for field in ['score', 'status', 'tags', 'add_tags']:
         attr = getattr(args, field)
