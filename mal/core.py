@@ -8,9 +8,12 @@
 #
 
 # stdlib
+import os
 import sys
 import math
 import html
+import tempfile
+import subprocess
 from operator import itemgetter
 from datetime import date
 
@@ -275,6 +278,62 @@ def find(mal, regex, filtering='all', extra=False, user=None):
     sorted_items = sorted(items, key=itemgetter('status'), reverse=True)
     for index, item in enumerate(sorted_items):
         anime_pprint(index + 1, item, extra=extra)
+
+
+def edit(mal, regex, changes):
+    """Select and change entry. Opens file with data to change if no
+    field was given."""
+    # find the correct entry to modify (handles animes not found)
+    entry = select_item(mal.find(regex, extra=True))
+
+    if not changes: # open file for user to choose changes manually
+        tmp_path = tempfile.gettempdir() + '/mal_tmp'
+        editor = os.environ.get('EDITOR', '/usr/bin/vi')
+        # write information to tmp file
+        with open(tmp_path, 'w') as tmp:
+            tmp.write('# change fields for "{}"\n'.format(entry['title']))
+            tmp.write('status: {}\n'.format(mal.status_names[entry['status']]))
+            for field in ['score', 'tags']:
+                tmp.write('{}: {}\n'.format(field, entry[field]))
+
+        # open the file with the default editor
+        subprocess.call([editor, tmp_path]) 
+
+        # read back the data into a dict if any changes were made
+        with open(tmp_path, 'r') as tmp:
+            lines = [l for l in tmp.read().split('\n') if l and not l.startswith('#')]
+
+        # delete tmp file, we don't need it anymore
+        os.remove(tmp_path)
+
+        changes = dict()
+        for field, value in [tuple(l.split(':')) for l in lines]:
+            field, value = field.strip(), value.strip()
+            if field == 'status':
+                value = str(mal.status_codes[value])
+            if str(entry[field]) != value:
+                changes[field] = value
+        if not changes: return
+
+    # change entry
+    for field, new in changes.items():
+        if field == 'add_tags':
+            if entry.get('tags') is None:
+                entry['tags'] = new
+            else:
+                entry['tags'] += ' ' + new
+        else:
+            entry[field] = new
+
+    # if the entry didn't have a tag before and none was provived by
+    # the user as a change we need to remove the entry from the dict
+    # to prevent the api from thinking we want to add the 'None' tag
+    if entry.get('tags') is None:
+        entry.pop('tags')
+
+    # send it back to update
+    response = mal.update(entry['id'], entry)
+    report_if_fails(response)
 
 
 def anime_pprint(index, item, extra=False):

@@ -70,3 +70,19 @@ def add(mal, args):
 def config(mal, args):
     # Show the current config file
     setup.print_config()
+
+
+def edit(mal, args):
+    """Edit an entry in the users list, if it was present. Notify otherwise."""
+    changes = dict()
+    for field in ['score', 'status', 'tags', 'add_tags']:
+        attr = getattr(args, field)
+        if attr is not None:
+            changes[field] = attr
+
+    # turn list of tags into a single string if needed
+    for field in ['tags', 'add_tags']:
+        if field in changes.keys():
+            changes[field] = ' '.join(changes[field])
+
+    core.edit(mal, args.anime_regex.lower(), changes)
