@@ -21,7 +21,7 @@ def score_color(score):
         return colorize(score, 'blue', 'bold')
     elif score >= 5:
         return colorize(score, 'yellow', 'bold')
-    elif score > 1:
+    elif score >= 1:
         return colorize(score, 'red', 'bold')
     else:
         return colorize('-', 'pink', 'bold')
