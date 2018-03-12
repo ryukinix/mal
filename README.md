@@ -15,7 +15,7 @@
 `mal` is a command-line client for [MyAnimeList.net](http://myanimelist.net/) which uses the official [API](http://myanimelist.net/modules.php?go=api).
 It should remain functional indefinitely (unlike web-scraping alternatives).
 It is currently in alpha development so new ideas are welcome!
-This project is inspired from [mal](https://github.com/pushrax/mal).
+This project was inspired initially in [mal](https://github.com/pushrax/mal).
 
 ## Features
 
@@ -51,7 +51,7 @@ Check [requirements.txt](requirements.txt) for exact versions.
 From the command line run:
 
 ```
-sudo pip install mal
+pip install mal --user
 ```
 
 ### Manual Installation
@@ -120,26 +120,32 @@ After authenticating you can start using the program.
 When `mal` is executed without any arguments the help message is displayed:
 
 ```
-usage: mal [-h]
-           {search,increase,inc,decrease,dec,login,list,config,download,watch}
+usage: mal [-h] [-v]
+           {search,filter,increase,inc,decrease,dec,login,list,config,drop,stats,add,edit}
            ...
 
 MyAnimeList command line client.
 
 positional arguments:
-  {search,increase,inc,decrease,dec,login,list,config,download,watch}
+  {search,filter,increase,inc,decrease,dec,login,list,config,drop,stats,add,edit}
                         commands
     search              search an anime
+    filter              find anime in users list
     increase (inc)      increase anime's watched episodes by one
     decrease (dec)      decrease anime's watched episodes by one
     login               save login credentials
     list                list animes
-    config              config - not implemented yet
-    download            download - not implemented yet
-    watch               watch - not implemented yet
+    config              Print current config file and its path
+    drop                Put a selected anime on drop list
+    stats               Show anime watch stats
+    add                 add an anime to the list
+    edit                edit entry
 
 optional arguments:
   -h, --help            show this help message and exit
+  -v, --version         show the version of mal
+
+
 ```
 
 You can also use the `-h` or `--help` options on `mal` or any of its subcommands to see specific help message.
