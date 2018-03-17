@@ -1,4 +1,3 @@
-
 import unittest
 from unittest import mock
 from unittest.mock import ANY
@@ -43,7 +42,7 @@ class TestApiList(unittest.TestCase):
             'my_score': 3,
             'series_episodes': 2,
             'my_rewatching': 1})
-      
+
         mock_requests_get.return_value = mock.Mock(
             text=list.get_response_xml())
         result = self.mal.list()
@@ -76,7 +75,7 @@ class TestApiList(unittest.TestCase):
             'my_finish_date': '2016-01-01',
             'my_tags': 'moe'
         })
-      
+
         mock_requests_get.return_value = mock.Mock(
             text=list.get_response_xml())
         result = self.mal.list(extra=True)
@@ -112,14 +111,14 @@ class TestApiList(unittest.TestCase):
             'series_animedb_id': 3,
             'series_title': 'anime3',
         })
-      
+
         mock_requests_get.return_value = mock.Mock(
             text=list.get_response_xml())
         result = self.mal.list(stats=True)
 
         self.assertTrue(3 in result)
         anime = result[3]
-        
+
         self.assertTrue('stats' in result)
         anime_stats_props_valid = lambda x: all(
             result['stats'].get(k) == v for k, v in x.items())
@@ -156,7 +155,7 @@ class TestApiFind(unittest.TestCase):
             'series_animedb_id': 2,
             'series_title': 'lost_anime'
         })
-       
+
         mock_requests_get.return_value = mock.Mock(
             text=list.get_response_xml())
         results = self.mal.find('found_anime')
@@ -177,7 +176,7 @@ class TestApiFind(unittest.TestCase):
             'series_animedb_id': 2,
             'series_title': 'found_anime2'
         })
-       
+
         mock_requests_get.return_value = mock.Mock(
             text=list.get_response_xml())
         results = self.mal.find('found_anime')
@@ -211,7 +210,7 @@ class TestApiValidateLogin(unittest.TestCase):
 
     @mock.patch.object(requests, 'get')
     def test_validate_login(self, mock_requests_get):
-        mal = api.MyAnimeList(MOCK_CONFIG)
+        mal = api.MyAnimeList.login(MOCK_CONFIG)
         mock_status_code = 1
         mock_requests_get.return_value = mock.Mock(
             status_code=mock_status_code)
@@ -315,7 +314,7 @@ class TestApiUpdate(unittest.TestCase):
             status_code=expected_response_code
         )
         result = self.mal.update(item_id, entry)
-        
+
         mock_requests_post.assert_called_with(
             'https://myanimelist.net/api/animelist/update/{0}.xml'.format(
                 item_id),
