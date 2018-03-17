@@ -10,10 +10,11 @@
 
 import unittest
 import sys
-import os
+from os.path import dirname
 
-sys.path.insert(0, os.path.dirname(__file__))
+__base__ = dirname(__file__)
+sys.path.insert(0, dirname(__base__))
 
-tests = unittest.defaultTestLoader.discover(__file__)
+tests = unittest.defaultTestLoader.discover(__base__)
 suite = unittest.defaultTestLoader.suiteClass(tests)
 unittest.TextTestRunner(verbosity=2).run(suite)
