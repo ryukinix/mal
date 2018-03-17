@@ -23,6 +23,10 @@ This project was inspired initially in [mal](https://github.com/pushrax/mal).
 * Fetch your anime list
 * List animes in certain status (e.g. watching)
 * Increment or decrement episodes seen of animes
+* Add animes to your plan to watch list
+* Edit contents of your animes on its your own preferred text editor:
+  tags, status, score.
+* Print your MAL stats! Just like MyAnimeList stats.
 
 And more are currently being developed!
 
@@ -51,7 +55,7 @@ Check [requirements.txt](requirements.txt) for exact versions.
 From the command line run:
 
 ```
-pip install mal --user
+pip install --user mal
 ```
 
 ### Manual Installation
@@ -59,43 +63,16 @@ pip install mal --user
 Clone this project and run inside it:
 
 ```
-sudo python setup.py install
+make install
 ```
 
-Or alternatively using make:
-
-```
-sudo make install
-```
+Probably we'll need have super-user permissions, but I'd recommend you
+to install inside of a virtualenv or use the `pip install --user' stuff.
 
 ### On ArchLinux
 
 If you're using the archlinux distro this project has been packaged and uploaded to
 the AUR as [python-mal-git](https://aur.archlinux.org/packages/python-mal-git).
-
-You can install it using an AUR wrappers like `yaourt` or `pacaur` which will be much simpler.
-
-Using `yaourt`:
-```
-yaourt -S python-mal-git
-```
-
-Using `pacaur`:
-
-```
-pacaur -y python-mal-git
-```
-
-Or do it manually:
-
-```
-wget https://aur.archlinux.org/cgit/aur.git/snapshot/python-mal-git.tar.gz
-tar xvzf python-mal-git.tar.gz
-cd python-mal-git/
-makepkg -si
-```
-
-Notice that before using this method all dependencies should be installed.
 
 ## Usage
 
@@ -153,41 +130,8 @@ You can also use the `-h` or `--help` options on `mal` or any of its subcommands
 
 ## Contributing
 
-We are looking for contributors. If you know some python and would like to help check out our [issues](https://github.com/ryukinix/mal/issues).
+Look at [CONTRIBUTING.md](CONTRIBUTING.md)
 
-Also feel free to open new issues for any bug you found, features you think would be nice to have or questions in general.
-
-### Running The Source
-
-There are a few options to run the source in development.
-
-#### Development Mode
-
-For developing you can run:
-
-```
-sudo python setup.py develop
-```
-
-Or alternatively using make:
-
-```
-sudo make develop
-```
-
-In development mode an EGG file is linked with the actual source so that way you can modify it and test without reinstalling.
-
-For more information see [Development Mode](http://setuptools.readthedocs.io/en/latest/setuptools.html#development-mode).
-
-#### Running With Python
-
-Inside the project run:
-
-```
-PYTHONPATH=. python mal/cli.py
-```
-
-PYTHONPATH variable is set to look inside the project so it will look for the local module [mal](mal/) before looking for installed `mal`.
 
 ## License
 
