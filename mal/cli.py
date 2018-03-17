@@ -38,9 +38,9 @@ def create_parser():
 
     # Parser for "search" command
     parser_search = subparsers.add_parser('search',
-                                          help='search an anime')
-    parser_search.add_argument('anime_regex',
-                               help='regex pattern to match anime titles')
+                                          help='search an anime globally on MAL')
+    parser_search.add_argument('anime_title',
+                               help='a substring to match anime titles')
     parser_search.add_argument('--extend', action='store_true', # defaults to false
                                help='display all available information on anime')
     parser_search.set_defaults(func=commands.search)
