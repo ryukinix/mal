@@ -51,7 +51,7 @@ Check [requirements.txt](requirements.txt) for exact versions.
 From the command line run:
 
 ```
-pip install mal --user
+pip install --user mal
 ```
 
 ### Manual Installation
@@ -59,43 +59,16 @@ pip install mal --user
 Clone this project and run inside it:
 
 ```
-sudo python setup.py install
+make install
 ```
 
-Or alternatively using make:
-
-```
-sudo make install
-```
+Probably we'll need have super-user permissions, but I'd recommend you
+to install inside of a virtualenv or use the `pip install --user' stuff.
 
 ### On ArchLinux
 
 If you're using the archlinux distro this project has been packaged and uploaded to
 the AUR as [python-mal-git](https://aur.archlinux.org/packages/python-mal-git).
-
-You can install it using an AUR wrappers like `yaourt` or `pacaur` which will be much simpler.
-
-Using `yaourt`:
-```
-yaourt -S python-mal-git
-```
-
-Using `pacaur`:
-
-```
-pacaur -y python-mal-git
-```
-
-Or do it manually:
-
-```
-wget https://aur.archlinux.org/cgit/aur.git/snapshot/python-mal-git.tar.gz
-tar xvzf python-mal-git.tar.gz
-cd python-mal-git/
-makepkg -si
-```
-
-Notice that before using this method all dependencies should be installed.
 
 ## Usage
 
