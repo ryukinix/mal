@@ -23,6 +23,10 @@ This project was inspired initially in [mal](https://github.com/pushrax/mal).
 * Fetch your anime list
 * List animes in certain status (e.g. watching)
 * Increment or decrement episodes seen of animes
+* Add animes to your plan to watch list
+* Edit contents of your animes on its your own preferred text editor:
+  tags, status, score.
+* Print your MAL stats! Just like MyAnimeList stats.
 
 And more are currently being developed!
 
