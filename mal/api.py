@@ -40,10 +40,10 @@ class MyAnimeList(object):
     # reverse of status_names dict
     status_codes = {v: k for k, v in status_names.items()}
 
-    def __init__(self, config):
-        self.username = config[setup.LOGIN_SECTION]['username']
-        self.password = config[setup.LOGIN_SECTION]['password']
-        self.date_format = config[setup.CONFIG_SECTION]['date_format']
+    def __init__(self, username, password, date_format=setup.DEFAULT_DATE_FORMAT):
+        self.username = username
+        self.password = password
+        self.date_format = date_format
 
     @checked_connection
     @animated('validating login')
@@ -59,7 +59,11 @@ class MyAnimeList(object):
     @classmethod
     def login(cls, config):
         """Create an instante of MyAnimeList and log it in."""
-        mal = cls(config)  # start instance of MyAnimeList
+        username = config[setup.LOGIN_SECTION]['username']
+        password = config[setup.LOGIN_SECTION]['password']
+        date_format = config[setup.CONFIG_SECTION]['date_format']
+
+        mal = cls(username, password, date_format)
 
         # 401 = unauthorized
         if mal.validate_login() == 401:

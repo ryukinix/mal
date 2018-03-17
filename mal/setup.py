@@ -25,9 +25,10 @@ APP_DIR = user_config_dir(APP_NAME)
 CONFIG_PATH = path.join(APP_DIR, APP_FILE)
 LOGIN_SECTION = 'login'
 CONFIG_SECTION = 'config'
+DEFAULT_DATE_FORMAT = "%Y-%m-%d"
 DEFAULT_CONFIG = {
     CONFIG_SECTION: {
-        'date_format': '%Y-%m-%d',
+        'date_format': DEFAULT_DATE_FORMAT,
         'animation': True,
     },
 }
