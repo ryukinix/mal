@@ -96,7 +96,7 @@ class MyAnimeList(object):
 
         payload = dict(u=username, status=status, type=type)
         r = requests.get(
-            'http://myanimelist.net/malappinfo.php',
+            'https://myanimelist.net/malappinfo.php',
             params=payload,
             headers={'User-Agent': self.user_agent}
         )
