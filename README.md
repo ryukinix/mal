@@ -66,13 +66,40 @@ Clone this project and inside it run:
 make install
 ```
 
-It is likely that `mal` will never need super-user permissions, but we recommend its
-installation inside of a `virtualenv`. You can also install it with `pip install --user'.
+`mal` requires super-user permissions when you run `make install` inside of a `virtualenv`.
+We strong encourage you to install it with `pip install --user`.
 
 ### On ArchLinux
 
 This project has been packaged and uploaded to the AUR as
 [python-mal-git](https://aur.archlinux.org/packages/python-mal-git) in case you're using an archlinux distro.
+
+You may install it using an AUR wrappers such `yaourt` or `pacaur`, making
+the installation much simpler.
+
+Using `yaourt`:
+
+```
+yaourt -S python-mal-git
+```
+
+Using `pacaur`
+
+```
+pacaur -y python-mal-git
+```
+
+Or manually:
+
+```
+wget https://aur.archlinux.org/cgit/aur.git/snapshot/python-mal-git.tar.gz
+tar xvzf python-mal-git.tar.gz
+cd python-mal-git/
+makepkg -si
+```
+
+Notice that all dependencies should be
+installed before using this method.
 
 ## Usage
 
