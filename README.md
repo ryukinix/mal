@@ -12,28 +12,35 @@
 
 ## Description
 
-`mal` is a command-line client for the official [API](http://myanimelist.net/modules.php?go=api) of [MyAnimeList.net](http://myanimelist.net/) website.
-It should remain functional indefinitely (it will never have web-scraping, unlike other alternative projects).
-It is currently in alpha development and new ideas are welcome! Please check our [CONTRIBUTING.md](CONTRIBUTING.md) file.
-This project was initially inspired in [pushrax/mal](https://github.com/pushrax/mal).
+`mal` is a command-line client for [MyAnimeList](http://myanimelist.net/), via the [official API](http://myanimelist.net/modules.php?go=api).
+
+One of the major design goals of this project is to avoid the use of web-scraping, which means it should work indefinitely. Other projects
+that scrape the website tend to break whenever MyAnimeList has an update, rarely ever recovering from the needed maintenance as a result.
+
+Development is currently in alpha. New ideas are welcome! But please check [CONTRIBUTING.md](CONTRIBUTING.md) before you submit that pull
+request.
+
+This project is an unofficial fork of [pushrax/mal](https://github.com/pushrax/mal), which seems to have fallen out of maintenance.
 
 ## Features
 
-- Search your anime list
-- Fetch your anime list
-- List animes by their statuses (e.g. watching)
-- Increment or decrement seen episodes
-- Add animes to your watch list planner
-- Edit contents of your animes on your own preferred text editor:
-  tags, status, score.
+- Search your anime list.
+- Fetch your anime list.
+- List animes by their status (e.g. `watching`).
+- Increment or decrement episode watch count.
+- Add anime to your `Plan To Watch` list.
+- Edit anime metadata (currently `tags`, `status` and `score`) using your favorite text editor.
 - Print your MAL stats! Just like you do on MyAnimeList.
 
-More features are currently being developed! You can also request other features [here](https://github.com/ryukinix/mal/issues).
+More features are currently being developed! 
+
+If you have a suggestion for a new feature, a bug to report or something else, you can submit an [issue](https://github.com/ryukinix/mal/issues).
+
+Please note that as this project is still in alpha development, pretty much everything is subject to change.
 
 ## TL;DR | Demos
 
 ![Main Usage](https://cloud.githubusercontent.com/assets/7642878/19803847/59295fd0-9ce1-11e6-9292-7e52266de4af.gif)
-
 
 ![Listing Animes By Status](https://cloud.githubusercontent.com/assets/7642878/19803846/59157a9c-9ce1-11e6-93a7-30665ae859bf.gif)
 
@@ -46,42 +53,66 @@ More features are currently being developed! You can also request other features
 - [decorating](https://pypi.python.org/pypi/decorating/)
 - [argparse](https://docs.python.org/3.5/library/argparse.html) (Merged into stdlib since version 3.2)
 
-Check [requirements.txt](requirements.txt) for exact versions.
+See [requirements.txt](requirements.txt) for detailed version information.
 
 ## Installation
 
-### Using pip
+### Preface
 
-From the command line run:
+Ensure that you are using **Python 3** before attempting to install.
 
-```
-pip install --user mal
-```
+It's common for systems to have both Python 2 and 3, so if necessary, use `pip3` or `python3 -m pip`.
+
+If your system has both `python2` and `python3`, replace all instances of `python` and `pip` with `python3` and `pip3` (or `python3 -m pip`).
+
+### Install via `pip`
+
+From the command line, run:
+
+    pip install --user mal
+
+This will install the latest stable build of `mal` from the `PyPi` repository.
 
 ### Manual Installation
 
-Clone this project and inside it run:
+If you want the absolute latest, bleeding-edge version, you'll have to install manually.
 
+Clone this project and run `pip`:
+
+    git clone https://github.com/ryukinix/mal
+    cd mal
+    sudo pip install --user .
+
+Note: If installing in a `virtualenv`, the `sudo` is not necessary.
+
+It's also possible to install with the makefile (`sudo make install`) and the setup script (`sudo python3 ./setup.py install`),
+but we strongly recommend the `pip`, as it tracks dependencies, and can uninstall. It *is* a package manager, after all.
+
+Finally, if you want to update after having already installed, you can do this:
+
+```bash
+git pull origin master
+sudo pip install --user .
 ```
-pip install --user .
-```
+# TODO: testing how bash looks
 
-`mal` requires super-user permissions when you run `make install` outside of a `virtualenv`.
-We strong encourage you to install it with `pip install --user .`.
-
-### On ArchLinux
+### On Arch Linux
 
 This project has been packaged and uploaded to the AUR as
-[python-mal-git](https://aur.archlinux.org/packages/python-mal-git) in case you're using an archlinux distro.
+[python-mal-git](https://aur.archlinux.org/packages/python-mal-git) in case you're using Arch Linux or a similar distro (like Manjaro).
 
 ## Usage
 
 ### Authenticating
 
-`mal` needs your credentials in order to access your anime list. In its first call to any valid command, it will ask for your username and password and save it in **plain text** its default path (on linux `~/.config/mal/myanimelist.ini`).
+For some reason, the MAL API requires a username and password for most actions... including searching the main database. Thus, `mal` needs
+your MAL login to be useful. To prevent this from being a headache, `mal` stores your credentials in your OS's default config path
+(e.g. `~/.config/mal/myanimelist.ini` for Linux). Your username and password are stored unencrypted in **plain text** in that file. 
+If you haven't already authenticated (`mal login`), the program will ask for your credentials when needed.
 
-The file will be saved in the following format:
+Currently, there is an [open issue](https://github.com/ryukinix/mal/issues/81) hoping to resolve the whole "plain text password" kerfuffle.
 
+The format of `myanimelist.ini` is as follows:
 
 ```ini
 [mal]
@@ -90,48 +121,53 @@ password = your_password
 
 ```
 
-You may start using `mal` after authenticating your user.
-
 ### Using The Interface
 
 When `mal` is executed without any arguments, a help message is displayed:
 
-```
-usage: mal [-h] [-v]
-           {search,filter,increase,inc,decrease,dec,login,list,config,drop,stats,add,edit}
-           ...
+    $ mal
+    usage: mal [-h] [-v]
+               {search,filter,increase,inc,decrease,dec,login,list,config,drop,stats,add,edit}
+               ...
 
-MyAnimeList command line client.
+    MyAnimeList command line client.
 
-positional arguments:
-  {search,filter,increase,inc,decrease,dec,login,list,config,drop,stats,add,edit}
-                        commands
-    search              search an anime
-    filter              find anime in users list
-    increase (inc)      increase anime's watched episodes by one
-    decrease (dec)      decrease anime's watched episodes by one
-    login               save login credentials
-    list                list animes
-    config              Print current config file and its path
-    drop                Put a selected anime on drop list
-    stats               Show anime watch stats
-    add                 add an anime to the list
-    edit                edit entry
+    positional arguments:
+      {search,filter,increase,inc,decrease,dec,login,list,config,drop,stats,add,edit}
+                            commands
+        search              search an anime
+        filter              find anime in users list
+        increase (inc)      increase anime's watched episodes by one
+        decrease (dec)      decrease anime's watched episodes by one
+        login               save login credentials
+        list                list animes
+        config              Print current config file and its path
+        drop                Put a selected anime on drop list
+        stats               Show anime watch stats
+        add                 add an anime to the list
+        edit                edit entry
 
-optional arguments:
-  -h, --help            show this help message and exit
-  -v, --version         show the version of mal
+    optional arguments:
+      -h, --help            show this help message and exit
+      -v, --version         show the version of mal
 
+You can also use the `-h` or `--help` options with `mal` or any of its subcommands to see specific help messages.
 
-```
+    $ mal list -h
+    usage: mal list [-h] [--extend] [--user USER] [section]
 
-You can also use the `-h` or `--help` options on `mal` or any of its subcommands to see specific help messages.
+    positional arguments:
+      section      section to display, can be one of: [all, watching, completed,
+                   on hold, dropped, plan to watch, rewatching] (default: all)
 
+    optional arguments:
+      -h, --help   show this help message and exit
+      --extend     display extra info such as start/finish dates and tags
+      --user USER  choose which users list to show
 
 ## Contributing
 
-Look at [CONTRIBUTING.md](CONTRIBUTING.md)
-
+See [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ## License
 
