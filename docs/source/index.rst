@@ -57,10 +57,10 @@ Or alternatively using make:
 
 ::
 
-    sudo make install
+    pip install --user .
 
 ``mal`` requires super-user permissions when you run ``make install`` inside of a ``virtualenv``.
-We strong encourage you to install it with ``pip install --user``.
+We strong encourage you to install it with ``pip install --user .``.
 
 On ArchLinux
 ~~~~~~~~~~~~
