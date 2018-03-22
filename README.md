@@ -66,7 +66,7 @@ Clone this project and inside it run:
 pip install --user .
 ```
 
-`mal` requires super-user permissions when you run `make install` inside of a `virtualenv`.
+`mal` requires super-user permissions when you run `make install` outside of a `virtualenv`.
 We strong encourage you to install it with `pip install --user .`.
 
 ### On ArchLinux
