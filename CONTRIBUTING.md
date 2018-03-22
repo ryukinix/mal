@@ -1,16 +1,17 @@
-# Contributing
+> MAL is currently looking for contributors. The project is primarly done in Python, but all skills and levels are welcome as there are many ways in which you can help, such as documenting, testing/opening new issues, solving bugs, developing new features and many others. If you are not sure whether your skill is or not needed, please open a new issue [here](https://github.com/ryukinix/mal/issues). Also feel free to open new issues for any bugs you find, features you think would be nice to have or questions in general.
 
-We are looking for contributors. If you know some python and would like to help check out our [issues](https://github.com/ryukinix/mal/issues).
+# Steps for Contributing
 
-Also feel free to open new issues for any bug you found, features you think would be nice to have or questions in general.
+- 1. Find an issue [here](https://github.com/ryukinix/mal/issues).
+- 2. Verify if the chosen issue is not already in WIP (create a new issue if needed).
+- 3. Mention (by commenting on the issue) that you want to take it.
+- 4. Fork it and create a new branch out of `master`.
+- 5. Work on it.
+- 6. Submit a pull request.
 
-# Running The Source
+# Setting up mal for development
 
-There are a few options to run the source in development.
-
-# Development Mode
-
-For developing you can run setup a virtualenv and:
+Setup a `virtualenv` and run:
 
 
 ```
@@ -20,11 +21,11 @@ python install -r requirements.txt
 python setup.py develop
 ```
 
-In development mode an EGG file is linked with the actual source so that way you can modify it and test without reinstalling.
+In development mode an _EGG_ file is linked with the actual source so that you can modify and test it without the need of reinstalling it.
 
 For more information see [Development Mode](http://setuptools.readthedocs.io/en/latest/setuptools.html#development-mode).
 
-# Running without need to install
+# Running mal without installing it
 
 Inside the project run:
 
@@ -32,4 +33,4 @@ Inside the project run:
 PYTHONPATH=. python mal/cli.py
 ```
 
-PYTHONPATH variable is set to look inside the project so it will look for the local module [mal](mal/) before looking for installed `mal`.
+PYTHONPATH variable is set to look inside the project so it will look for the local module [mal](mal/) before it looks for a installed `mal`.

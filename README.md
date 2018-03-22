@@ -12,23 +12,23 @@
 
 ## Description
 
-`mal` is a command-line client for [MyAnimeList.net](http://myanimelist.net/) which uses the official [API](http://myanimelist.net/modules.php?go=api).
-It should remain functional indefinitely (unlike web-scraping alternatives).
-It is currently in alpha development so new ideas are welcome!
-This project was inspired initially in [mal](https://github.com/pushrax/mal).
+`mal` is a command-line client for the official [API](http://myanimelist.net/modules.php?go=api) of [MyAnimeList.net](http://myanimelist.net/) website.
+It should remain functional indefinitely (it will never have web-scraping, unlike other alternative projects).
+It is currently in alpha development and new ideas are welcome! Please check our [CONTRIBUTING.md](CONTRIBUTING.md) file.
+This project was initially inspired in [pushrax/mal](https://github.com/pushrax/mal).
 
 ## Features
 
-* Searching your anime list
-* Fetch your anime list
-* List animes in certain status (e.g. watching)
-* Increment or decrement episodes seen of animes
-* Add animes to your plan to watch list
-* Edit contents of your animes on its your own preferred text editor:
+- Search your anime list
+- Fetch your anime list
+- List animes by their statuses (e.g. watching)
+- Increment or decrement seen episodes
+- Add animes to your watch list planner
+- Edit contents of your animes on your own preferred text editor:
   tags, status, score.
-* Print your MAL stats! Just like MyAnimeList stats.
+- Print your MAL stats! Just like you do on MyAnimeList.
 
-And more are currently being developed!
+More features are currently being developed! You can also request other features [here](https://github.com/ryukinix/mal/issues).
 
 ## TL;DR | Demos
 
@@ -60,27 +60,27 @@ pip install --user mal
 
 ### Manual Installation
 
-Clone this project and run inside it:
+Clone this project and inside it run:
 
 ```
-make install
+pip install --user .
 ```
 
-Probably we'll need have super-user permissions, but I'd recommend you
-to install inside of a virtualenv or use the `pip install --user' stuff.
+`mal` requires super-user permissions when you run `make install` inside of a `virtualenv`.
+We strong encourage you to install it with `pip install --user .`.
 
 ### On ArchLinux
 
-If you're using the archlinux distro this project has been packaged and uploaded to
-the AUR as [python-mal-git](https://aur.archlinux.org/packages/python-mal-git).
+This project has been packaged and uploaded to the AUR as
+[python-mal-git](https://aur.archlinux.org/packages/python-mal-git) in case you're using an archlinux distro.
 
 ## Usage
 
 ### Authenticating
 
-The program needs your credentials to access your list. In the first call to any valid command the program will ask for your username and password and save it in **plain text** in the default path (on linux `~/.config/mal/myanimelist.ini`).
+`mal` needs your credentials in order to access your anime list. In its first call to any valid command, it will ask for your username and password and save it in **plain text** its default path (on linux `~/.config/mal/myanimelist.ini`).
 
-The file will be save in the following format:
+The file will be saved in the following format:
 
 
 ```ini
@@ -90,11 +90,11 @@ password = your_password
 
 ```
 
-After authenticating you can start using the program.
+You may start using `mal` after authenticating your user.
 
 ### Using The Interface
 
-When `mal` is executed without any arguments the help message is displayed:
+When `mal` is executed without any arguments, a help message is displayed:
 
 ```
 usage: mal [-h] [-v]
@@ -125,7 +125,7 @@ optional arguments:
 
 ```
 
-You can also use the `-h` or `--help` options on `mal` or any of its subcommands to see specific help message.
+You can also use the `-h` or `--help` options on `mal` or any of its subcommands to see specific help messages.
 
 
 ## Contributing

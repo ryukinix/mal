@@ -13,23 +13,24 @@ Welcome to mal's documentation!
 Description
 -----------
 
-``mal`` is a command-line client for
-`MyAnimeList.net <http://myanimelist.net/>`__ which uses the official
-`API <http://myanimelist.net/modules.php?go=api>`__. It should remain
-functional indefinitely (unlike web-scraping alternatives). It is
-currently in alpha development so new ideas are welcome! This project is
-inspired from `mal <https://github.com/pushrax/mal>`__.
+``mal`` is a command-line client for the official `API <http://myanimelist.net/modules.php?go=api>`__ of `MyAnimeList.net <http://myanimelist.net/>`__ website.
+It should remain functional indefinitely (it will never have web-scraping, unlike other alternative projects).
+It is currently in alpha development and new ideas are welcome!
+This project was initially inspired in `mal <https://github.com/pushrax/mal>`__.
 
 Features
 --------
 
--  Searching your anime list
--  Fetch your anime list
--  List animes in certain status (e.g. watching)
--  Increment or decrement episodes seen of animes
+- Search your anime list
+- Fetch your anime list
+- List animes by their statuses (e.g. watching)
+- Increment or decrement seen episodes
+- Add animes to your watch list planner
+- Edit contents of your animes on your own preferred text editor:
+  tags, status, score.
+- Print your MAL stats! Just like you do on MyAnimeList.
 
-And more are currently being developed!
-
+More features are currently being developed!
 
 Installation
 ------------
@@ -46,7 +47,7 @@ From the command line run:
 Manual Installation
 ~~~~~~~~~~~~~~~~~~~
 
-Clone this project and run inside it:
+Clone this project and inside it run:
 
 ::
 
@@ -56,17 +57,20 @@ Or alternatively using make:
 
 ::
 
-    sudo make install
+    pip install --user .
+
+``mal`` requires super-user permissions when you run ``make install`` inside of a ``virtualenv``.
+We strong encourage you to install it with ``pip install --user .``.
 
 On ArchLinux
 ~~~~~~~~~~~~
 
-If you're using the archlinux distro this project has been packaged and
-uploaded to the AUR as
-`python-mal-git <https://aur.archlinux.org/packages/python-mal-git>`__.
+``mal`` has been packaged and uploaded to the AUR as
+`python-mal-git <https://aur.archlinux.org/packages/python-mal-git>`__
+in case you're using an archlinux distro.
 
-You can install it using an AUR wrappers like ``yaourt`` or ``pacaur``
-which will be much simpler.
+You may install it using an AUR wrappers such ``yaourt`` or ``pacaur``, making
+the installation much simpler.
 
 Using ``yaourt``:
 
@@ -80,7 +84,7 @@ Using ``pacaur``:
 
     pacaur -y python-mal-git
 
-Or do it manually:
+Or manually:
 
 ::
 
@@ -89,8 +93,8 @@ Or do it manually:
     cd python-mal-git/
     makepkg -si
 
-Notice that before using this method all dependencies should be
-installed.
+Notice that all dependencies should be
+installed before using this method.
 
 Usage
 -----
@@ -98,12 +102,11 @@ Usage
 Authenticating
 ~~~~~~~~~~~~~~
 
-The program needs your credentials to access your list. In the first
-call to any valid command the program will ask for your username and
-password and save it in **plain text** in the default path (on linux
-``~/.config/mal/myanimelist.ini``).
+`mal` needs your credentials in order to access your anime list.
+In its first call to any valid command,
+it will ask for your username and password and save it in **plain text** its default path (on linux ``~/.config/mal/myanimelist.ini``).
 
-The file will be save in the following format:
+The file will be saved in the following format:
 
 .. code:: ini
 
@@ -111,12 +114,12 @@ The file will be save in the following format:
     username = your_username
     password = your_password
 
-After authenticating you can start using the program.
+You may start using `mal` after authenticating your user.
 
 Using The Interface
 ~~~~~~~~~~~~~~~~~~~
 
-When ``mal`` is executed without any arguments the help message is
+When ``mal`` is executed without any arguments a help message is
 displayed:
 
 ::
@@ -143,9 +146,7 @@ displayed:
       -h, --help            show this help message and exit
 
 You can also use the ``-h`` or ``--help`` options on ``mal`` or any of
-its subcommands to see specific help message.
-
-
+its subcommands to see specific help messages.
 
 
 Indices and tables
