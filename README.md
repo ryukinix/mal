@@ -86,7 +86,7 @@ Clone this project and run `pip`:
 Note: If installing in a `virtualenv`, the `sudo` is not necessary.
 
 It's also possible to install with the makefile (`sudo make install`) and the setup script (`sudo python3 ./setup.py install`),
-but we strongly recommend the `pip`, as it tracks dependencies, and can uninstall. It *is* a package manager, after all.
+but we strongly recommend `pip`, as it tracks dependencies, and can uninstall. It *is* a package manager, after all.
 
 Finally, if you want to update after having already installed, you can do this:
 
@@ -97,6 +97,23 @@ Finally, if you want to update after having already installed, you can do this:
 
 This project has been packaged and uploaded to the AUR as
 [python-mal-git](https://aur.archlinux.org/packages/python-mal-git) in case you're using Arch Linux or a similar distro (like Manjaro).
+
+### Troubleshooting
+
+If you just *can't* get `mal` to run because it's crashing upon startup, make sure that everything is using `python3`
+
+    $ head -1 $(which mal)
+    #!/usr/bin/python
+    $ sudo ed $(which mal) <<< $'1s/python$/python3\nwq'
+    28
+    #!/usr/bin/python3
+    29
+    $ head -1 $(which mal)
+    #!/usr/bin/python3
+
+You might have to go through a few files to get it to work, but usually, editing the launcher is enough. Failing that,
+delete the launcher, re-clone the repo, and try again in a `virtualenv`. If it works there, be careful to follow the above steps and
+make sure you're using python3 for everything.
 
 ## Usage
 
