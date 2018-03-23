@@ -69,7 +69,7 @@ If your system has both `python2` and `python3`, replace all instances of `pytho
 
 From the command line, run:
 
-    pip install --user mal
+    $ pip install --user mal
 
 This will install the latest stable build of `mal` from the `PyPi` repository.
 
@@ -79,9 +79,9 @@ If you want the absolute latest, bleeding-edge version, you'll have to install m
 
 Clone this project and run `pip`:
 
-    git clone https://github.com/ryukinix/mal
-    cd mal
-    sudo pip install --user .
+    $ git clone https://github.com/ryukinix/mal
+    $ cd mal
+    $ sudo pip install --user .
 
 Note: If installing in a `virtualenv`, the `sudo` is not necessary.
 
@@ -90,11 +90,8 @@ but we strongly recommend the `pip`, as it tracks dependencies, and can uninstal
 
 Finally, if you want to update after having already installed, you can do this:
 
-```bash
-git pull origin master
-sudo pip install --user .
-```
-# TODO: testing how bash looks
+    $ git pull origin master
+    $ sudo pip install --user .
 
 ### On Arch Linux
 
