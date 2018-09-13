@@ -81,3 +81,10 @@
           version from `mal.__version__` variable.
   * Note: old users should fix date_format on ~/.config/mal/myanimelist.ini
           manually changing from %%d-%%m-%%Y to %d-%m-%Y.
+- v0.4.0
+  * Add edit command
+  * Fix date
+  * Option to disable animation in config
+  * Refactor docs
+  * Add basic tests covering the API
+  * Handle XML ParserError exception as easter egg (MAL API is DEAD anyway)

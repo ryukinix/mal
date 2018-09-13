@@ -17,7 +17,7 @@ import requests
 from decorating import animated
 
 # self-package
-from mal.utils import checked_connection, checked_regex
+from mal.utils import checked_connection, checked_regex, checked_cancer
 from mal import setup
 
 
@@ -71,6 +71,7 @@ class MyAnimeList(object):
 
         return mal
 
+    @checked_cancer
     @checked_connection
     @animated('searching in database')
     def search(self, query):
@@ -89,6 +90,7 @@ class MyAnimeList(object):
         elements = ET.fromstring(r.text)
         return [dict((attr.tag, attr.text) for attr in el) for el in elements]
 
+    @checked_cancer
     @checked_connection
     @animated('preparing animes')
     def list(self, status='all', type='anime', extra=False, stats=False, user=None):
@@ -157,6 +159,7 @@ class MyAnimeList(object):
                 result.append(value)
         return result
 
+    @checked_cancer
     @checked_connection
     @animated('updating')
     def update(self, item_id, entry, action="update"):
