@@ -12,6 +12,7 @@ import sys
 import os
 from functools import wraps
 from sre_constants import error as BadRegexError
+import xml.etree
 
 # 3rd party
 from decorating.animation import AnimatedDecorator
@@ -74,6 +75,25 @@ def checked_regex(func):
 
         return result
     return wrapper
+
+
+def checked_cancer(func):
+    """Wrap the function in a try/except to catch and handle a BadRegexError."""
+    @wraps(func)  # keeps the wrapped function's name and docstring intact
+    def wrapper(*args, **kwargs):
+        result = None
+        try:
+            result = func(*args, **kwargs)
+        except xml.etree.ElementTree.ParseError:
+            if AnimatedDecorator.spinner.running:
+                AnimatedDecorator.stop()
+            print_error('XMLParseError', 'Invalid API Response', 'reason: MAL IS DEAD')
+            sys.exit(1)
+
+        return result
+    return wrapper
+
+
 
 
 def checked_connection(func):
