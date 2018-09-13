@@ -2,8 +2,6 @@ PYTHON = python3
 INSTALL = install
 DEVELOP = develop
 TARGET = setup.py
-TEST_DEPLOY = sdist bdist_wheel upload --repository pypitest --sign
-TEST_REGISTER = register --repository pypitest
 DEPLOY = sdist bdist_wheel upload --repository pypi --sign
 REGISTER = register --repository pypi
 BUILD_GARBAGE = build/ dist/
@@ -16,12 +14,16 @@ BUILD = sdist bdist_wheel
 all: install
 	 @make clean
 
+dev-dependencies:
+	pip install -r requirements-dev.txt
+
 check:
 	@echo "+===============+"
 	@echo "|     CHECK     |"
 	@echo "+===============+"
 	$(PYTHON) $(TARGET) $(CHECK)
 	@echo "ok!"
+
 clean:
 	@echo "+===============+"
 	@echo "|  CLEAN BUILD  |"
@@ -42,19 +44,12 @@ build:
 	@echo "+===============+"
 	$(PYTHON) $(TARGET) $(BUILD)
 
-
 develop:
 	@echo "+===============+"
 	@echo "|    DEVELOP    |"
 	@echo "+===============+"
 	$(PYTHON) $(TARGET) $(DEVELOP)
 
-test-register:
-	@make check
-	@echo "+===============+"
-	@echo "| TEST-REGISTER |"
-	@echo "+===============+"
-	$(PYTHON) $(TARGET) $(TEST_REGISTER)
 
 develop-uninstall:
 	@echo "+===============+"
@@ -64,27 +59,20 @@ develop-uninstall:
 	@make clean
 	rm -rfv $(EGG)
 
-test-deploy:
-	@make check
-	@echo "+===============+"
-	@echo "| TEST-DEPLOY   |"
-	@echo "+===============+"
-	$(PYTHON) $(TARGET) $(TEST_DEPLOY)
-
-deploy:
+deploy: dev-dependencies check build
 	@make check
 	@echo "+===============+"
 	@echo "|   DEPLOY      |"
 	@echo "+===============+"
-	$(PYTHON) $(TARGET) $(DEPLOY)
+	twine upload dist/*
 
 
-register:
+register: dev-dependencies
 	@make check
 	@echo "+===============+"
 	@echo "|   REGISTER    |"
 	@echo "+===============+"
-	$(PYTHON) $(TARGET) $(REGISTER)
+	twine register
 
 help:
 	@echo "+=============================================+"
@@ -102,17 +90,12 @@ help:
 	@echo
 	@echo "make build:"
 	@echo "  build the package as egg-file"
+	@echo
 	@echo "make develop:"
 	@echo "	 install in develop mode (symlink)"
 	@echo
 	@echo "make develop-uninstall:"
 	@echo "	 uninstall develop files and clean build"
-	@echo
-	@echo "make test-register:"
-	@echo "	 test register using the testPyPI server "
-	@echo
-	@echo "test-deploy:"
-	@echo "	 test deploy using the testPyPI server"
 	@echo
 	@echo "deploy:"
 	@echo "	 deploy to PyPY"
