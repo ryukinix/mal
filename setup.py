@@ -18,7 +18,7 @@ readme = path.join(here, 'README.md')
 
 try:
     import pypandoc
-    long_description = pypandoc.convert(readme, 'rst', format='markdown')
+    long_description = pypandoc.convert_file(readme, 'rst', format='markdown')
 except ImportError:
     warn("Only-for-developers: you need pypandoc for upload "
          "correct reStructuredText into PyPI home page")
