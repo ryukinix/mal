@@ -3,12 +3,9 @@
 [![Build Status](https://travis-ci.org/ryukinix/mal.svg?branch=master)](https://travis-ci.org/ryukinix/mal)
 [![codecov](https://codecov.io/gh/ryukinix/mal/branch/master/graph/badge.svg)](https://codecov.io/gh/ryukinix/mal)
 [![PyPi version](https://img.shields.io/pypi/v/mal.svg)](https://pypi.python.org/pypi/mal/)
-[![Requirements Status](https://requires.io/github/ryukinix/mal/requirements.svg?branch=master)](https://requires.io/github/ryukinix/mal/requirements/?branch=master)
 [![PyPi License](https://img.shields.io/pypi/l/mal.svg)](https://pypi.python.org/pypi/mal/)
 [![PyPI pyversions](https://img.shields.io/pypi/pyversions/mal.svg)](https://pypi.python.org/pypi/mal/)
-[![PyPI status](https://img.shields.io/pypi/status/mal.svg)](https://pypi.python.org/pypi/mal/)
-[![HitCount](https://hitt.herokuapp.com/ryukinix/mal.svg)](https://github.com/ryukinix/mal)
-
+[![PyPI status](https://img.shields.io/pypi/status/mal.svg)](https://pypi.python.org/pypi/m
 
 ## Description
 
