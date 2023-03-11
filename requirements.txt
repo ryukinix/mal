@@ -1,3 +1,4 @@
 requests>=2.18.1
 appdirs>=1.4.0
 decorating==0.6.1
+Authlib>=1.2.0
