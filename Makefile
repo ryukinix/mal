@@ -2,6 +2,7 @@ PYTHON = python3
 INSTALL = install
 DEVELOP = develop
 TARGET = setup.py
+TESTS = tests/
 DEPLOY = sdist bdist_wheel upload --repository pypi --sign
 REGISTER = register --repository pypi
 BUILD_GARBAGE = build/ dist/
@@ -17,11 +18,20 @@ all: install
 dev-dependencies:
 	pip install -r requirements-dev.txt
 
-check:
-	@echo "+===============+"
-	@echo "|     CHECK     |"
-	@echo "+===============+"
+check: check-tests check-package
+
+check-package:
+	@echo "+===================+"
+	@echo "| PACKAGE INTEGRITY |"
+	@echo "+===================+"
 	$(PYTHON) $(TARGET) $(CHECK)
+	@echo "ok!"
+
+check-tests:
+	@echo "+===============+"
+	@echo "|     TESTS     |"
+	@echo "+===============+"
+	$(PYTHON) $(TESTS)
 	@echo "ok!"
 
 clean:
