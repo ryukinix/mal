@@ -61,7 +61,7 @@ class AuthHandler(http.server.SimpleHTTPRequestHandler):
         return dict(parse.parse_qsl(parse.urlparse(url).query))
 
 
-def get_token(authorization_code: str, state: str):
+def get_token(authorization_code: str, state: str) -> dict:
     return auth_config.client.fetch_access_token(
         auth_config.token_url,
         client_id=auth_config.client_id,
@@ -73,14 +73,17 @@ def get_token(authorization_code: str, state: str):
     )
 
 
-def login(server_class=http.server.HTTPServer, handler_class=AuthHandler) -> str:
+def login(open_browser=True) -> dict:
     print("Authorize application access your myanimelist account...")
     url, state = auth_config.create_authorization_url()
-    webbrowser.open(url)
+    if open_browser:
+        webbrowser.open(url)
+    else:
+        print("Authorize: ", url)
     server_address = (auth_config.callback_host, auth_config.callback_port)
-    httpd = server_class(server_address, handler_class)
+    httpd = http.server.HTTPServer(server_address, AuthHandler)
     httpd.handle_request()
-    authorization_code = handler_class.queue.get()["code"]
+    authorization_code = AuthHandler.queue.get()["code"]
     return get_token(authorization_code, state)
 
 
