@@ -15,6 +15,7 @@ from datetime import datetime
 # 3rd party
 import requests
 from decorating import animated
+from authlib.integrations.requests_client import OAuth2Auth
 
 # self-package
 from mal.utils import checked_connection, checked_regex, checked_cancer
@@ -23,7 +24,7 @@ from mal import setup
 
 class MyAnimeList(object):
     """Does all the actual communicating with the MAL api."""
-    base_url = 'https://myanimelist.net/api'
+    base_url = 'https://api.myanimelist.net/v2'
     user_agent = ('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) '
                   'AppleWebKit/537.36 (KHTML, like Gecko) '
                   'Chrome/34.0.1847.116 Safari/537.36')
@@ -40,34 +41,19 @@ class MyAnimeList(object):
     # reverse of status_names dict
     status_codes = {v: k for k, v in status_names.items()}
 
-    def __init__(self, username, password, date_format=setup.DEFAULT_DATE_FORMAT):
-        self.username = username
-        self.password = password
+    def __init__(self, token: str, date_format=setup.DEFAULT_DATE_FORMAT):
+        self.token = token
+        self.session = requests.Session()
+        self.session.auth = OAuth2Auth(self.token)
         self.date_format = date_format
-
-    @checked_connection
-    @animated('validating login')
-    def validate_login(self):
-        r = requests.get(
-            self.base_url + '/account/verify_credentials.xml',
-            auth=(self.username, self.password),
-            headers={'User-Agent': self.user_agent}
-        )
-
-        return r.status_code
 
     @classmethod
     def login(cls, config):
         """Create an instante of MyAnimeList and log it in."""
-        username = config[setup.LOGIN_SECTION]['username']
-        password = config[setup.LOGIN_SECTION]['password']
+        token = config[setup.LOGIN_SECTION]['token']
         date_format = config[setup.CONFIG_SECTION]['date_format']
 
-        mal = cls(username, password, date_format)
-
-        # 401 = unauthorized
-        if mal.validate_login() == 401:
-            return None
+        mal = cls(token, date_format)
 
         return mal
 
